@@ -1,12 +1,14 @@
 import { View, Text } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState} from 'react'
 import {MainContext} from './context/ContextProvider'
-
+import { NavigationContainer } from "@react-navigation/native";
+import NotAuthenticatedStack from './navigatorAuth/NotAuthenticatedStack';
+import Login from './pages/Login'
 export default function Main() {
-  const {test, setTest} = useContext(MainContext);
+  const {authenticated} = useContext(MainContext);
   return (
-    <View>
-      <Text>{test}</Text>
-    </View>
-  )
+    <NavigationContainer>
+    <NotAuthenticatedStack/>
+    </NavigationContainer>
+  );
 }
