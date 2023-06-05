@@ -4,12 +4,12 @@ import {MainContext} from './context/ContextProvider'
 import { NavigationContainer } from "@react-navigation/native";
 import NotAuthenticatedStack from './navigatorAuth/NotAuthenticatedStack';
 import Login from './pages/Login'
+import BottomTabBar from './navigatorAuth/BottomTabs'
 export default function Main() {
   const {authenticated} = useContext(MainContext);
-  const [first, setfirst] = useState(second)
   return (
     <NavigationContainer>
-    <NotAuthenticatedStack/>
+    {authenticated?<BottomTabBar />:<NotAuthenticatedStack/>}
     </NavigationContainer>
   );
 }
