@@ -6,6 +6,7 @@ import NotAuthenticatedStack from './navigatorAuth/NotAuthenticatedStack';
 import Login from './pages/Login'
 export default function Main() {
   const {authenticated} = useContext(MainContext);
+  const [first, setfirst] = useState(second)
   return (
     <NavigationContainer>
     <NotAuthenticatedStack/>
