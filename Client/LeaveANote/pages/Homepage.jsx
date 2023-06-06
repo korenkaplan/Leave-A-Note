@@ -1,8 +1,10 @@
-import { View, StyleSheet, Dimensions,TextInput  } from 'react-native';
+import { View, StyleSheet, Dimensions,TextInput,TouchableOpacity  } from 'react-native';
 import React from 'react';
-import { Heading, VStack ,Stack,Input} from 'native-base';
+import { Heading, VStack ,Stack,Input, Button} from 'native-base';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Logo from "../assets/note-taking.svg";
+import Lottie from 'lottie-react-native';
+import SearchBar from '../Comps/login/SearchBar';
 export default function Homepage({ navigation }) {
   const widthPercent = 100;
   const heightPercent = 40;
@@ -21,19 +23,8 @@ export default function Homepage({ navigation }) {
       <VStack alignItems="center" flex={1}>
         <Logo width={width} height={height} />
         <Heading>Leave A Note</Heading>
-        <View style>
-      {/* <Ionicons name="search" color ={"black"} size={24}/> */}
-        <Input
-        width={width- 100}
-        placeholder='Search Car Number'
-        variant="underlined"
-        value={value}
-        onChangeText={handleInputChange}
-        style={styles.searchInput}
-        keyboardType="numeric" // Set keyboardType to 'numeric'
-      />
-        </View>
-   
+        <SearchBar />
+        <Button >Leave Note</Button>
       </VStack>
     </View>
   );
@@ -45,6 +36,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-
+  BG:{
+    backgroundColor:'#e6e6fa'
+  }
+ 
 });

@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { View, Text } from 'react-native'
+import {I18nManager } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { NativeBaseProvider } from 'native-base'
 import Main from './Main'
