@@ -6,7 +6,7 @@ export default function ProfileTopView() {
   return (
     <View  style={styles.topView} >
     <ProfileLogoTop />
-    <View style={styles.topInfo}>
+    {/* <View style={styles.topInfo}>
       <View>
       <Icon
     name='person' />
@@ -19,7 +19,7 @@ export default function ProfileTopView() {
       <Text>8333368</Text>
       </View>
     </View>
-    <Divider width={5} />
+    <Divider width={5} /> */}
    </View>
   )
 }
@@ -31,7 +31,6 @@ const styles =  StyleSheet.create({
     },
     topView:{
       flex: 1,
-       backgroundColor: 'red',
        justifyContent: 'center',
        alignItems: 'center',
        padding:10,

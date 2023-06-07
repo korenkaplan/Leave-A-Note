@@ -1,20 +1,23 @@
-import { View, Text,StyleSheet} from 'react-native'
-import React from 'react'
-import { Icon } from '@rneui/themed';
+import { View,StyleSheet} from 'react-native'
+import React,{useState} from 'react'
 import ProfileTopView from '../Components/profile/ProfileTopView'
+import ProfileTabView from '../Components/profile/ProfileTabView';
 export default function Profile({ navigation }) {
   return (
     <View style ={styles.container}>
       <ProfileTopView/>
-      <View style={{flex: 4, backgroundColor: 'darkorange'}} />
+      <View style={{flex: 9, backgroundColor: 'darkorange'}}>
+     <ProfileTabView style ={styles.ProfileTabView}/>
+      </View>
     </View>
   )
 }     
 const styles =  StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     flexDirection:'column',
   },
-
 });
+
+
+    
