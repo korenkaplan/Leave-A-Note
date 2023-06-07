@@ -10,9 +10,7 @@ export default function EditPassword() {
   const [isValid, setIsValid] = useState(false)
  
 
-  /**
-  The validation schema for Formik using yup
- */
+ 
   const validationSchema = Yup.object().shape({
     currentPassword: Yup.string().required('Current password is required'),
     newPassword: Yup.string()
