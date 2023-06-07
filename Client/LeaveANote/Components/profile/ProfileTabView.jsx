@@ -19,36 +19,39 @@ export default function ProfileTabView() {
         }}
         variant="primary"
       >
-        <Tab.Item
-          title="Accidents History"
+         <Tab.Item
+          title="Edit Password"
           titleStyle={{ fontSize: 12 }}
-          icon={{ name: 'timer-outline', type: 'ionicon', color: 'white' }}
+          icon={{ name: 'lock-closed-outline', type: 'ionicon', color: 'white' }}
         />
         <Tab.Item
           title="Edit information"
           titleStyle={{ fontSize: 12 }}
           icon={{ name: 'person-outline', type: 'ionicon', color: 'white' }}
         />
-        <Tab.Item
-          title="Edit Password"
+           <Tab.Item
+          title="Accidents History"
           titleStyle={{ fontSize: 12 }}
-          icon={{ name: 'lock-closed-outline', type: 'ionicon', color: 'white' }}
+          icon={{ name: 'timer-outline', type: 'ionicon', color: 'white' }}
         />
       </Tab>
       <TabView
         value={index}
         onChange={setIndex}
         animationType="spring"
-      >
-        <TabView.Item  style={styles.tabItem}>
-          <AccidentsHistory />
-        </TabView.Item >
-        <TabView.Item  style={styles.tabItem}>
-          <EditInfo />
-        </TabView.Item>
+        disableSwipe={true} 
+          >
+      
         <TabView.Item  style={styles.tabItem}>
           <EditPassword />
         </TabView.Item>
+        <TabView.Item  style={styles.tabItem}>
+        <EditInfo />
+        </TabView.Item>
+        <TabView.Item     style={styles.tabItem}
+        >
+          <AccidentsHistory />
+        </TabView.Item >
       </TabView>
     </View>
   );
@@ -57,7 +60,6 @@ export default function ProfileTabView() {
 const styles = StyleSheet.create({
   container: {
     flex: 1, // Set flex to 1 to fill the available space
-    backgroundColor: 'darkorange',
   },
   tabItem:{
     flex: 1,
