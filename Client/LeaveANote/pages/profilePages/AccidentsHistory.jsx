@@ -54,6 +54,7 @@ export default function AccidentsHistory() {
     return (
       <ListItem.Swipeable
         bottomDivider
+        key={item.key}
         style={{backgroundColor: 'gray'}}
         leftContent={reset => (
           <Button
