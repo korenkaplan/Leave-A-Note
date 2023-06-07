@@ -9,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
   return (
-   <Tab.Navigator
+   <Tab.Navigator initialRouteName='Profile'
   screenOptions={{
     headerShown: false,
     tabBarShowLabel: true,
