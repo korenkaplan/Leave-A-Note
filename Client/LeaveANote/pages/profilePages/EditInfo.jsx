@@ -1,19 +1,20 @@
 import { View, Text,StyleSheet,KeyboardAvoidingView } from 'react-native'
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import { Input, Icon,Button } from '@rneui/themed';
+import {MainContext} from '../../context/ContextProvider'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 export default function EditInfo() {
-
   const validationSchema = Yup.object().shape({
     fullname: Yup.string().required('fullname is required').min(1,'Name must be have at least one letter'),
     carNum: Yup.string().required('Car number is required').matches(/^[0-9]{7,8}$/, 'Invalid Car number'),
     phoneNumber: Yup.string().required('Phone number is required').matches(/^05[0-5][0-9]{7}$/, 'Invalid phone number'),
     email: Yup.string().required('Email is required').email('Invalid Email address'),
   });
+  const {loggedUser} = useContext(MainContext);
 
   const handleFormSubmit = (values, { resetForm }) => {
-    //TODO: validate password with database
+    //TODO: update user information in database
       // Handle form submission
       console.log(values);
 
@@ -23,7 +24,7 @@ export default function EditInfo() {
   return (
     <View style={styles.container}>
       <Formik
-      initialValues={{fullname: '', carNum: '', phoneNumber: ''}}
+      initialValues={{fullname: loggedUser.fullname, carNum: loggedUser.carNum, phoneNumber: loggedUser.phoneNumber,email: loggedUser.email}}
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}>
         {({handleChange, handleSubmit, values, errors,resetForm}) => (
@@ -53,9 +54,6 @@ export default function EditInfo() {
             keyboardType='numeric'
             />
              {errors.phoneNumber && <Text style={styles.error}>{errors.phoneNumber}</Text>}
-             <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-              >
              <Input
             onChangeText={handleChange('email')}
             value={values.email}
@@ -65,7 +63,6 @@ export default function EditInfo() {
             />
              {errors.phoneNumber && <Text style={styles.error}>{errors.phoneNumber}</Text>}
              <Button  title="Submit" onPress={handleSubmit} />
-             </KeyboardAvoidingView>
           </View>
         )}
       </Formik>
