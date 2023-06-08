@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-
-export default function Inbox({ navigation }) {
+import CameraComp from '../Components/CameraComp'
+export default function Inbox() {
   return (
-    <View>
-      <Text>Inbox</Text>
+    <View style={{flex:1}}>
+      <CameraComp/>
     </View>
   )
 }
