@@ -1,29 +1,127 @@
-import {View, Text,StyleSheet} from 'react-native';
-import React from 'react';
-import { Divider } from '@rneui/base';
+import {View, Text,StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import React,{useState} from 'react';
+import Header from '../Components/uiComponents/Header';
+import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
+import { ListItem,Avatar} from '@rneui/themed';
 export default function Inbox() {
-  return (
+  //a temporary state containing the list of items,
+  //TODO get messages from the server 
+  const [messages, setMessages] = useState([
+    {
+      key: '1',
+      hittingDriver: 'koren kaplan',
+      date: '02/12/2023',
+      type: 'note',
+    },
+    {
+      key: '2',
+      hittingDriver: '83-333-68',
+      date: '03/12/2023',
+      type: 'report',
+    },
+    {
+      key: '3',
+      hittingDriver: 'Ravid kaplan',
+      date: '02/12/2023',
+      type: 'report',
+    },
+    {
+      key: '4',
+      hittingDriver: '83-222-68',
+      date: '03/12/2023',
+      type: 'report',
+    },
+    {
+      key: 'q',
+      hittingDriver: 'koren kaplan',
+      date: '02/12/2023',
+      type: 'note',
+    },
+    {
+      key: 'w',
+      hittingDriver: '83-333-68',
+      date: '03/12/2023',
+      type: 'report',
+    },
+    {
+      key: 'e',
+      hittingDriver: 'Ravid kaplan',
+      date: '02/12/2023',
+      type: 'report',
+    },
+    {
+      key: 'r',
+      hittingDriver: '83-222-68',
+      date: '03/12/2023',
+      type: 'report',
+    },
+    {
+      key: 't',
+      hittingDriver: 'koren kaplan',
+      date: '02/12/2023',
+      type: 'note',
+    },
+    {
+      key: 'y',
+      hittingDriver: '83-333-68',
+      date: '03/12/2023',
+      type: 'report',
+    },
+    {
+      key: 'u',
+      hittingDriver: 'Ravid kaplan',
+      date: '02/12/2023',
+      type: 'report',
+    },
+    {
+      key: 'a',
+      hittingDriver: '83-222-68',
+      date: '03/12/2023',
+      type: 'report',
+    },
+  ])
+
+  //convert objects from database to list items
+  const convertedMessages = messages.map((message,index) => {
+    return (
+     <TouchableOpacity  key={message.key} onPress={()=>console.log(message)}>
+       <ListItem  bottomDivider>
+       <Avatar
+          size={64}
+          rounded
+          icon={{ name:message.type === 'report'? 'eye-outline' : 'document-outline', type: 'ionicon' }}
+          containerStyle={{ backgroundColor: message.type === 'report'? 'lightblue' : 'lightgray'}}
+        />
+        <ListItem.Content>
+          <ListItem.Title>{message.hittingDriver}</ListItem.Title>
+          <ListItem.Subtitle>{message.date}</ListItem.Subtitle>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+     </TouchableOpacity>
+
+    )
+    
+     });
+
+       return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Inbox</Text>
-      </View>
-      <Divider color='black'/>
+      <Header style={styles.header} dividerColor='black' backgroundColor='lightblue' text='Inbox'/>
+      <ScrollView style={styles.scroll}>
+        { messages.length > 0 ? convertedMessages :<EmptyAnimationInbox/>}
+      </ScrollView>
     </View>
   );
 }
+
+
 const styles = StyleSheet.create({
   container:{
     flex: 1,
   },
-  header:{
-    width: '100%',
-    height: '10%',
-    backgroundColor:'lightblue',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerText:{
-    color:'white',
-    fontSize:25,
+  scroll:{
+    flexGrow: 1,
+    padding: 10,
+    backgroundColor: 'white',
   }
 });

@@ -72,9 +72,11 @@ export default function AccidentsHistory() {
             buttonStyle={{minHeight: '100%', backgroundColor: 'red'}}
           />
         )}>
-        <Icon
-          name={item.type === 'report' ? 'document-outline' : 'eye-outline'}
-          type="ionicon"
+            <Avatar
+          size={64}
+          rounded
+          icon={{ name:item.type === 'report'? 'eye-outline' : 'document-outline', type: 'ionicon' }}
+          containerStyle={{ backgroundColor:item.type === 'report'?'lightblue':'lightgray' }}
         />
         <ListItem.Content>
           <ListItem.Title>{item.hittingDriver}</ListItem.Title>
