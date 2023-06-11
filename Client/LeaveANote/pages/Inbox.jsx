@@ -104,6 +104,33 @@ export default function Inbox() {
     
      });
 
+     //create a function to handle the press of a message
+     const handlePress = (message, index) => {
+       //move to view the message
+       moveToNoteView(message)
+      //delete message from the message list
+      handleDelete(index)
+     
+
+     }
+     const handleDelete = index => {
+      //TODO: delete frm database
+      let updatedMessages = [...messages]
+      updatedMessages.splice(index,1)
+      setMessages(updatedMessages)
+    };
+     //create a function to move to a view of a message on press 
+     const moveToNoteView = (message) => {
+      navigation.navigate({
+        name: 'NoteView',
+        params: {...message},
+        merge: true,
+      }
+      );
+     
+      
+    };
+    
        return (
     <View style={styles.container}>
       <Header style={styles.header} dividerColor='black' backgroundColor='lightblue' text='Inbox'/>
