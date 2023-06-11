@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -47,8 +47,46 @@ export default function BottomTabs() {
   return (
  <Stack.Navigator initialRouteName="Tabs" screenOptions={{ headerShown: false }}>
   <Stack.Screen name='Tabs' component={TabNavigator}/>
-  <Stack.Screen name="NoteView" component={NoteView} />
-  <Stack.Screen name="ReportView" component={ReportView} />
+  <Stack.Screen name="NoteView" component={NoteView} options={{
+    title:'Note',
+    headerShown:true,
+    headerStyle:{
+      backgroundColor: '#3b5998',
+    },
+    headerTitleStyle: {
+      textAlign: 'center',
+      color: 'white',
+      textAlign: 'center',
+    },
+    headerTintColor:'white'
+  }}/>
+  <Stack.Screen name="ReportView" component={ReportView} options={{
+    title:'Report',
+    headerShown:true,
+    headerStyle:{
+      backgroundColor: '#3b5998',
+    },
+    headerTitleStyle: {
+      textAlign: 'center',
+      color: 'white',
+      textAlign: 'center',
+    },
+    headerTintColor:'white'
+  }} />
  </Stack.Navigator>
   )
 }
+const styles = StyleSheet.create({
+  header: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'blue',
+    textAlign: 'center',
+  },
+});

@@ -3,7 +3,6 @@ import React from 'react';
 // eslint-disable-next-line prettier/prettier
 import {View, StyleSheet, Linking} from 'react-native';
 import { Image, ListItem,Icon } from '@rneui/themed';
-import Header from '../../Components/uiComponents/Header';
 import { Button } from 'native-base';
 
 interface NoteProps {
@@ -22,9 +21,7 @@ interface NoteProps {
   };
 }
 
-const NoteView: React.FC<NoteProps> = (
-  {route}
-) => {
+const NoteView: React.FC<NoteProps> = ( {route}) => {
   //const message = navigation.getParam('message','no message');
   const {
     date,
@@ -33,10 +30,7 @@ const NoteView: React.FC<NoteProps> = (
     type,
     imageSource,
   } = route.params;
-const header = (
-  <Header dividerColor="black" backgroundColor="#3b5998" text={type} />
 
-);
 const noteDetails = (
   <>
     <ListItem>
@@ -83,7 +77,6 @@ const moveToSmsDialog = () => {
 
   return (
     <View style={styles.MainContainer}>
-      {header}
       <View style={styles.imageContainer}>
         {image}
         </View>

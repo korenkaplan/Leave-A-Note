@@ -22,7 +22,7 @@ export default function AccidentsHistory() {
       id: '2',
       hittingDriver:{
         name:'Ofri Malka',
-        carNumber:'8333368',
+        carNumber:'69354401',
         phoneNumber:'0528942612',
       },
       reporter:{
@@ -31,7 +31,7 @@ export default function AccidentsHistory() {
       },
       date: '04/12/2023',
       type: 'report',
-      isAnonymous:false,
+      isAnonymous:true,
       isIdentify:true,
       imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg'
     },
@@ -48,7 +48,39 @@ export default function AccidentsHistory() {
       type: 'report',
       isAnonymous:false,
       isIdentify:false,
-      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg'
+      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-2.jpg'
+    },
+    {
+      id: '4',
+      hittingDriver:{
+        name:'Ofri Malka',
+        carNumber:'69354401',
+        phoneNumber:'0528942612',
+      },
+      reporter:{
+        name:'Koren Kaplan',
+        phoneNumber:'0533406789',
+      },
+      date: '04/12/2023',
+      type: 'report',
+      isAnonymous:false,
+      isIdentify:true,
+      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467044/cld-sample.jpg'
+    },
+    {
+      id: '5',
+      hittingDriver:{
+        carNumber:'8333368',
+      },
+      reporter:{
+        name:'Koren Kaplan',
+        phoneNumber:'0533406789',
+      },
+      date: '03/12/2023',
+      type: 'report',
+      isAnonymous:true,
+      isIdentify:false,
+      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467034/samples/landscapes/nature-mountains.jpg'
     },
   ]);
   const handleInfoPress = (item) => {
