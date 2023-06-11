@@ -5,7 +5,6 @@ import {View, StyleSheet, Linking} from 'react-native';
 import { Image, ListItem,Icon } from '@rneui/themed';
 import Header from '../../Components/uiComponents/Header';
 import { Button } from 'native-base';
-import { Divider } from '@rneui/base';
 
 interface NoteProps {
   route: {

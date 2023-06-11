@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 
 export default function AccidentsHistory() {
   const navigation = useNavigation();
-  const [accidents, setAccidentst] = useState([
+  const [messages, setMessages] = useState([
     {
       id: '1',
       hittingDriver:{
@@ -15,73 +15,131 @@ export default function AccidentsHistory() {
         phoneNumber:'0533406789',
       },
       date: '02/12/2023',
-      type: 'Note',
+      type: 'note',
       imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg'
     },
-  ]);
-  const handleInfoPress = (item) => {
-    //ToDO: check if note or report
+    {
+      id: '2',
+      hittingDriver:{
+        name:'Ofri Malka',
+        carNumber:'8333368',
+        phoneNumber:'0528942612',
+      },
+      reporter:{
+        name:'Koren Kaplan',
+        phoneNumber:'0533406789',
+      },
+      date: '04/12/2023',
+      type: 'report',
+      isAnonymous:false,
+      isIdentify:true,
+      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg'
+    },
+    {
+      id: '3',
+      hittingDriver:{
+        carNumber:'8333368',
+      },
+      reporter:{
+        name:'Koren Kaplan',
+        phoneNumber:'0533406789',
+      },
+      date: '03/12/2023',
+      type: 'report',
+      isAnonymous:false,
+      isIdentify:false,
+      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg'
+    },
+  ])
+
+  const convertedMessages = messages.map((message,index) => {
+    //if the message is of type note 
+    if(message.type === 'note')
+    {
+      return (
+        <TouchableOpacity onPress={()=> {handlePress(message,index)}}  key={message.id} >
+          <ListItem  bottomDivider>
+          <Avatar
+             size={64}
+             rounded
+             icon={{ name:'document-outline', type: 'ionicon' }}
+             containerStyle={{ backgroundColor:'lightblue'}}
+           />
+           <ListItem.Content>
+             <ListItem.Title>{message.hittingDriver.name}</ListItem.Title>
+             <ListItem.Subtitle>{message.date}</ListItem.Subtitle>
+           </ListItem.Content>
+           <ListItem.Chevron />
+         </ListItem>
+        </TouchableOpacity>
+  )
+  }
+  //if the message is of type report
+  else{
+    return(
+      <TouchableOpacity onPress={()=> {handlePress(message,index)}}  key={message.id} >
+          <ListItem  bottomDivider>
+          <Avatar
+             size={64}
+             rounded
+             icon={{ name:'eye-outline', type: 'ionicon' }}
+             containerStyle={{ backgroundColor:'lightblue'}}
+           />
+           <ListItem.Content>
+             <ListItem.Title>{message.isIdentify? message.hittingDriver.name : message.hittingDriver.carNumber}</ListItem.Title>
+             <ListItem.Subtitle>{message.date}</ListItem.Subtitle>
+           </ListItem.Content>
+           <ListItem.Chevron />
+         </ListItem>
+        </TouchableOpacity>
+    )
+  }
+   })
+   //create a function to handle the press of a message
+   const handlePress = (message, index) => {
+    //todo check if the message is a note or a report
+    if(message.type === 'note')
+    {
+      //move to view the message
+     moveToNoteView(message)
+    }
+    else{
+      moveToReportView(message)
+    }
+    
+     //delete message from the message list
+     handleDelete(index)
+   }
+   //create a function to delete the message from the message list
+   const handleDelete = index => {
+    //TODO: delete frm database
+    let updatedMessages = [...messages]
+    updatedMessages.splice(index,1)
+    setMessages(updatedMessages)
+  };
+   //create a function to move to a view of a message on press 
+   const moveToNoteView = (message) => {
     navigation.navigate({
       name: 'NoteView',
-      params: {...item},
+      params: {...message},
       merge: true,
     }
     );
+
+    
   };
-
-
-  const handleDelete = index => {
-    //TODO: delete frm database
-    // Create a copy of the accidents array
-    let updatedList = [...accidents];
-
-    // Remove the item at the specified index
-    updatedList.splice(index, 1);
-
-    // Update the state with the updated array
-    setAccidentst(updatedList);
-  };
-
-  const accidentsList = accidents.map((item, index) => {
-    return (
-      <ListItem.Swipeable
-        bottomDivider
-        key={item.id}
-        style={{backgroundColor: 'gray'}}
-        leftContent={reset => (
-          <Button
-            title="Info"
-            onPress={() => handleInfoPress(item)}
-            icon={{name: 'info', color: 'white'}}
-            buttonStyle={{minHeight: '100%'}}
-          />
-        )}
-        rightContent={reset => (
-          <Button
-            title="Delete"
-            onPress={() => handleDelete(index)}
-            icon={{name: 'delete', color: 'white'}}
-            buttonStyle={{minHeight: '100%', backgroundColor: 'red'}}
-          />
-        )}>
-            <Avatar
-          size={64}
-          rounded
-          icon={{ name:item.type === 'report'? 'eye-outline' : 'document-outline', type: 'ionicon' }}
-          containerStyle={{ backgroundColor:item.type === 'report'?'lightblue':'lightgray' }}
-        />
-        <ListItem.Content>
-          <ListItem.Title>{item.hittingDriver.name}</ListItem.Title>
-          <ListItem.Subtitle>{item.date}</ListItem.Subtitle>
-        </ListItem.Content>
-        <ListItem.Chevron />
-      </ListItem.Swipeable>
-    );
-  });
+   //create a funtion to move to a view of a report on press
+   const moveToReportView = (message) => {
+        navigation.navigate({
+          name: 'ReportView',
+          params: {...message},
+          merge: true,
+        });
+      }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
+      {messages.length > 0 ? convertedMessages : <EmptyListAnimation />}
     </ScrollView>
   );
 }

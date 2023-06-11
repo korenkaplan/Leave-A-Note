@@ -6,8 +6,8 @@ import Homepage from '../pages/Homepage';
 import Inbox from '../pages/Inbox';
 import Profile from '../pages/Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import AccidentsHistory from '../pages/profilePages/AccidentsHistory';
 import NoteView from '../pages/NotesAndReports/NoteView';
+import ReportView from '../pages/NotesAndReports/ReportView'
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
@@ -48,6 +48,7 @@ export default function BottomTabs() {
  <Stack.Navigator initialRouteName="Tabs" screenOptions={{ headerShown: false }}>
   <Stack.Screen name='Tabs' component={TabNavigator}/>
   <Stack.Screen name="NoteView" component={NoteView} />
+  <Stack.Screen name="ReportView" component={ReportView} />
  </Stack.Navigator>
   )
 }
