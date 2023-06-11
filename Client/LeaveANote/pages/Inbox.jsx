@@ -65,7 +65,7 @@ export default function Inbox({ navigation }) {
                size={64}
                rounded
                icon={{ name:'document-outline', type: 'ionicon' }}
-               containerStyle={{ backgroundColor:'lightblue'}}
+               containerStyle={{ backgroundColor:'lightgray'}}
              />
              <ListItem.Content>
                <ListItem.Title>{message.hittingDriver.name}</ListItem.Title>
@@ -100,15 +100,11 @@ export default function Inbox({ navigation }) {
      //create a function to handle the press of a message
      const handlePress = (message, index) => {
       //todo check if the message is a note or a report
-      if(message.type === 'note')
-      {
-        //move to view the message
-       moveToNoteView(message)
-      }
-      else{
-        moveToReportView(message)
-      }
-      
+      navigation.navigate({
+        name: message.type ==='note'? 'NoteView': 'ReportView',
+        params: {...message},
+        merge: true,
+      });
        //delete message from the message list
        handleDelete(index)
      }
@@ -119,25 +115,7 @@ export default function Inbox({ navigation }) {
       updatedMessages.splice(index,1)
       setMessages(updatedMessages)
     };
-     //create a function to move to a view of a message on press 
-     const moveToNoteView = (message) => {
-      navigation.navigate({
-        name: 'NoteView',
-        params: {...message},
-        merge: true,
-      }
-      );
 
-      
-    };
-     //create a funtion to move to a view of a report on press
-     const moveToReportView = (message) => {
-          navigation.navigate({
-            name: 'ReportView',
-            params: {...message},
-            merge: true,
-          });
-        }
     //check if the message list is empty or not and dispaly the list or animation
     const renderContent = () => {
       if (messages.length > 0) {
