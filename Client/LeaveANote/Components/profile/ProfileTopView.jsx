@@ -6,20 +6,7 @@ export default function ProfileTopView() {
   return (
     <View  style={styles.topView} >
     <ProfileLogoTop />
-    {/* <View style={styles.topInfo}>
-      <View>
-      <Icon
-    name='person' />
-      <Text>Koren Kaplan</Text>
-      </View>
-      <View>
-      <Icon
-  name='car'
-  type='ionicon' />
-      <Text>8333368</Text>
-      </View>
-    </View>
-    <Divider width={5} /> */}
+
    </View>
   )
 }

@@ -8,36 +8,28 @@ export default function AccidentsHistory() {
   const navigation = useNavigation();
   const [accidents, setAccidentst] = useState([
     {
-      key: '1',
-      hittingDriver: 'koren kaplan',
+      id: '1',
+      hittingDriver:{
+        name:'Koren Kaplan',
+        carNumber:'8333368',
+        phoneNumber:'0533406789',
+      },
       date: '02/12/2023',
-      type: 'note',
-    },
-    {
-      key: '2',
-      hittingDriver: '83-333-68',
-      date: '03/12/2023',
-      type: 'report',
-    },
-    {
-      key: '3',
-      hittingDriver: 'Ravid kaplan',
-      date: '02/12/2023',
-      type: 'report',
-    },
-    {
-      key: '4',
-      hittingDriver: '83-222-68',
-      date: '03/12/2023',
-      type: 'report',
+      type: 'Note',
+      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg'
     },
   ]);
-  const handleInfoPress = item => {
-
-    //ToDO: create a 
-    console.log(item);
-    navigation.navigate('Home', {item});
+  const handleInfoPress = (item) => {
+    //ToDO: check if note or report
+    navigation.navigate({
+      name: 'NoteView',
+      params: {...item},
+      merge: true,
+    }
+    );
   };
+
+
   const handleDelete = index => {
     //TODO: delete frm database
     // Create a copy of the accidents array
@@ -54,7 +46,7 @@ export default function AccidentsHistory() {
     return (
       <ListItem.Swipeable
         bottomDivider
-        key={item.key}
+        key={item.id}
         style={{backgroundColor: 'gray'}}
         leftContent={reset => (
           <Button
@@ -79,7 +71,7 @@ export default function AccidentsHistory() {
           containerStyle={{ backgroundColor:item.type === 'report'?'lightblue':'lightgray' }}
         />
         <ListItem.Content>
-          <ListItem.Title>{item.hittingDriver}</ListItem.Title>
+          <ListItem.Title>{item.hittingDriver.name}</ListItem.Title>
           <ListItem.Subtitle>{item.date}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />

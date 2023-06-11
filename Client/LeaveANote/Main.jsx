@@ -8,7 +8,7 @@ import { Camera } from 'react-native-vision-camera';
 export default function Main() {
   const {authenticated} = useContext(MainContext);
 useEffect(() => {
-  checkPermission();
+checkPermission();
 
 
 }, [])

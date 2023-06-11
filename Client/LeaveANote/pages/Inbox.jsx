@@ -3,88 +3,30 @@ import React,{useState} from 'react';
 import Header from '../Components/uiComponents/Header';
 import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
 import { ListItem,Avatar} from '@rneui/themed';
-export default function Inbox() {
+import NoteView from './NotesAndReports/NoteView';
+
+export default function Inbox({ navigation }) {
   //a temporary state containing the list of items,
   //TODO get messages from the server 
   const [messages, setMessages] = useState([
     {
-      key: '1',
-      hittingDriver: 'koren kaplan',
+      id: '1',
+      hittingDriver:{
+        name:'Koren Kaplan',
+        carNumber:'8333368',
+        phoneNumber:'0533406789',
+      },
       date: '02/12/2023',
-      type: 'note',
+      type: 'Note',
+      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg'
     },
-    {
-      key: '2',
-      hittingDriver: '83-333-68',
-      date: '03/12/2023',
-      type: 'report',
-    },
-    {
-      key: '3',
-      hittingDriver: 'Ravid kaplan',
-      date: '02/12/2023',
-      type: 'report',
-    },
-    {
-      key: '4',
-      hittingDriver: '83-222-68',
-      date: '03/12/2023',
-      type: 'report',
-    },
-    {
-      key: 'q',
-      hittingDriver: 'koren kaplan',
-      date: '02/12/2023',
-      type: 'note',
-    },
-    {
-      key: 'w',
-      hittingDriver: '83-333-68',
-      date: '03/12/2023',
-      type: 'report',
-    },
-    {
-      key: 'e',
-      hittingDriver: 'Ravid kaplan',
-      date: '02/12/2023',
-      type: 'report',
-    },
-    {
-      key: 'r',
-      hittingDriver: '83-222-68',
-      date: '03/12/2023',
-      type: 'report',
-    },
-    {
-      key: 't',
-      hittingDriver: 'koren kaplan',
-      date: '02/12/2023',
-      type: 'note',
-    },
-    {
-      key: 'y',
-      hittingDriver: '83-333-68',
-      date: '03/12/2023',
-      type: 'report',
-    },
-    {
-      key: 'u',
-      hittingDriver: 'Ravid kaplan',
-      date: '02/12/2023',
-      type: 'report',
-    },
-    {
-      key: 'a',
-      hittingDriver: '83-222-68',
-      date: '03/12/2023',
-      type: 'report',
-    },
+ 
   ])
 
-  //convert objects from database to list items
-  const convertedMessages = messages.map((message,index) => {
+     //convert objects from database to list items
+     const convertedMessages = messages.map((message,index) => {
     return (
-     <TouchableOpacity  key={message.key} onPress={()=>console.log(message)}>
+     <TouchableOpacity onPress={()=> {handlePress(message,index)}}  key={message.id} >
        <ListItem  bottomDivider>
        <Avatar
           size={64}
@@ -93,7 +35,7 @@ export default function Inbox() {
           containerStyle={{ backgroundColor: message.type === 'report'? 'lightblue' : 'lightgray'}}
         />
         <ListItem.Content>
-          <ListItem.Title>{message.hittingDriver}</ListItem.Title>
+          <ListItem.Title>{message.hittingDriver.name}</ListItem.Title>
           <ListItem.Subtitle>{message.date}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
@@ -103,16 +45,15 @@ export default function Inbox() {
     )
     
      });
-
      //create a function to handle the press of a message
      const handlePress = (message, index) => {
+      //todo check if the message is a note or a report
        //move to view the message
        moveToNoteView(message)
-      //delete message from the message list
-      handleDelete(index)
-     
-
+       //delete message from the message list
+       handleDelete(index)
      }
+     //create a function to delete the message from the message list
      const handleDelete = index => {
       //TODO: delete frm database
       let updatedMessages = [...messages]
@@ -130,13 +71,22 @@ export default function Inbox() {
      
       
     };
-    
+    //check if the message list is empty or not and dispaly the list or animation
+    const renderContent = () => {
+      if (messages.length > 0) {
+        return (
+          <ScrollView style={styles.scroll}>
+            {convertedMessages}
+          </ScrollView>
+        );
+      } else {
+        return <EmptyAnimationInbox />;
+      }
+    };
        return (
     <View style={styles.container}>
-      <Header style={styles.header} dividerColor='black' backgroundColor='lightblue' text='Inbox'/>
-      <ScrollView style={styles.scroll}>
-        { messages.length > 0 ? convertedMessages :<EmptyAnimationInbox/>}
-      </ScrollView>
+      <Header dividerColor='black' backgroundColor='lightblue' text='Inbox'/>
+      {renderContent()}
     </View>
   );
 }
@@ -149,6 +99,6 @@ const styles = StyleSheet.create({
   scroll:{
     flexGrow: 1,
     padding: 10,
-    backgroundColor: 'white',
-  }
+  },
+
 });
