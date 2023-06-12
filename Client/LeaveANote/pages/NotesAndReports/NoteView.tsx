@@ -4,6 +4,7 @@ import React from 'react';
 import {View, StyleSheet, Linking} from 'react-native';
 import { Image, ListItem,Icon } from '@rneui/themed';
 import { Button } from 'native-base';
+import { number } from 'yup';
 
 interface NoteProps {
   route: {
@@ -23,6 +24,8 @@ interface NoteProps {
 
 const NoteView: React.FC<NoteProps> = ( {route}) => {
   //const message = navigation.getParam('message','no message');
+
+  
   const {
     date,
     hittingDriver,

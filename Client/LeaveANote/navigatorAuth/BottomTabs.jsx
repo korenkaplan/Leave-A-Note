@@ -8,13 +8,16 @@ import Profile from '../pages/Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import NoteView from '../pages/NotesAndReports/NoteView';
 import ReportView from '../pages/NotesAndReports/ReportView'
+import CreateReport from '../pages/NotesAndReports/CreateReport';
+import CreateNote from '../pages/NotesAndReports/CreateNote';
+import CameraComp from '../Components/CameraComp';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
 
  function TabNavigator () {
   return(
-    <Tab.Navigator initialRouteName='Inbox'
+    <Tab.Navigator initialRouteName='Home'
     screenOptions={{
       headerShown: false,
       tabBarShowLabel: true,
@@ -22,9 +25,13 @@ export default function BottomTabs() {
      >
       <Tab.Screen  name ='Home' component={Homepage}
       options={{
+
         tabBarIcon:({color, size}) =>(
           <Ionicons name="home-outline" color ={color} size={size}/>
         )
+        // ,headerLeft:()=><Ionicons name="exit" color={color} size={size}/>
+
+        
       }}
       />
       <Tab.Screen name ='Inbox' component={Inbox}
@@ -53,6 +60,7 @@ export default function BottomTabs() {
   return (
  <Stack.Navigator initialRouteName="Tabs" screenOptions={{ headerShown: false }}>
   <Stack.Screen name='Tabs' component={TabNavigator}/>
+  
   <Stack.Screen name="NoteView" component={NoteView} options={{
     title:'Note',
     headerShown:true,
@@ -67,6 +75,21 @@ export default function BottomTabs() {
     headerTitleStyle: styles.title,
     headerTintColor:'white'
   }} />
+  <Stack.Screen name="CreateReport" component={CreateReport} options={{
+    title:'New Report',
+    headerShown:true,
+    headerStyle:styles.header,
+    headerTitleStyle: styles.title,
+    headerTintColor:'white'
+  }} />
+  <Stack.Screen name="CreateNote" component={CreateNote} options={{
+    title:'New Note',
+    headerShown:true,
+    headerStyle:styles.header,
+    headerTitleStyle: styles.title,
+    headerTintColor:'white'
+  }} />
+  <Stack.Screen name="CameraComp" component={CameraComp} />
  </Stack.Navigator>
   )
 }
@@ -80,4 +103,4 @@ const styles = StyleSheet.create({
   backIcon:{
     headerTintColor:'white'
   }
-});
+}); 

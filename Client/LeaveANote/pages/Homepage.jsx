@@ -1,5 +1,6 @@
 import {View, StyleSheet, Dimensions, ActivityIndicator} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState,useContext} from 'react';
+import { MainContext } from '../context/ContextProvider';
 import {Heading} from 'native-base';
 import Logo from '../assets/note-taking.svg';
 import {Button} from '@rneui/themed';
@@ -11,8 +12,8 @@ export default function Homepage({navigation}) {
   const windowHeight = Dimensions.get('window').height;
   const width = (windowWidth * widthPercent) / 100;
   const height = (windowHeight * heightPercent) / 100;
-
-  const [searchValue, setSearchValue] = useState('');
+  const {setCarNumInput} = useContext(MainContext);
+  const [searchValue, setSearchValue] = useState('8333368');
   const [error, setError] = useState('');
   const [iconName, setIconName] = useState('search');
   const [isNumberValid, setIsNumberValid] = useState(false);
@@ -82,9 +83,21 @@ export default function Homepage({navigation}) {
         setError('Car number not found');
         setIsNumberValid(false);
       }
-    }, 2000); // Replace 2000 with the actual duration of your asynchronous operation
+    }, 1500); // Replace 2000 with the actual duration of your asynchronous operation
   };
 
+  const moveToNotePage = ()=>{
+    setCarNumInput(searchValue);
+    navigation.navigate({
+      name: 'CreateNote',
+      params:{'carNumber': searchValue}
+    });
+    //setSearchValue('');
+  }
+  const moveToReportPage = ()=>{
+    navigation.navigate('CreateReport',searchValue);
+    setSearchValue('');
+  }
   return (
     <View flex={1} style={styles.container}>
       <Logo width={width} height={height} />
@@ -103,12 +116,14 @@ export default function Homepage({navigation}) {
         containerStyle={styles.button}
         disabled={!isNumberValid}
         size="sm"
+        onPress={moveToNotePage}
         title="Leave a Note"
       />
       <Button
         containerStyle={styles.button}
         size="sm"
         title="Report"
+        onPress={moveToReportPage}
         type="outline"
       />
     </View>
