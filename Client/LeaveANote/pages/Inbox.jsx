@@ -162,7 +162,6 @@ export default function Inbox({ navigation }) {
     };
        return (
     <View style={styles.container}>
-      <Header dividerColor='black' backgroundColor='lightblue' text='Inbox'/>
       {renderContent()}
     </View>
   );

@@ -31,8 +31,14 @@ export default function BottomTabs() {
         options={{
           tabBarIcon:({color, size}) =>(
             <Ionicons name="mail-outline" color ={color} size={size}/>
-          )
+          ),
+          title:'Inbox',
+    headerShown:true,
+    headerStyle:styles.header,
+    headerTitleStyle:styles.title,
+    headerTintColor:'white'
         }}
+     
       />
       <Tab.Screen name ='Profile' component={Profile}
         options={{
@@ -50,27 +56,15 @@ export default function BottomTabs() {
   <Stack.Screen name="NoteView" component={NoteView} options={{
     title:'Note',
     headerShown:true,
-    headerStyle:{
-      backgroundColor: '#3b5998',
-    },
-    headerTitleStyle: {
-      textAlign: 'center',
-      color: 'white',
-      textAlign: 'center',
-    },
+    headerStyle:styles.header,
+    headerTitleStyle:styles.title,
     headerTintColor:'white'
   }}/>
   <Stack.Screen name="ReportView" component={ReportView} options={{
     title:'Report',
     headerShown:true,
-    headerStyle:{
-      backgroundColor: '#3b5998',
-    },
-    headerTitleStyle: {
-      textAlign: 'center',
-      color: 'white',
-      textAlign: 'center',
-    },
+    headerStyle:styles.header,
+    headerTitleStyle: styles.title,
     headerTintColor:'white'
   }} />
  </Stack.Navigator>
@@ -78,15 +72,12 @@ export default function BottomTabs() {
 }
 const styles = StyleSheet.create({
   header: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#3b5998',
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'blue',
-    textAlign: 'center',
+    color: 'white',
   },
+  backIcon:{
+    headerTintColor:'white'
+  }
 });

@@ -6,7 +6,6 @@ export default function Profile({ navigation }) {
 
   return (
     <View style ={styles.container}>
-      {/* <ProfileTopView/> */}
       <View style={{flex: 9, }}>
      <ProfileTabView />
       </View>
