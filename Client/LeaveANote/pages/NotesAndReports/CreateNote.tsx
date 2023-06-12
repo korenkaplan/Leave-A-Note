@@ -44,7 +44,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
    ]); } 
  
  
-const handleSubmit = async ():void =>{
+const handleSubmit = async ():Promise<void> =>{
   try
   {
       // send to context function the image url
