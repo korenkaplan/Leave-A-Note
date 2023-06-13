@@ -3,6 +3,7 @@ import React,{useState} from 'react'
 import { Input, Icon,Button } from '@rneui/themed';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import {passwordSchema,} from '../../utils/validation/validationSchemas'
 export default function EditPassword() {
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true)
   const [newPasswordSecure, setNewPasswordSecure] = useState(true)
@@ -12,10 +13,8 @@ export default function EditPassword() {
 
  
   const validationSchema = Yup.object().shape({
-    currentPassword: Yup.string().required('Current password is required'),
-    newPassword: Yup.string()
-      .required('New password is required')
-      .min(8, 'New password must be at least 8 characters long'),
+    currentPassword: passwordSchema,
+    newPassword: passwordSchema,
     repeatPassword: Yup.string()
       .required('Repeat password is required')
       .oneOf([Yup.ref('newPassword')], 'Passwords must match')

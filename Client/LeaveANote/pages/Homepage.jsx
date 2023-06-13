@@ -12,7 +12,7 @@ export default function Homepage({navigation}) {
   const windowHeight = Dimensions.get('window').height;
   const width = (windowWidth * widthPercent) / 100;
   const height = (windowHeight * heightPercent) / 100;
-  const {setCarNumInput} = useContext(MainContext);
+  const {setCarNumInput, searchCarNumber, setDamagedUserId} = useContext(MainContext);
   const [searchValue, setSearchValue] = useState('8333368');
   const [error, setError] = useState('');
   const [iconName, setIconName] = useState('search');
@@ -75,7 +75,8 @@ export default function Homepage({navigation}) {
     setTimeout(() => {
       setIsLoading(false); // Set loading state to false after the operation completes
 
-      if (searchValue === '8333368') {
+      const resultUserID = searchCarNumber(searchValue);
+      if (resultUserID) {
         setIconName('check');
         setIsNumberValid(true);
       } else {
@@ -90,7 +91,7 @@ export default function Homepage({navigation}) {
     setCarNumInput(searchValue);
     navigation.navigate({
       name: 'CreateNote',
-      params:{'carNumber': searchValue}
+      params:{'carNumber': searchValue,}
     });
     //setSearchValue('');
   }

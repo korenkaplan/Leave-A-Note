@@ -9,7 +9,6 @@ import { Chip, CheckBox  } from '@rneui/themed';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
 interface Params {
-  carNumber: string;
   image: string;
 }
 
@@ -20,14 +19,16 @@ interface Props {
 
 const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
-  const { carNumber, image } = route.params;
-  const { carNumInput,submitReport} = useContext(MainContext);
+  const { image } = route.params;
+  const { setCarNumInput,submitReport} = useContext(MainContext);
   //states
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true); // toggle Submit btn if an image is taken.
   const [isChecked, setIsChecked] = useState<boolean>(false); // toggle the checkbox value
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'); // the image source starts with en empty iamge
   const enum Size {AvatarBig = 250, AvatarSmall =150,AvatarAccessoryBig =60, AvatarAccessorySmall =40};// enum for sizes of the avatar when the keyboard is open / closed
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false); // holds the boolean value if the keyboard is open or not
+
+  // create the schema for a new report object
   type Report ={
     imageUrl: string,
     damagedCarNumber: string,
@@ -35,6 +36,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
     date: string,
     isAnonymous: boolean,
   }
+  // create the schema for the values object of formik
   type Values = {
     damagedCarNumber: string,
     hittingCarNumber: string,
@@ -100,6 +102,9 @@ const handleFormSubmit = async (values: Values,{ resetForm }):Promise<void> =>{
     resetForm();
     //show alert
     createTwoButtonAlert(values.damagedCarNumber);
+
+    //reset car number in context and clear fields
+    setCarNumInput('');
   }
    catch (error: any) {
     console.log(error.message);
@@ -141,7 +146,7 @@ const validationSchema = Yup.object().shape({
       <Divider style={styles.divider}/>
       <View style={styles.bottomContainer}>
         <Formik
-        initialValues={{damagedCarNumber: carNumber, hittingCarNumber: ''}}
+        initialValues={{damagedCarNumber: '', hittingCarNumber: ''}}
         validationSchema={validationSchema}
         onSubmit={handleFormSubmit}
         >
@@ -152,6 +157,7 @@ const validationSchema = Yup.object().shape({
             value={values.damagedCarNumber}
             leftIcon={{type:'ionicon', name: 'car'}}
             placeholder="Enter Damaged Car Number"
+            keyboardType="numeric"
 
           />
           {errors.damagedCarNumber && <Text style={styles.error}>{errors.damagedCarNumber}</Text>}
@@ -161,6 +167,8 @@ const validationSchema = Yup.object().shape({
             value={values.hittingCarNumber}
             leftIcon={{type:'ionicon', name: 'car'}}
             placeholder="Enter Hitting Car Number"
+            keyboardType="numeric"
+
           />
           {errors.hittingCarNumber && <Text style={styles.error}>{errors.hittingCarNumber}</Text>}
           <CheckBox

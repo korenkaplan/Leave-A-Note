@@ -4,14 +4,15 @@ import { Input, Icon,Button } from '@rneui/themed';
 import {MainContext} from '../../context/ContextProvider'
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import {fullNameSchema,carNumberSchema, phoneNumberSchema, emailSchema} from '../../utils/validation/validationSchemas'
 export default function EditInfo() {
   const validationSchema = Yup.object().shape({
-    fullname: Yup.string().required('fullname is required').min(1,'Name must be have at least one letter'),
-    carNum: Yup.string().required('Car number is required').matches(/^[0-9]{7,8}$/, 'Invalid Car number'),
-    phoneNumber: Yup.string().required('Phone number is required').matches(/^05[0-5][0-9]{7}$/, 'Invalid phone number'),
-    email: Yup.string().required('Email is required').email('Invalid Email address'),
+    fullname:fullNameSchema,
+    carNum: carNumberSchema,
+    phoneNumber:phoneNumberSchema,
+    email: emailSchema,
   });
-  const {loggedUser} = useContext(MainContext);
+  const {currentUser} = useContext(MainContext);
 
   const handleFormSubmit = (values, { resetForm }) => {
     //TODO: update user information in database
@@ -24,7 +25,7 @@ export default function EditInfo() {
   return (
     <View style={styles.container}>
       <Formik
-      initialValues={{fullname: loggedUser.fullname, carNum: loggedUser.carNum, phoneNumber: loggedUser.phoneNumber,email: loggedUser.email}}
+      initialValues={{fullname: currentUser.fullname, carNum: currentUser.carNum, phoneNumber:currentUser.phoneNumber,email:currentUser.email}}
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}>
         {({handleChange, handleSubmit, values, errors,resetForm}) => (

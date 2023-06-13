@@ -21,6 +21,12 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const { carNumInput,submitNote} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
+
+  type Note ={
+    damagedCarNumber: string,
+    imageSource: string,
+    date: string,
+  }
   useEffect(() => {
     if (image) {
       setImgSource(image);
@@ -47,8 +53,13 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
 const handleSubmit = async ():Promise<void> =>{
   try
   {
+    let note: Note = {
+      damagedCarNumber: carNumInput,
+      imageSource: imgSource,
+      date: new Date().toLocaleDateString('en-GB'),
+    }
       // send to context function the image url
-  await submitNote(imgSource);
+  await submitNote(note);
   //show dialog
   createTwoButtonAlert();
   }

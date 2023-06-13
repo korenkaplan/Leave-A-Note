@@ -1,9 +1,7 @@
 import {View, Text,StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import React,{useState} from 'react';
-import Header from '../Components/uiComponents/Header';
 import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
 import { ListItem,Avatar} from '@rneui/themed';
-import NoteView from './NotesAndReports/NoteView';
 
 export default function Inbox({ navigation }) {
   //a temporary state containing the list of items,
