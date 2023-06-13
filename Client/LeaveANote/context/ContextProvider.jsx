@@ -23,6 +23,7 @@ export default function MainContextProvider({children}) {
   };
   const submitReport = report => {
     //TODO implement submit note to database
+    console.log(report);
     console.log('submit report from context');
   };
   const value = {
