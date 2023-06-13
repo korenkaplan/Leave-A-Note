@@ -7,6 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Button, Input, Text, CheckBox  } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import { emailSchema, passwordSchema, phoneNumberSchema,carNumberSchema,fullNameSchema } from '../utils/validation/validationSchemas';
+import DividerWithText from '../Components/uiComponents/DividerWithText';
 interface SignUpFormValues {
   email: string;
   password: string;
@@ -130,6 +131,9 @@ const {signupAttempt} = useContext(MainContext);
           </>
         )}
       </Formik>
+      <DividerWithText text="Already Have An Account ?"/>
+      <Button title="Sign in" type="outline" onPress={() => navigation.navigate('Login')} />
+      
       </ScrollView>
     </View>
   );

@@ -1,10 +1,10 @@
-import {View, StyleSheet, Dimensions, ActivityIndicator} from 'react-native';
+import {View, StyleSheet, Dimensions, ActivityIndicator,Alert} from 'react-native';
 import React, {useState,useContext} from 'react';
 import { MainContext } from '../context/ContextProvider';
 import {Heading} from 'native-base';
 import Logo from '../assets/note-taking.svg';
 import {Button} from '@rneui/themed';
-import {Input, Icon} from '@rneui/themed';
+import {Input, Icon, Chip } from '@rneui/themed';
 export default function Homepage({navigation}) {
   const widthPercent = 100;
   const heightPercent = 30;
@@ -12,7 +12,7 @@ export default function Homepage({navigation}) {
   const windowHeight = Dimensions.get('window').height;
   const width = (windowWidth * widthPercent) / 100;
   const height = (windowHeight * heightPercent) / 100;
-  const {setCarNumInput, searchCarNumber, setDamagedUserId} = useContext(MainContext);
+  const {setCarNumInput, searchCarNumber, setDamagedUserId,handleLogOut} = useContext(MainContext);
   const [searchValue, setSearchValue] = useState('8333368');
   const [error, setError] = useState('');
   const [iconName, setIconName] = useState('search');
@@ -99,8 +99,38 @@ export default function Homepage({navigation}) {
     navigation.navigate('CreateReport',searchValue);
     setSearchValue('');
   }
+  const createTwoButtonAlert = () =>
+  Alert.alert(
+    'Are you sure you want to Sign out?',
+    '',
+    [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Sign Out',
+        onPress: () => handleLogOut(),
+        style: 'destructive', // Custom style for the "Sign Out" button
+      },
+    ],
+    {
+      titleStyle: { fontSize: 24, fontWeight: 'bold', color: 'red' }, // Custom style for the alert title
+      messageStyle: { fontSize: 16, color: 'blue' }, // Custom style for the alert message
+      buttonStyle: { backgroundColor: 'orange' }, // Custom style for the buttons
+    }
+  );
+
   return (
-    <View flex={1} style={styles.container}>
+    <View >
+       <Icon
+        raised
+        name='log-out-outline'
+        type='ionicon'
+        color='#f50'
+        style={styles.logoutIcon}
+        onPress={()=> createTwoButtonAlert()} />
+        <View style={styles.container}>
       <Logo width={width} height={height} />
       <Heading>Leave A Note</Heading>
       <View style={styles.searchContainer}>
@@ -128,15 +158,19 @@ export default function Homepage({navigation}) {
         type="outline"
       />
     </View>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
+
   button: {
     width: '50%',
     margin: 20,
   },
   container: {
+    justifyContent: 'center',
     alignItems: 'center',
   },
   searchContainer: {

@@ -1,90 +1,18 @@
 import {View, Text,StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
-import React,{useState} from 'react';
+import React,{useState,useContext} from 'react';
 import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
 import { ListItem,Avatar} from '@rneui/themed';
-
+import { MainContext } from '../context/ContextProvider';
 export default function Inbox({ navigation }) {
   //a temporary state containing the list of items,
+  const {currentUser, setCurrentUser} = useContext(MainContext);
   //TODO get messages from the server 
-  const [messages, setMessages] = useState([
-    {
-      id: '1',
-      hittingDriver:{
-        name:'Koren Kaplan',
-        carNumber:'8333368',
-        phoneNumber:'0533406789',
-      },
-      date: '02/12/2023',
-      type: 'note',
-      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg'
-    },
-    {
-      id: '2',
-      hittingDriver:{
-        name:'Ofri Malka',
-        carNumber:'69354401',
-        phoneNumber:'0528942612',
-      },
-      reporter:{
-        name:'Koren Kaplan',
-        phoneNumber:'0533406789',
-      },
-      date: '04/12/2023',
-      type: 'report',
-      isAnonymous:true,
-      isIdentify:true,
-      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg'
-    },
-    {
-      id: '3',
-      hittingDriver:{
-        carNumber:'8333368',
-      },
-      reporter:{
-        name:'Koren Kaplan',
-        phoneNumber:'0533406789',
-      },
-      date: '03/12/2023',
-      type: 'report',
-      isAnonymous:false,
-      isIdentify:false,
-      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-2.jpg'
-    },
-    {
-      id: '4',
-      hittingDriver:{
-        name:'Ofri Malka',
-        carNumber:'69354401',
-        phoneNumber:'0528942612',
-      },
-      reporter:{
-        name:'Koren Kaplan',
-        phoneNumber:'0533406789',
-      },
-      date: '04/12/2023',
-      type: 'report',
-      isAnonymous:false,
-      isIdentify:true,
-      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467044/cld-sample.jpg'
-    },
-    {
-      id: '5',
-      hittingDriver:{
-        carNumber:'8333368',
-      },
-      reporter:{
-        name:'Koren Kaplan',
-        phoneNumber:'0533406789',
-      },
-      date: '03/12/2023',
-      type: 'report',
-      isAnonymous:true,
-      isIdentify:false,
-      imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467034/samples/landscapes/nature-mountains.jpg'
-    },
-  ])
+  const [messages, setMessages] = useState(currentUser.unreadMessages);
+
+  
+ 
      //convert objects from database to list items
-     const convertedMessages = messages.map((message,index) => {
+     const convertedMessages = currentUser.unreadMessages.map((message,index) => {
       //if the message is of type note 
       if(message.type === 'note')
       {
@@ -139,12 +67,19 @@ export default function Inbox({ navigation }) {
        handleDelete(index)
      }
      //create a function to delete the message from the message list
-     const handleDelete = index => {
-      //TODO: delete frm database
-      let updatedMessages = [...messages]
-      updatedMessages.splice(index,1)
-      setMessages(updatedMessages)
+     const handleDelete = (index) => {
+      // Remove the message from the message list
+      const updatedMessages = [...messages];
+      updatedMessages.splice(index, 1);
+      setMessages(updatedMessages);
+    
+      // Update the currentUser state
+      setCurrentUser((prevUser) => ({
+        ...prevUser,
+        unreadMessages: updatedMessages,
+      }));
     };
+    
 
     //check if the message list is empty or not and dispaly the list or animation
     const renderContent = () => {
