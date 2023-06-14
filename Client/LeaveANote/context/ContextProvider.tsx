@@ -1,19 +1,27 @@
 /* eslint-disable prettier/prettier */
 import React, { createContext, useState, ReactNode} from 'react';
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import {storage} from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { string } from 'yup';
 interface User {
+  id:string;
   fullname: string;
   email: string;
   phoneNumber: string;
   carNum: string;
-  unreadMessages: Array<Message | ReportInbox >;
+  unreadMessages: Array<NoteInbox | ReportInbox >;
+  notes: NoteInbox[];
+  reports: ReportInbox[];
+
 }
 interface ReportInbox {
   id: string;
   hittingDriver:{
-    name: string;
+    name?: string;
     carNumber: string;
-    phoneNumber: string;
+    phoneNumber?: string;
   },
   reporter:{
     name: string;
@@ -40,12 +48,12 @@ interface Note {
 interface SignUpFormValues {
   email: string;
   password: string;
-  repeatPassword: string;
+  repeatpassword: string;
   phoneNumber: string;
   carNumber: string;
   fullName: string;
 }
-interface Message {
+interface NoteInbox {
   id: string;
   hittingDriver:{
     name?: string;
@@ -69,11 +77,21 @@ interface MainContextType {
   setDamagedUserId: React.Dispatch<React.SetStateAction<string>>;
   submitNote: (note: Note) => Promise<void>;
   submitReport: (report: Report) => Promise<void>;
-  uploadImageToCloudinary: (imageSource: string) => Promise<string>;
   searchCarNumber: (carNumber: string) => Promise<boolean>;
-  loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<void>;
+  loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean | void>;
   signupAttempt: (newUser: SignUpFormValues) => Promise<number>;
   handleLogOut: () => Promise<void>;
+  getAllNotes: () => Promise<Note[]>;
+  getAllReports: () => Promise<Report[]>;
+  uploadPhotoToStorage: (uri:string) => Promise<string>;
+  updateUserInformation:(data: UserDataToUpdate) => Promise<boolean>;
+  updateUserPassword:(oldPassword: string, newPassword:string) => Promise<boolean>;
+}
+interface UserDataToUpdate{
+  fullname: string;
+  email: string;
+  phoneNumber: string;
+  carNum: string;
 }
 export const MainContext = createContext<MainContextType>({} as MainContextType);
 
@@ -83,6 +101,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const [carNumInput, setCarNumInput] = useState<string>('');
   const [damagedUserId, setDamagedUserId] = useState<string>('');
   const [currentUser, setCurrentUser] = useState<User>({
+    id:'1',
     fullname: 'test name',
     email: 'testemail@gmail.com',
     phoneNumber: '0533406789',
@@ -99,6 +118,10 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
         type: 'note',
         imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg',
       },
+ 
+    ],
+    notes:[],
+    reports:[
       {
         id: '2',
         hittingDriver: {
@@ -165,46 +188,80 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       },
     ],
   });
+ 
+
+const api: AxiosInstance = axios.create({
+  baseURL: 'https://api.example.com', // Set your base URL
+  // You can also configure other Axios options here
+});
+const uploadPhotoToStorage = async (uri:string): Promise<string> => {
+  const timestamp: string = Date.now().toString();
+  const photoRef = ref(storage, `photos/${carNumInput}/${timestamp}`); 
+
+  try {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    // Upload the blob to Firebase Storage
+    const snapshot = await uploadBytes(photoRef, blob);
+
+    // Get the download URL of the uploaded photo
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    console.log('Photo uploaded successfully. Download URL:', downloadURL);
+    return downloadURL;
+  } catch (error:any) {
+    console.error('Error uploading photo:', error);
+    return error.message;
+  }
+};
   const handleLogOut = async (): Promise<void> => {
     await AsyncStorage.removeItem('connectedUser');
     setAuthenticated(false);
   };
   //search a user's car number
   const searchCarNumber = async (carNumber: string): Promise<boolean> => {
-    // Todo: check car number in the database
-    let userIdFromDb: string | undefined = 'user-id'; // send request to database get back the id of the user if found
-    if (userIdFromDb) {
-      setDamagedUserId(userIdFromDb);
-      return true;
-    }
+    try {
+      // const response = await api.get(`/users/getByCarNumber/${carNumber}`);
+      // const user = response.data;
 
-    else
-      {return false;}
+      // if (user) {
+      //   setDamagedUserId(user.id); // Assuming the user object has an 'id' property
+      //   return true;
+      // } else {
+      //   return false;
+      // }
+      if(carNumber === '8333368')
+      return true;
+      else
+      return false
+    } catch (error) {
+      console.error('Error searching car number:', error);
+      throw new Error('An error occurred while searching the car number.');
+    }
   };
   //submit a new note
   const submitNote = async (note: Note): Promise<void> => {
     // find the user by the car number provided in the note.
-    // create a new note with the following schema: hittingDriver == logged user
-    // date: string;
-    // hittingDriver: {
-    //   name: string;
-    //   carNumber: string;
-    //   phoneNumber: string;
-    // };
-    // type: string;
-    // imageSource: string;
+   // const response = await api.post(`/notes/addNote/${damagedUserId}`,note);
     // TODO: implement submit note to database
     console.log(note);
   };
   //submit a new report
   const submitReport = async (report: Report): Promise<void> => {
     // TODO: implement submit note to database
+   // const response = await api.post(`/reports/addReport/${damagedUserId}`,note);
     console.log(report);
     console.log('submit report from context');
   };
   //try to login
-  const loginAttempt = async (email: string, password: string, rememberMeValue: boolean): Promise<void> => {
-    //set the connect user in the async storage with a token
+  const loginAttempt = async (email: string, password: string, rememberMeValue: boolean): Promise<boolean | void> => {
+    // const loginData = {
+    //   email,
+    //   password,
+    // };
+    // const response = await api.post(`/users/login`,loginData);
+    
     console.log(email, password, rememberMeValue);
 
     if (email === 'k@gmail.com' && password === '123456') {
@@ -213,7 +270,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
         //set the user token to the async storage
         await storeObject('connectedUser', { email, password });
       }
-      return;
+      return false;
     }
     setAuthenticated(false);
 
@@ -229,16 +286,78 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   };
   //sing up attempt
   const signupAttempt = async (newUser: SignUpFormValues): Promise<number> => {
-    //check if one of the following is already registered: phone number, email,car number
     //return: 0 -> success,1 -> phone number already in use, 2 -> email already in use, 3 -> car number already in use.
-    console.log(newUser);
-    return 0;
+    try {
+      const response: AxiosResponse<number> = await api.post('/users/signup', newUser);
+      // Assuming the response data is a number indicating the result
+      // Access the data from the response
+      const result: number = response.data;
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error('Error occurred during signup:', error);
+      throw new Error('An error occurred during signup.');
+    }
   };
-  //upload the image to cloudinary and get back the url
-  const uploadImageToCloudinary = async (imageSource: string): Promise<string> => {
-    console.log(imageSource);
+  //Get all notes from database
+  const getAllNotes = async(): Promise<Note[]>=>{
+    try {
+      const response = await api.get(`/users/all/notes/${currentUser.id}`);
+      const notes: Note[] = response.data;
+       return notes;
+
+    } catch (error) {
+      console.error('Error occurred during signup:', error);
+      throw new Error('An error occurred during signup.');
+    }
   };
-  
+    //Get all reports from database
+  const getAllReports = async(): Promise<Report[]>=>{
+      try {
+        const response = await api.get(`/users/all/reports/${currentUser.id}`);
+        const reports: Report[] = response.data;
+         return reports;
+      } catch (error) {
+        console.error('Error occurred during signup:', error);
+        throw new Error('An error occurred during signup.');
+      }
+    };
+  //update user information
+  const updateUserInformation = async(data: UserDataToUpdate): Promise<boolean>=>{
+    try {
+      const response = await api.post<UserDataToUpdate>(`/users/update/${currentUser.id}`,data);
+      const updatedData = response.data;
+      if(updatedData !== null) {
+        setCurrentUser((prevUser: User)=>({
+          ...prevUser,
+          fullname: updatedData.fullname,
+          email: updatedData.email,
+          carNum: updatedData.carNum,
+          phoneNumber: updatedData.phoneNumber,
+      }));
+      return true;
+      }
+       return false;
+    } catch (error) {
+      console.error('Error occurred during signup:', error);
+      throw new Error('An error occurred during signup.');
+    }
+  };
+  // update the user password
+  const updateUserPassword = async(oldPassword: string, newPassword:string): Promise<boolean> =>{
+    const data = {
+      oldPassword,
+      newPassword,
+    }
+    try {
+      const response = await api.post(`/users/updatePassowrd`,data);
+      const isUpdated: boolean = response.data;
+      return isUpdated;
+    } catch (error) {
+      console.error('Error occurred during signup:', error);
+      throw new Error('An error occurred during signup.');
+    }
+  };
   const value: MainContextType = {
     authenticated,
     setAuthenticated,
@@ -255,11 +374,16 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     setCurrentUser,
     loginAttempt,
     signupAttempt,
-    uploadImageToCloudinary,
     handleLogOut,
+    getAllNotes,
+    getAllReports,
+    uploadPhotoToStorage,
+    updateUserInformation,
+    updateUserPassword,
   };
 
-  //https://api.cloudinary.com/v1_1/dz3brwyob
+  //create a function to delete a message from the messages
+
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 }
 

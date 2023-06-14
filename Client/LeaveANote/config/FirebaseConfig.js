@@ -1,4 +1,5 @@
 // Import the functions you need from the SDKs you need
+/* eslint-disable prettier/prettier */
 import {initializeApp} from 'firebase/app';
 import {getStorage, ref} from 'firebase/storage';
 import config from './index';

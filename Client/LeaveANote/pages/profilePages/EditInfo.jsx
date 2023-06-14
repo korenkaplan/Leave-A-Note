@@ -6,6 +6,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {fullNameSchema,carNumberSchema, phoneNumberSchema, emailSchema} from '../../utils/validation/validationSchemas'
 export default function EditInfo() {
+  const {} = useContext(MainContext);
   const validationSchema = Yup.object().shape({
     fullname:fullNameSchema,
     carNum: carNumberSchema,

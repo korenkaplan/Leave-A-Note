@@ -6,9 +6,6 @@ import {RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainContext } from '../../context/ContextProvider';
 import { Chip } from '@rneui/themed';
-import {storage} from '../../config/config';
-import config from '../../config';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 interface Params {
   carNumber: string;
   image: string;
@@ -21,10 +18,9 @@ interface Props {
 
 const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const { carNumber, image } = route.params;
-  const { carNumInput,submitNote} = useContext(MainContext);
+  const { carNumInput,submitNote, uploadPhotoToStorage} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
-  const [cloudSource, setCloudSource] = useState<string>('');
 
   type Note ={
     damagedCarNumber: string,
@@ -38,27 +34,6 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     }
   }, [image]);
 
-  const uploadPhotoToStorage = async (uri:string): Promise<string> => {
-    const timestamp: string = Date.now().toString();
-    const photoRef = ref(storage, `photos/${carNumInput}/${timestamp}`); 
-  
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-  
-      // Upload the blob to Firebase Storage
-      const snapshot = await uploadBytes(photoRef, blob);
-  
-      // Get the download URL of the uploaded photo
-      const downloadURL = await getDownloadURL(snapshot.ref);
-  
-      console.log('Photo uploaded successfully. Download URL:', downloadURL);
-      return downloadURL;
-    } catch (error:any) {
-      console.error('Error uploading photo:', error);
-      return error.message;
-    }
-  };
   const openCamera = ():void => {
     navigation.navigate({
       name:'CameraComp',

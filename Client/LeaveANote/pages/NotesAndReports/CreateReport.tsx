@@ -20,7 +20,7 @@ interface Props {
 const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
   const { image } = route.params;
-  const { setCarNumInput,submitReport} = useContext(MainContext);
+  const { setCarNumInput,submitReport,uploadPhotoToStorage} = useContext(MainContext);
   //states
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true); // toggle Submit btn if an image is taken.
   const [isChecked, setIsChecked] = useState<boolean>(false); // toggle the checkbox value
@@ -89,8 +89,9 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
  // handle the submit: cal function from context and show alert
 const handleFormSubmit = async (values: Values,{ resetForm }):Promise<void> =>{
   try {
+    const imageRef: string = await uploadPhotoToStorage(imgSource);
     let report: Report = {
-      imageUrl: imgSource,
+      imageUrl: imageRef,
       damagedCarNumber: values.damagedCarNumber,
       hittingCarNumber: values.hittingCarNumber,
       date: new Date().toLocaleDateString('en-GB'),

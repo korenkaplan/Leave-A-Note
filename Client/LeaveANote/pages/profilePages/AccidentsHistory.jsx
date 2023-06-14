@@ -1,11 +1,12 @@
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState,useContext} from 'react';
 import {ListItem, Avatar, Icon, Button} from '@rneui/themed';
 import EmptyListAnimation from '../../Components/accidentsHistory/EmptyListAnimation';
 import {useNavigation} from '@react-navigation/native';
-
+import { MainContext } from '../../context/ContextProvider';
 export default function AccidentsHistory() {
   const navigation = useNavigation();
+  const {currentUser, setCurrentUser} = useContext(MainContext);
   const [accidents, setAccidentst] = useState([
     {
       id: '1',
