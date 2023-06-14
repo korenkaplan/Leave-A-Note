@@ -13,6 +13,7 @@ import CreateNote from '../pages/NotesAndReports/CreateNote';
 import CameraComp from '../Components/CameraComp';
 import {Badge} from '@rneui/base';
 import {MainContext} from '../context/ContextProvider';
+import AccidentsHistory from '../pages/profilePages/AccidentsHistory';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
@@ -129,6 +130,7 @@ export default function BottomTabs() {
         }}
       />
       <Stack.Screen name="CameraComp" component={CameraComp} />
+      <Stack.Screen name="AccidentsHistory" component={AccidentsHistory} />
     </Stack.Navigator>
   );
 }

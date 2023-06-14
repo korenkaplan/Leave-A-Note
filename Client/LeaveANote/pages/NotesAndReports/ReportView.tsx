@@ -3,31 +3,22 @@ import React from 'react';
 import { View, StyleSheet,Linking } from 'react-native';
 import { Image, ListItem,Icon,Divider } from '@rneui/themed';
 import { Button } from 'native-base';
+import { Accident } from '../../utils/interfaces/interfaces';
+
 interface ComponentProps {
   // Define your component props here
-  route:{
-    params:{
-        id:string,
-        hittingDriver:{
-            name:string
-            carNumber:string
-            phoneNumber:string
-        }
-        date:string
-        type:string
-        imageSource:string
-        isAnonymous:boolean
-        isIdentify:boolean
-        reporter:{
-            name:string
-            phoneNumber:string
-        }
-    }
-  }
+  route:
+  {
+     params:
+       {
+         item: Accident;
+       };
+ };
 };
 
 const ReportView: React.FC<ComponentProps> = ({route}) => {
-    const {id, hittingDriver, date, type, imageSource,isAnonymous,isIdentify, reporter} = route.params;
+  const {item} = route.params;
+    const {hittingDriver, date, imageSource,isAnonymous,isIdentify, reporter} = item;
         //return the header of the page
   
       //return the image

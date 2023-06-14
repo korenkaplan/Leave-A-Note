@@ -8,9 +8,6 @@ export default function Inbox({ navigation }) {
   const {currentUser, setCurrentUser} = useContext(MainContext);
   //TODO get messages from the server 
   const [messages, setMessages] = useState(currentUser.unreadMessages);
-
-  
- 
      //convert objects from database to list items
      const convertedMessages = currentUser.unreadMessages.map((message,index) => {
       //if the message is of type note 
@@ -56,11 +53,11 @@ export default function Inbox({ navigation }) {
     }
      })
      //create a function to handle the press of a message
-     const handlePress = (message, index) => {
+     const handlePress = (item, index) => {
       //todo check if the message is a note or a report
       navigation.navigate({
-        name: message.type ==='note'? 'NoteView': 'ReportView',
-        params: {...message},
+        name: item.type ==='note'? 'NoteView': 'ReportView',
+        params: {item},
         merge: true,
       });
        //delete message from the message list
@@ -79,8 +76,6 @@ export default function Inbox({ navigation }) {
         unreadMessages: updatedMessages,
       }));
     };
-    
-
     //check if the message list is empty or not and dispaly the list or animation
     const renderContent = () => {
       if (messages.length > 0) {
@@ -99,7 +94,6 @@ export default function Inbox({ navigation }) {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container:{

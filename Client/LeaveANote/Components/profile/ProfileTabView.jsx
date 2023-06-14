@@ -20,6 +20,12 @@ export default function ProfileTabView() {
         }}
         variant="primary"
       >
+                 <Tab.Item
+        style={styles.tabItem}
+          title="Accidents History"
+          titleStyle={{ fontSize: 12 }}
+          icon={{ name: 'timer-outline', type: 'ionicon', color: 'white' }}
+        />
             <Tab.Item
         style={styles.tabItem}
           title="Edit information"
@@ -32,12 +38,6 @@ export default function ProfileTabView() {
           titleStyle={{ fontSize: 12 }}
           icon={{ name: 'lock-closed-outline', type: 'ionicon', color: 'white' }}
         />
-           <Tab.Item
-        style={styles.tabItem}
-          title="Accidents History"
-          titleStyle={{ fontSize: 12 }}
-          icon={{ name: 'timer-outline', type: 'ionicon', color: 'white' }}
-        />
       </Tab>
       <TabView
         value={index}
@@ -46,14 +46,14 @@ export default function ProfileTabView() {
         disableSwipe={true} 
           >
         <TabView.Item  style={styles.tabView}>
-        <EditInfo />
+        <AccidentsHistory />
         </TabView.Item>
         <TabView.Item  style={styles.tabView}>
         <EditPassword />
         </TabView.Item>
         <TabView.Item     style={styles.tabView}
         >
-          <AccidentsHistory />
+        <EditInfo />
         </TabView.Item >
       </TabView>
     </View>

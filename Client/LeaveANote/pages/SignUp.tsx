@@ -133,7 +133,6 @@ const {signupAttempt} = useContext(MainContext);
       </Formik>
       <DividerWithText text="Already Have An Account ?"/>
       <Button title="Sign in" type="outline" onPress={() => navigation.navigate('Login')} />
-      
       </ScrollView>
     </View>
   );

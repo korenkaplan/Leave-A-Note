@@ -5,34 +5,24 @@ import {View, StyleSheet, Linking} from 'react-native';
 import { Image, ListItem,Icon } from '@rneui/themed';
 import { Button } from 'native-base';
 import { number } from 'yup';
-
+import { Accident } from '../../utils/interfaces/interfaces';
 interface NoteProps {
-  route: {
-    params: {
-        date: string;
-        hittingDriver: {
-          name: string;
-          carNumber: string;
-          phoneNumber: string;
+  route:
+   {
+      params:
+        {
+          item: Accident;
         };
-        id: string;
-        type: string;
-        imageSource: string;
-    };
   };
-}
+  }
 
 const NoteView: React.FC<NoteProps> = ( {route}) => {
   //const message = navigation.getParam('message','no message');
 
   
-  const {
-    date,
-    hittingDriver,
-    id,
-    type,
-    imageSource,
-  } = route.params;
+  const {item } = route.params;
+  const {hittingDriver, date, imageSource} = item;
+ 
 
 const noteDetails = (
   <>

@@ -1,69 +1,11 @@
 /* eslint-disable prettier/prettier */
 import React, { createContext, useState, ReactNode} from 'react';
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {storage} from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { string } from 'yup';
-interface User {
-  id:string;
-  fullname: string;
-  email: string;
-  phoneNumber: string;
-  carNum: string;
-  unreadMessages: Array<NoteInbox | ReportInbox >;
-  notes: NoteInbox[];
-  reports: ReportInbox[];
+import {User, Accident, NoteToSend, SignUpFormValues, ReportToSend , UserDataToUpdate} from '../utils/interfaces/interfaces';
 
-}
-interface ReportInbox {
-  id: string;
-  hittingDriver:{
-    name?: string;
-    carNumber: string;
-    phoneNumber?: string;
-  },
-  reporter:{
-    name: string;
-    phoneNumber: string;
-  },
-  date: string;
-  type: string;
-  isAnonymous:boolean,
-  isIdentify:boolean,
-  imageSource: string;
-}
-interface Report {
-  imageUrl: string;
-  damagedCarNumber:string;
-  hittingCarNumber: string;
-  date:string;
-  isAnonymous: boolean;
-}
-interface Note {
-  damagedCarNumber: string;
-  imageSource: string;
-  date: string;
-}
-interface SignUpFormValues {
-  email: string;
-  password: string;
-  repeatpassword: string;
-  phoneNumber: string;
-  carNumber: string;
-  fullName: string;
-}
-interface NoteInbox {
-  id: string;
-  hittingDriver:{
-    name?: string;
-    carNumber: string;
-    phoneNumber?: string;
-  },
-  date: string;
-  type: string;
-  imageSource: string;
-}
 interface MainContextType {
   currentUser: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
@@ -75,24 +17,21 @@ interface MainContextType {
   setCarNumInput: React.Dispatch<React.SetStateAction<string>>;
   damagedUserId: string;
   setDamagedUserId: React.Dispatch<React.SetStateAction<string>>;
-  submitNote: (note: Note) => Promise<void>;
-  submitReport: (report: Report) => Promise<void>;
+  submitNote: (note: NoteToSend) => Promise<void>;
+  submitReport: (report: ReportToSend) => Promise<void>;
   searchCarNumber: (carNumber: string) => Promise<boolean>;
   loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean | void>;
   signupAttempt: (newUser: SignUpFormValues) => Promise<number>;
   handleLogOut: () => Promise<void>;
-  getAllNotes: () => Promise<Note[]>;
-  getAllReports: () => Promise<Report[]>;
+  getAllNotes: () => Promise<Accident[]>;
+  getAllReports: () => Promise<Accident[]>;
   uploadPhotoToStorage: (uri:string) => Promise<string>;
   updateUserInformation:(data: UserDataToUpdate) => Promise<boolean>;
   updateUserPassword:(oldPassword: string, newPassword:string) => Promise<boolean>;
+  deleteANoteById:(noteId:string) => Promise<boolean>;
+  deleteAReportById:(id:string) => Promise<boolean>;
 }
-interface UserDataToUpdate{
-  fullname: string;
-  email: string;
-  phoneNumber: string;
-  carNum: string;
-}
+
 export const MainContext = createContext<MainContextType>({} as MainContextType);
 
 function MainContextProvider({ children }: { children: ReactNode; }) {
@@ -120,7 +59,19 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       },
  
     ],
-    notes:[],
+    notes:[
+      {
+        id: '10',
+        hittingDriver: {
+          name: 'Koren Kaplan',
+          carNumber: '8333368',
+          phoneNumber: '0533406789',
+        },
+        date: '02/12/2023',
+        type: 'note',
+        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg',
+      },
+    ],
     reports:[
       {
         id: '2',
@@ -188,8 +139,6 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       },
     ],
   });
- 
-
 const api: AxiosInstance = axios.create({
   baseURL: 'https://api.example.com', // Set your base URL
   // You can also configure other Axios options here
@@ -241,14 +190,14 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
     }
   };
   //submit a new note
-  const submitNote = async (note: Note): Promise<void> => {
+  const submitNote = async (note: NoteToSend): Promise<void> => {
     // find the user by the car number provided in the note.
    // const response = await api.post(`/notes/addNote/${damagedUserId}`,note);
     // TODO: implement submit note to database
     console.log(note);
   };
   //submit a new report
-  const submitReport = async (report: Report): Promise<void> => {
+  const submitReport = async (report: ReportToSend): Promise<void> => {
     // TODO: implement submit note to database
    // const response = await api.post(`/reports/addReport/${damagedUserId}`,note);
     console.log(report);
@@ -300,7 +249,7 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
     }
   };
   //Get all notes from database
-  const getAllNotes = async(): Promise<Note[]>=>{
+  const getAllNotes = async(): Promise<Accident[]>=>{
     try {
       const response = await api.get(`/users/all/notes/${currentUser.id}`);
       const notes: Note[] = response.data;
@@ -312,7 +261,7 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
     }
   };
     //Get all reports from database
-  const getAllReports = async(): Promise<Report[]>=>{
+  const getAllReports = async(): Promise<Accident[]>=>{
       try {
         const response = await api.get(`/users/all/reports/${currentUser.id}`);
         const reports: Report[] = response.data;
@@ -350,12 +299,34 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
       newPassword,
     }
     try {
-      const response = await api.post(`/users/updatePassowrd`,data);
+      const response = await api.post('/users/updatePassowrd',data);
       const isUpdated: boolean = response.data;
       return isUpdated;
     } catch (error) {
       console.error('Error occurred during signup:', error);
       throw new Error('An error occurred during signup.');
+    }
+  };
+  const deleteANoteById = async(noteId: string):Promise<boolean> =>{
+    try {
+     // return true; //for testing purposes
+      const response = await api.delete(`/notes/delete/${noteId}`);
+      const result: boolean = response.data;
+      return result;
+    } catch (error: any) {
+      console.log(error.message);
+      return false;
+    }
+  };
+  const deleteAReportById = async(reportId: string):Promise<boolean> =>{
+    try {
+      // return true; //for testing purposes
+      const response = await api.delete(`/reports/delete/${reportId}`);
+      const result: boolean = response.data;
+      return result;
+    } catch (error: any) {
+      console.log(error.message);
+      return false;
     }
   };
   const value: MainContextType = {
@@ -380,6 +351,8 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
     uploadPhotoToStorage,
     updateUserInformation,
     updateUserPassword,
+    deleteANoteById,
+    deleteAReportById,
   };
 
   //create a function to delete a message from the messages
