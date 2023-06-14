@@ -1,11 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Avatar, Divider  } from '@rneui/base';
+import { Avatar, Button, Divider  } from '@rneui/base';
 import React, { useState,useEffect,useContext } from 'react';
 import { View,StyleSheet, Alert} from 'react-native';
 import {RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainContext } from '../../context/ContextProvider';
 import { Chip } from '@rneui/themed';
+import {storage} from '../../config/config';
+import config from '../../config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 interface Params {
   carNumber: string;
   image: string;
@@ -21,6 +24,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const { carNumInput,submitNote} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
+  const [cloudSource, setCloudSource] = useState<string>('');
 
   type Note ={
     damagedCarNumber: string,
@@ -33,7 +37,28 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
       setDisableSendBtn(false);
     }
   }, [image]);
+
+  const uploadPhotoToStorage = async (uri:string): Promise<string> => {
+    const timestamp: string = Date.now().toString();
+    const photoRef = ref(storage, `photos/${carNumInput}/${timestamp}`); 
   
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+  
+      // Upload the blob to Firebase Storage
+      const snapshot = await uploadBytes(photoRef, blob);
+  
+      // Get the download URL of the uploaded photo
+      const downloadURL = await getDownloadURL(snapshot.ref);
+  
+      console.log('Photo uploaded successfully. Download URL:', downloadURL);
+      return downloadURL;
+    } catch (error:any) {
+      console.error('Error uploading photo:', error);
+      return error.message;
+    }
+  };
   const openCamera = ():void => {
     navigation.navigate({
       name:'CameraComp',
@@ -49,15 +74,18 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     }
    ]); } 
  
- 
 const handleSubmit = async ():Promise<void> =>{
   try
   {
+    const imageRef: string = await uploadPhotoToStorage(imgSource);
+    
     let note: Note = {
       damagedCarNumber: carNumInput,
-      imageSource: imgSource,
+      imageSource: imageRef,
       date: new Date().toLocaleDateString('en-GB'),
-    }
+    };
+    console.log(note);
+    
       // send to context function the image url
   await submitNote(note);
   //show dialog
@@ -68,6 +96,7 @@ const handleSubmit = async ():Promise<void> =>{
       console.log(error);
     }
 };
+
   return (
     <View style={styles.MainContainer}>
       <View  style={styles.topContainer}>
@@ -117,7 +146,6 @@ const handleSubmit = async ():Promise<void> =>{
   containerStyle={styles.sendBtn}
   titleStyle={styles.sendBtnTitle} // Add this line
 />
-
   </View>
       </View>
     </View>

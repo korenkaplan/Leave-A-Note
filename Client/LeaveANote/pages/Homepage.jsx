@@ -19,7 +19,6 @@ export default function Homepage({navigation}) {
   const [isNumberValid, setIsNumberValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isNumLengthValid = searchValue.length > 6 && searchValue.length < 9;
-
   /**
   Contains the props of the right icon of the input element
  */
@@ -162,7 +161,9 @@ export default function Homepage({navigation}) {
 
   );
 }
-
+//console.log(CLOUD_NAME);
+// console.log(CLOUDINARY_API_KEY);
+// console.log(CLOUDINARY_API_SECRET);
 const styles = StyleSheet.create({
 
   button: {

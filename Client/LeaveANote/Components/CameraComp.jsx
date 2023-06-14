@@ -34,7 +34,8 @@ export default function CameraComp({ navigation, route }) {
   const takePicture = async()=>{
     if(camera != null){
       const snapshot = await camera.current.takePhoto()
-      setImageData('file://' + snapshot.path);
+      const imagePath = 'file://' + snapshot.path;
+      setImageData(imagePath);
       setTakePhotoClicked(true);
     }
     
