@@ -14,18 +14,29 @@ import CameraComp from '../Components/CameraComp';
 import {Badge} from '@rneui/base';
 import {MainContext} from '../context/ContextProvider';
 import AccidentsHistory from '../pages/profilePages/AccidentsHistory';
+import { ThemeContext } from '../context/ThemeContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
   const {currentUser} = useContext(MainContext);
+  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
+
   function TabNavigator() {
     return (
-      <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: true,
-        }}>
+<Tab.Navigator
+  initialRouteName="Home"
+  screenOptions={{
+    headerShown: false,
+    tabBarShowLabel: true,
+    tabBarStyle: {
+      backgroundColor: secondary,
+    },
+    tabBarActiveTintColor: primary,
+    tabBarInactiveTintColor: text.secondary,
+  }}
+>
         <Tab.Screen
           name="Home"
           component={Homepage}
@@ -133,13 +144,15 @@ export default function BottomTabs() {
       <Stack.Screen name="AccidentsHistory" component={AccidentsHistory} />
     </Stack.Navigator>
   );
+
 }
-const styles = StyleSheet.create({
+const createStyles = (primary,secondary,text,background) =>
+StyleSheet.create({
   header: {
-    backgroundColor: '#3b5998',
+    backgroundColor: primary,
   },
   title: {
-    color: 'white',
+    color: text.secondary,
   },
   backIcon: {
     headerTintColor: 'white',

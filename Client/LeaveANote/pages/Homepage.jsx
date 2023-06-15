@@ -1,11 +1,19 @@
-import {View, StyleSheet, Dimensions, ActivityIndicator,Alert} from 'react-native';
+import {View, StyleSheet, Dimensions, ActivityIndicator,Alert,TouchableOpacity} from 'react-native';
 import React, {useState,useContext} from 'react';
 import { MainContext } from '../context/ContextProvider';
 import {Heading} from 'native-base';
 import Logo from '../assets/note-taking.svg';
-import {Button} from '@rneui/themed';
-import {Input, Icon, Chip } from '@rneui/themed';
+import {Input, Icon, Chip,Button, Switch  } from '@rneui/themed';
+import {ThemeContext} from '../context/ThemeContext';
+import ThemedView from '../Components/uiComponents/ThemedView'
+import CustomButton from '../Components/uiComponents/CustomButton';
+
+
+
 export default function Homepage({navigation}) {
+  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
   const widthPercent = 100;
   const heightPercent = 30;
   const windowWidth = Dimensions.get('window').width;
@@ -19,14 +27,16 @@ export default function Homepage({navigation}) {
   const [isNumberValid, setIsNumberValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isNumLengthValid = searchValue.length > 6 && searchValue.length < 9;
+  const [checked, setChecked] = useState(false);
+
   /**
   Contains the props of the right icon of the input element
  */
   const iconProps = {
     name: iconName,
     marginRight: 10,
-    color: isNumLengthValid ? 'white' : 'gray',
-    backgroundColor: isNumLengthValid ? 'lightblue' : 'transparent',
+    color: text.primary,
+    backgroundColor: isNumLengthValid ? primary : 'transparent',
     borderRadius: 50,
     padding: 3,
     // disabled: !isNumLengthValid,
@@ -35,19 +45,17 @@ export default function Homepage({navigation}) {
         ? handleSearchPress()
         : setError('Car number must be 7 or 8 digits long'),
   };
-
   /**
   This function creates a loading spinner.
  */
   const loadSpinner = () => {
     return (
       <View
-        style={{borderRadius: 50, backgroundColor: 'lightblue', padding: 2}}>
+        style={{borderRadius: 50, backgroundColor: primary, padding: 2}}>
         <ActivityIndicator size="small" color="white" />
       </View>
     );
   };
-
   /**
   This function updates the states on input change event:
   1. change validation state of the input to false.
@@ -96,7 +104,7 @@ export default function Homepage({navigation}) {
     navigation.navigate('CreateReport',searchValue);
     setSearchValue('');
   }
-  const createTwoButtonAlert = () =>
+  const logOutAlert = () =>
   Alert.alert(
     'Are you sure you want to Sign out?',
     '',
@@ -119,17 +127,20 @@ export default function Homepage({navigation}) {
   );
 
   return (
-    <View >
-       <Icon
-        raised
-        name='log-out-outline'
-        type='ionicon'
-        color='#f50'
-        style={styles.logoutIcon}
-        onPress={()=> createTwoButtonAlert()} />
+    <ThemedView style={styles.MainContainer} >
+   <Icon
+  reverse
+  name='log-out-outline'
+  type='ionicon'
+  color={primary}
+  onPress={logOutAlert}
+  iconStyle={{ color: text.primary }} // Specify the color of the icon
+  containerStyle={{ marginLeft: 20 }}
+/>
+           
         <View style={styles.container}>
       <Logo width={width} height={height} />
-      <Heading>Leave A Note</Heading>
+      <Heading style={{color:text.primary}}>Leave A Note</Heading>
       <View style={styles.searchContainer}>
         <Input
           errorMessage={error}
@@ -137,40 +148,43 @@ export default function Homepage({navigation}) {
           rightIcon={isLoading ? loadSpinner : iconProps}
           onChangeText={updateSearchValue}
           value={searchValue}
+          inputStyle={{color:text.primary}}
           keyboardType="numeric"
         />
       </View>
-      <Button
-        containerStyle={styles.button}
-        disabled={!isNumberValid}
-        size="sm"
-        onPress={moveToNotePage}
-        title="Leave a Note"
-      />
-      <Button
-        containerStyle={styles.button}
-        size="sm"
-        title="Report"
-        onPress={moveToReportPage}
-        type="outline"
-      />
+      <CustomButton disabled={!isNumberValid} onPress={handleSearchPress} title={'Leave a Note'} />
+      <CustomButton buttonStyle={{backgroundColor: secondary}}  onPress={handleSearchPress} title={'Report'} />
     </View>
-    </View>
+    </ThemedView>
 
   );
 }
-//console.log(CLOUD_NAME);
-// console.log(CLOUDINARY_API_KEY);
-// console.log(CLOUDINARY_API_SECRET);
-const styles = StyleSheet.create({
 
-  button: {
+const createStyles = (primary,secondary,text,background) => StyleSheet.create({
+  text:{
+    color: text.primary
+  },
+  noteBtn: {
+    height:50,
+    width:50,
+    margin: 20,
+    borderRadius:10,
+    color: text.primary,
+  },
+  reportBtn: {
     width: '50%',
     margin: 20,
+    borderRadius:10
+
+  },
+  MainContainer:{
+    backgroundColor: background
   },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: background
+
   },
   searchContainer: {
     width: '80%',
@@ -189,7 +203,7 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   searchBarInputContainer: {
-    backgroundColor: 'white',
+    backgroundColor: background
   },
   searchBarInput: {
     fontSize: 16,
@@ -199,3 +213,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
 });
+
+
+

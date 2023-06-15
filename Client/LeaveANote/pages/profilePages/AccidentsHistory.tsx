@@ -1,6 +1,6 @@
 import React, { useState, useContext,FC} from 'react';
 import {StyleSheet, ScrollView,RefreshControl } from 'react-native';
-import { ListItem, Avatar, Button } from '@rneui/themed';
+import { ListItem, Avatar, Button,Icon } from '@rneui/themed';
 import EmptyListAnimation from '../../Components/accidentsHistory/EmptyListAnimation';
 import { MainContext } from '../../context/ContextProvider';
 import {Accident} from '../../utils/interfaces/interfaces';
@@ -112,12 +112,10 @@ const AccidentsHistory: FC = ()=> {
               buttonStyle={{minHeight: '100%', backgroundColor: 'red'}}
             />
           )}>
-          <Avatar
-            size={64}
-            rounded
-            icon={{name: 'document-outline', type: 'ionicon'}}
-            containerStyle={{backgroundColor: 'lightgray'}}
-          />
+            <Icon style={styles.iconNote}
+              name = 'document-outline'
+              type = 'ionicon'
+              />
           <ListItem.Content>
             <ListItem.Title>{item.hittingDriver.name}</ListItem.Title>
             <ListItem.Subtitle>{item.date}</ListItem.Subtitle>
@@ -147,12 +145,10 @@ const AccidentsHistory: FC = ()=> {
               buttonStyle={{minHeight: '100%', backgroundColor: 'red'}}
             />
           )}>
-          <Avatar
-            size={64}
-            rounded
-            icon={{name: 'eye-outline', type: 'ionicon'}}
-            containerStyle={{backgroundColor: 'lightblue'}}
-          />
+           <Icon style={styles.iconReport}
+              name = 'eye-outline'
+              type = 'ionicon'
+              />
           <ListItem.Content>
             <ListItem.Title>
               {item.isIdentify
@@ -181,6 +177,21 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 10,
     backgroundColor: 'white',
+  },
+    iconNote:{
+    size:30,
+    borderWidth:1,
+    borderRadius:50,
+    padding:10,
+    backgroundColor:'lightgray',
+
+  },
+  iconReport:{
+    size:30,
+    borderWidth:1,
+    borderRadius:50,
+    padding:10,
+    backgroundColor:'lightblue',
   },
 });
 export default AccidentsHistory;

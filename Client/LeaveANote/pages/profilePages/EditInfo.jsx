@@ -1,4 +1,5 @@
-import { View, Text,StyleSheet,KeyboardAvoidingView, Alert } from 'react-native'
+
+import { View, Text,StyleSheet, Alert } from 'react-native'
 import React,{useState,useContext} from 'react'
 import { Input, Icon,Button } from '@rneui/themed';
 import {MainContext} from '../../context/ContextProvider'

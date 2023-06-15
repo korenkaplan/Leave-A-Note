@@ -1,3 +1,22 @@
+//the interface for a theme
+export interface Theme {
+  colors:
+  {
+    primary: string;
+    secondary:string;
+    background: string;
+    text:{
+      primary: string;
+      secondary: string;
+    }
+  },
+  fonts:
+  {
+    regular: string;
+    bold: string; 
+  },
+}
+
 // the interface of a connected user.
 export interface User {
     id:string;

@@ -59,6 +59,23 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
         type: 'note',
         imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg',
       },
+      {
+        id: '2',
+        hittingDriver: {
+          name: 'Ofri Malka',
+          carNumber: '69354401',
+          phoneNumber: '0528942612',
+        },
+        reporter: {
+          name: 'Koren Kaplan',
+          phoneNumber: '0533406789',
+        },
+        date: '04/12/2023',
+        type: 'report',
+        isAnonymous: true,
+        isIdentify: true,
+        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg',
+      },
  
     ],
     notes:[

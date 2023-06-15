@@ -1,11 +1,16 @@
 import {View, Text,StyleSheet, ScrollView, TouchableOpacity,RefreshControl, LogBox} from 'react-native';
 import React,{useState,useContext} from 'react';
 import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
-import { ListItem,Avatar} from '@rneui/themed';
+import { ListItem,Avatar, Icon} from '@rneui/themed';
 import { MainContext } from '../context/ContextProvider';
+import { ThemeContext } from '../context/ThemeContext';
+import ThemedView from '../Components/uiComponents/ThemedView';
 
 export default function Inbox({ navigation }) {
-LogBox.ignoreLogs(["ReactImageView: Image source 'null' doesn't exist"]);
+  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
+
   //a temporary state containing the list of items,
   const {currentUser, setCurrentUser, getUserById, deleteAReportById, deleteANoteById, deleteFromUnreadMessages} = useContext(MainContext);
   //TODO get messages from the server 
@@ -13,49 +18,39 @@ LogBox.ignoreLogs(["ReactImageView: Image source 'null' doesn't exist"]);
   const [refreshing, setRefreshing] = useState(false);
    
      //convert objects from database to list items
-     const convertedMessages = currentUser.unreadMessages.map((message,index) => {
-      //if the message is of type note 
-      if(message.type === 'note')
-      {
+     const convertedMessages = currentUser.unreadMessages.map((message, index) => {
+      // If the message is of type note
+      if (message.type === 'note') {
         return (
-          <TouchableOpacity onPress={()=> {handlePress(message,index)}}  key={message.id} >
-            <ListItem  bottomDivider>
-            <Avatar
-               size={64}
-               rounded
-               icon={{ name:'document-outline', type: 'ionicon' }}
-               containerStyle={{ backgroundColor:'lightgray'}}
-             />
-             <ListItem.Content>
-               <ListItem.Title>{message.hittingDriver.name}</ListItem.Title>
-               <ListItem.Subtitle>{message.date}</ListItem.Subtitle>
-             </ListItem.Content>
-             <ListItem.Chevron />
-           </ListItem>
+          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
+            <ListItem bottomDivider containerStyle={styles.noteItem}>
+              <Icon style={styles.iconNote} name='document-outline' type='ionicon' color={text.primary} />
+              <ListItem.Content>
+                <ListItem.Title style={styles.noteTitle}>{message.hittingDriver.name}</ListItem.Title>
+                <ListItem.Subtitle style={styles.noteSubtitle}>{message.date}</ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
           </TouchableOpacity>
-    )
-    }
-    //if the message is of type report
-    else{
-      return(
-        <TouchableOpacity onPress={()=> {handlePress(message,index)}}  key={message.id} >
-            <ListItem  bottomDivider>
-            <Avatar
-               size={64}
-               rounded
-               icon={{ name:'eye-outline', type: 'ionicon' }}
-               containerStyle={{ backgroundColor:'lightblue'}}
-             />
-             <ListItem.Content>
-               <ListItem.Title>{message.isIdentify? message.hittingDriver.name : message.hittingDriver.carNumber}</ListItem.Title>
-               <ListItem.Subtitle>{message.date}</ListItem.Subtitle>
-             </ListItem.Content>
-             <ListItem.Chevron />
-           </ListItem>
+        );
+      }
+      // If the message is of type report
+      else {
+        return (
+          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
+            <ListItem bottomDivider containerStyle={styles.reportItem}>
+              <Icon style={styles.iconReport} name='eye-outline' type='ionicon' color={text.primary} />
+              <ListItem.Content>
+                <ListItem.Title style={styles.reportTitle}>{message.isIdentify ? message.hittingDriver.name : message.hittingDriver.carNumber}</ListItem.Title>
+                <ListItem.Subtitle style={styles.reportSubtitle}>{message.date}</ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
           </TouchableOpacity>
-      )
-    }
-     })
+        );
+      }
+    });
+    
     const handleRefresh = async () => {
      //call getUserById() that will get the user from the database and set the current user.
    await getUserById(currentUser.id);
@@ -113,13 +108,14 @@ LogBox.ignoreLogs(["ReactImageView: Image source 'null' doesn't exist"]);
       }
     };
        return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       {renderContent()}
-    </View>
+    </ThemedView>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (primary,secondary,text,background) => 
+  StyleSheet.create({
   container:{
     flex: 1,
   },
@@ -127,5 +123,37 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 10,
   },
+  iconNote:{
+    size:30,
+    borderWidth:1,
+    borderRadius:50,
+    padding:10,
+    backgroundColor:primary,
 
+  },
+  iconReport:{
+    size:30,
+    borderWidth:1,
+    borderRadius:50,
+    padding:10,
+    backgroundColor:secondary,
+  },
+  noteTitle: {
+    color: text.primary,
+  },
+  noteSubtitle: {
+    color: text.secondary,
+  },
+  reportTitle: {
+    color: text.primary,
+  },
+  reportSubtitle: {
+    color: text.secondary,
+  },
+  noteItem: {
+    backgroundColor:background,
+  },
+  reportItem: {
+    backgroundColor:background,
+  },
 });
