@@ -65,16 +65,14 @@ export default function Homepage({navigation}) {
    * after submit event
    *
    */
-  const handleSearchPress = () => {
-    //TODO: search the car number in the database
-    setError('');
+  const handleSearchPress = async () => {
     setIsLoading(true); // Set loading state to true
-
     // Simulate an asynchronous operation (e.g., API call) with a timeout
-    setTimeout(() => {
+    setTimeout( async () => {
+      setError('');
       setIsLoading(false); // Set loading state to false after the operation completes
-
-      const resultUserID = searchCarNumber(searchValue);
+      const resultUserID = await searchCarNumber(searchValue);
+      console.log('resultUserID:', resultUserID);
       if (resultUserID) {
         setIconName('check');
         setIsNumberValid(true);

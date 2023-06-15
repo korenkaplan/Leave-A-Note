@@ -1,35 +1,49 @@
-import { View, Text,StyleSheet} from 'react-native'
-import React,{useState} from 'react'
+import { View, Text,StyleSheet,Alert} from 'react-native'
+import React,{useState, useContext} from 'react'
 import { Input, Icon,Button } from '@rneui/themed';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {passwordSchema,} from '../../utils/validation/validationSchemas'
+import { MainContext } from '../../context/ContextProvider';
 export default function EditPassword() {
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true)
   const [newPasswordSecure, setNewPasswordSecure] = useState(true)
   const [repeatPasswordSecure, setRepeatPasswordSecure] = useState(true)
   const [isValid, setIsValid] = useState(false)
- 
+  const {updateUserPassword} = useContext(MainContext);
 
  
   const validationSchema = Yup.object().shape({
     currentPassword: passwordSchema,
-    newPassword: passwordSchema,
+    newPassword: passwordSchema.notOneOf([Yup.ref('currentPassword')], 'New password cannot be the same as the old password'),
     repeatPassword: Yup.string()
       .required('Repeat password is required')
-      .oneOf([Yup.ref('newPassword')], 'Passwords must match')
+      .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
   });
-
     /**
-  Handle the sbumit check if the password matches the current password in the database
+  Handle the submit check if the password matches the current password in the database
  */
-  const handleFormSubmit = (values, { resetForm }) => {
-    //TODO: validate password with database
-      // Handle form submission
-      console.log(values);
+  const handleFormSubmit = async (values, { resetForm, setFieldError }) => {
 
-      // Clear the form inputs
-      resetForm();
+      const result = await updateUserPassword(values.currentPassword, values.newPassword)
+      switch (result) {
+        case 0:
+          {
+            Alert.alert('successfully changed password')
+            resetForm();
+            break;
+          }
+          case 1:
+            {
+              setFieldError('currentPassword','password is incorrect')
+              break;
+            }
+            case 2:
+              {
+                Alert.alert('There was a problem try again later..')
+              }
+      }
+
   };
   return (
     <View style={styles.container}>

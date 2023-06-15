@@ -24,7 +24,7 @@ export default function Main() {
           setTimeout(() => {
           // check if user is connected in async storage
           setIsLoading(false); // Set isLoading to false when data retrieval is complete
-          },3000);
+          },3200);
       }
     };
 

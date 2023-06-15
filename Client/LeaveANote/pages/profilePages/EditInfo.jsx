@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,KeyboardAvoidingView } from 'react-native'
+import { View, Text,StyleSheet,KeyboardAvoidingView, Alert } from 'react-native'
 import React,{useState,useContext} from 'react'
 import { Input, Icon,Button } from '@rneui/themed';
 import {MainContext} from '../../context/ContextProvider'
@@ -6,7 +6,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {fullNameSchema,carNumberSchema, phoneNumberSchema, emailSchema} from '../../utils/validation/validationSchemas'
 export default function EditInfo() {
-  const {} = useContext(MainContext);
+  const {updateUserInformation} = useContext(MainContext);
   const validationSchema = Yup.object().shape({
     fullname:fullNameSchema,
     carNum: carNumberSchema,
@@ -15,13 +15,21 @@ export default function EditInfo() {
   });
   const {currentUser} = useContext(MainContext);
 
-  const handleFormSubmit = (values, { resetForm }) => {
+  const handleFormSubmit = async (values, { resetForm }) => {
     //TODO: update user information in database
       // Handle form submission
       console.log(values);
-
-      // Clear the form inputs
+      const result = await updateUserInformation(values);
+      if( result)
+      {
+      Alert.alert('Your information has been updated successfully')
       resetForm();
+
+      }
+      else{
+      Alert.alert('Your information wasn\'t updated successfully try again later...')
+      }
+      // Clear the form inputs
   };
   return (
     <View style={styles.container}>

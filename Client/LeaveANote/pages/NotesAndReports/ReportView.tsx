@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
 import { View, StyleSheet,Linking } from 'react-native';
 import { Image, ListItem,Icon,Divider } from '@rneui/themed';

@@ -1,13 +1,17 @@
-import {View, Text,StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text,StyleSheet, ScrollView, TouchableOpacity,RefreshControl, LogBox} from 'react-native';
 import React,{useState,useContext} from 'react';
 import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
 import { ListItem,Avatar} from '@rneui/themed';
 import { MainContext } from '../context/ContextProvider';
+
 export default function Inbox({ navigation }) {
+LogBox.ignoreLogs(["ReactImageView: Image source 'null' doesn't exist"]);
   //a temporary state containing the list of items,
-  const {currentUser, setCurrentUser} = useContext(MainContext);
+  const {currentUser, setCurrentUser, getUserById, deleteAReportById, deleteANoteById, deleteFromUnreadMessages} = useContext(MainContext);
   //TODO get messages from the server 
   const [messages, setMessages] = useState(currentUser.unreadMessages);
+  const [refreshing, setRefreshing] = useState(false);
+   
      //convert objects from database to list items
      const convertedMessages = currentUser.unreadMessages.map((message,index) => {
       //if the message is of type note 
@@ -52,6 +56,13 @@ export default function Inbox({ navigation }) {
       )
     }
      })
+    const handleRefresh = async () => {
+     //call getUserById() that will get the user from the database and set the current user.
+   await getUserById(currentUser.id);
+   setTimeout(() => {
+    setRefreshing(false);
+   }, 3000); // Adjust the delay time as needed
+  };
      //create a function to handle the press of a message
      const handlePress = (item, index) => {
       //todo check if the message is a note or a report
@@ -60,27 +71,40 @@ export default function Inbox({ navigation }) {
         params: {item},
         merge: true,
       });
+      //the timeout is so the animation won't show for a brief second if the list is empty before moving to view the message.
+      setTimeout(() => {
+        handleDelete(index)
+      }, 2000);
        //delete message from the message list
-       handleDelete(index)
      }
      //create a function to delete the message from the message list
-     const handleDelete = (index) => {
+     const handleDelete = async (index) => {
+      try {
+      //  const result = await deleteFromUnreadMessages(message[index].id)
+      //  if(!result) {return; } //if delete was'nt successful from database don't delete the message.
       // Remove the message from the message list
       const updatedMessages = [...messages];
       updatedMessages.splice(index, 1);
       setMessages(updatedMessages);
-    
       // Update the currentUser state
       setCurrentUser((prevUser) => ({
         ...prevUser,
         unreadMessages: updatedMessages,
       }));
+
+      } catch (error) {
+        
+      }
+
     };
     //check if the message list is empty or not and dispaly the list or animation
     const renderContent = () => {
       if (messages.length > 0) {
         return (
-          <ScrollView style={styles.scroll}>
+          <ScrollView style={styles.scroll}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }>
             {convertedMessages}
           </ScrollView>
         );

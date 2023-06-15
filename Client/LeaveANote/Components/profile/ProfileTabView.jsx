@@ -15,7 +15,7 @@ export default function ProfileTabView() {
         onChange={(e) => setIndex(e)}
         style={styles.tabMenu}
         indicatorStyle={{
-          backgroundColor: 'white',
+          backgroundColor: 'lightgray',
           height: 6,
         }}
         variant="primary"
@@ -49,11 +49,10 @@ export default function ProfileTabView() {
         <AccidentsHistory />
         </TabView.Item>
         <TabView.Item  style={styles.tabView}>
-        <EditPassword />
-        </TabView.Item>
-        <TabView.Item     style={styles.tabView}
-        >
         <EditInfo />
+        </TabView.Item>
+        <TabView.Item     style={styles.tabView}>
+        <EditPassword />
         </TabView.Item >
       </TabView>
     </View>
@@ -62,17 +61,16 @@ export default function ProfileTabView() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Set flex to 1 to fill the available space
-  },
-  tabView:{
     flex: 1,
-
   },
-  tabItem:{
+  tabView: {
     flex: 1,
-    backgroundColor:'red'
   },
-  tabMenu:{
-   
-  }
+  tabItem: {
+    flex: 1,
+    backgroundColor: 'red',
+  },
+  tabMenu: {
+    backgroundColor: 'lightblue', // Change the background color here
+  },
 });

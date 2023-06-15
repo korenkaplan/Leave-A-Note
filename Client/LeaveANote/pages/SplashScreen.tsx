@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import { View,  StyleSheet, Animated } from 'react-native';

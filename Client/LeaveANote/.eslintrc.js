@@ -1,7 +1,8 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
   rules: {
+        // Rule 5: Require the use of semicolons
+        'semi': ['error', 'always'],
     
   }
 };

@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useContext,FC} from 'react';
-import {StyleSheet, ScrollView } from 'react-native';
+import {StyleSheet, ScrollView,RefreshControl } from 'react-native';
 import { ListItem, Avatar, Button } from '@rneui/themed';
 import EmptyListAnimation from '../../Components/accidentsHistory/EmptyListAnimation';
 import { MainContext } from '../../context/ContextProvider';
@@ -9,12 +8,21 @@ import { useNavigation } from '@react-navigation/native';
 
 const AccidentsHistory: FC = ()=> {
   const navigation = useNavigation();
-  const { currentUser, setCurrentUser, deleteAReportById, deleteANoteById} = useContext(MainContext);
+  const {getUserById, currentUser, setCurrentUser, deleteAReportById, deleteANoteById} = useContext(MainContext);
   //const [reports, setReports] = useState(currentUser.reports);
   const [notes, setNotes] = useState(currentUser.notes);
+  const [refreshing, setRefreshing] = useState(false);
   const [accidents, setAccidents] = useState<Accident[]>([...currentUser.notes, ...currentUser.reports]);
 
-
+  const handleRefresh = async () => {
+   //call getUserById() that will get the user from the database and set the current user.
+   await getUserById(currentUser.id);
+   
+    setTimeout(() => {
+      
+     setRefreshing(false);
+    }, 3000); // Adjust the delay time as needed
+  };
   const handleInfoPress = (item: Accident) => {
     if (item.type === 'note') {
       navigation.navigate('NoteView', { item });
@@ -22,7 +30,6 @@ const AccidentsHistory: FC = ()=> {
       navigation.navigate('ReportView', { item });
     }
   };
-  
   const deleteNote = async (index: number, id: string): Promise<void>  => {
     try {
       const isDeleted = await deleteANoteById(id);
@@ -82,7 +89,6 @@ const AccidentsHistory: FC = ()=> {
       console.log(error.message);
     }
   };
-
   const accidentsList = accidents.map((item, index) => {
     if (item.type === 'note') {
       return (
@@ -161,7 +167,11 @@ const AccidentsHistory: FC = ()=> {
     }
   });
     return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}
+    refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+    }
+    >
       {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
     </ScrollView>
   );

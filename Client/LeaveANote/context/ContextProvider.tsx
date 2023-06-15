@@ -27,9 +27,11 @@ interface MainContextType {
   getAllReports: () => Promise<Accident[]>;
   uploadPhotoToStorage: (uri:string) => Promise<string>;
   updateUserInformation:(data: UserDataToUpdate) => Promise<boolean>;
-  updateUserPassword:(oldPassword: string, newPassword:string) => Promise<boolean>;
-  deleteANoteById:(noteId:string) => Promise<boolean>;
+  updateUserPassword:(oldPassword: string, newPassword:string) => Promise<number>; // update the user password: return 0 if updated successfully, 1 if wrong old password, 2 id problem at database.
+  deleteANoteById:(noteId:string) => Promise<boolean>; 
   deleteAReportById:(id:string) => Promise<boolean>;
+  getUserById:(id: string) => Promise<void>; // get a user by Id and set CurrantUser state.
+  deleteFromUnreadMessages: (id:string)=> Promise<boolean>;
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -143,7 +145,19 @@ const api: AxiosInstance = axios.create({
   baseURL: 'https://api.example.com', // Set your base URL
   // You can also configure other Axios options here
 });
-const uploadPhotoToStorage = async (uri:string): Promise<string> => {
+  const getUserById = async (id: string):Promise<void> =>{
+    try {
+      const response: AxiosResponse = await api.get(`users/${id}`);
+      const user: User = response.data;
+      setCurrentUser(user);
+      
+    } catch (error: any) {
+      console.log(error.message);
+      console.error(error.message);
+    }
+   
+  };
+  const uploadPhotoToStorage = async (uri:string): Promise<string> => {
   const timestamp: string = Date.now().toString();
   const photoRef = ref(storage, `photos/${carNumInput}/${timestamp}`); 
 
@@ -180,8 +194,11 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
       // } else {
       //   return false;
       // }
+      console.log(carNumber);
       if(carNumber === '8333368')
-      return true;
+      {
+        return true;
+      }
       else
       return false
     } catch (error) {
@@ -252,7 +269,7 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
   const getAllNotes = async(): Promise<Accident[]>=>{
     try {
       const response = await api.get(`/users/all/notes/${currentUser.id}`);
-      const notes: Note[] = response.data;
+      const notes: Accident[] = response.data;
        return notes;
 
     } catch (error) {
@@ -260,11 +277,11 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
       throw new Error('An error occurred during signup.');
     }
   };
-    //Get all reports from database
+  //Get all reports from database
   const getAllReports = async(): Promise<Accident[]>=>{
       try {
         const response = await api.get(`/users/all/reports/${currentUser.id}`);
-        const reports: Report[] = response.data;
+        const reports: Accident[] = response.data;
          return reports;
       } catch (error) {
         console.error('Error occurred during signup:', error);
@@ -292,16 +309,17 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
       throw new Error('An error occurred during signup.');
     }
   };
-  // update the user password
-  const updateUserPassword = async(oldPassword: string, newPassword:string): Promise<boolean> =>{
+  // update the user password: return 0 if updated successfully, 1 if wrong old password, 2 id problem at database
+  const updateUserPassword = async(oldPassword: string, newPassword:string): Promise<number> =>{
     const data = {
       oldPassword,
       newPassword,
     }
+
     try {
-      const response = await api.post('/users/updatePassowrd',data);
-      const isUpdated: boolean = response.data;
-      return isUpdated;
+      const response = await api.post<number>('/users/updatePassowrd',data);
+      const result= response.data;
+      return result;
     } catch (error) {
       console.error('Error occurred during signup:', error);
       throw new Error('An error occurred during signup.');
@@ -323,6 +341,16 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
       // return true; //for testing purposes
       const response = await api.delete(`/reports/delete/${reportId}`);
       const result: boolean = response.data;
+      return result;
+    } catch (error: any) {
+      console.log(error.message);
+      return false;
+    }
+  };
+  const deleteFromUnreadMessages = async (id: string): Promise<boolean> =>{
+    try {
+      const response = await api.delete<boolean>(`/users/unread/${id}`);
+      const result = response.data;
       return result;
     } catch (error: any) {
       console.log(error.message);
@@ -353,9 +381,10 @@ const uploadPhotoToStorage = async (uri:string): Promise<string> => {
     updateUserPassword,
     deleteANoteById,
     deleteAReportById,
+    getUserById,
+    deleteFromUnreadMessages,
   };
 
-  //create a function to delete a message from the messages
 
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 }

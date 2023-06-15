@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, FC, useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Formik } from 'formik';

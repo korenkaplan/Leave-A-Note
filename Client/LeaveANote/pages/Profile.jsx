@@ -1,9 +1,9 @@
-import { View,StyleSheet} from 'react-native'
+import { View,StyleSheet,LogBox  } from 'react-native'
 import React,{useState} from 'react'
 import ProfileTopView from '../Components/profile/ProfileTopView'
 import ProfileTabView from '../Components/profile/ProfileTabView';
-export default function Profile({ navigation }) {
 
+export default function Profile({ navigation }) {
   return (
     <View style ={styles.container}>
       <View style={{flex: 9, }}>

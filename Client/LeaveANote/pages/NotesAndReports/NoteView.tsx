@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
-// eslint-disable-next-line prettier/prettier
 import {View, StyleSheet, Linking} from 'react-native';
 import { Image, ListItem,Icon } from '@rneui/themed';
 import { Button } from 'native-base';

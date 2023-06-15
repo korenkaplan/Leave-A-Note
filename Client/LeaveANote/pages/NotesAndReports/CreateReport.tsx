@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Avatar, Divider, Input, Text } from '@rneui/base';
 import React, { useState,useEffect,useContext } from 'react';
 import { View,StyleSheet, Alert, Keyboard} from 'react-native';
@@ -8,6 +7,7 @@ import { MainContext } from '../../context/ContextProvider';
 import { Chip, CheckBox  } from '@rneui/themed';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
+import { ReportToSend } from '../../utils/interfaces/interfaces';
 interface Params {
   image: string;
 }
@@ -25,17 +25,9 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true); // toggle Submit btn if an image is taken.
   const [isChecked, setIsChecked] = useState<boolean>(false); // toggle the checkbox value
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'); // the image source starts with en empty iamge
-  const enum Size {AvatarBig = 250, AvatarSmall =150,AvatarAccessoryBig =60, AvatarAccessorySmall =40};// enum for sizes of the avatar when the keyboard is open / closed
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false); // holds the boolean value if the keyboard is open or not
+  const enum Size {AvatarBig = 250, AvatarSmall =150,AvatarAccessoryBig =60, AvatarAccessorySmall =40};// enum for sizes of the avatar when the keyboard is open / closed
 
-  // create the schema for a new report object
-  type Report ={
-    imageUrl: string,
-    damagedCarNumber: string,
-    hittingCarNumber: string,
-    date: string,
-    isAnonymous: boolean,
-  }
   // create the schema for the values object of formik
   type Values = {
     damagedCarNumber: string,
@@ -90,7 +82,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
 const handleFormSubmit = async (values: Values,{ resetForm }):Promise<void> =>{
   try {
     const imageRef: string = await uploadPhotoToStorage(imgSource);
-    let report: Report = {
+    let report: ReportToSend = {
       imageUrl: imageRef,
       damagedCarNumber: values.damagedCarNumber,
       hittingCarNumber: values.hittingCarNumber,

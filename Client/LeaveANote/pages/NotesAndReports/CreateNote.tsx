@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Avatar, Button, Divider  } from '@rneui/base';
 import React, { useState,useEffect,useContext } from 'react';
 import { View,StyleSheet, Alert} from 'react-native';
@@ -6,27 +5,23 @@ import {RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainContext } from '../../context/ContextProvider';
 import { Chip } from '@rneui/themed';
+import { NoteToSend } from '../../utils/interfaces/interfaces';
+
 interface Params {
   carNumber: string;
   image: string;
 }
-
 interface Props {
   route: RouteProp<Record<string, Params>, string>;
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
-
 const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const { carNumber, image } = route.params;
   const { carNumInput,submitNote, uploadPhotoToStorage} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
 
-  type Note ={
-    damagedCarNumber: string,
-    imageSource: string,
-    date: string,
-  }
+
   useEffect(() => {
     if (image) {
       setImgSource(image);
@@ -54,7 +49,7 @@ const handleSubmit = async ():Promise<void> =>{
   {
     const imageRef: string = await uploadPhotoToStorage(imgSource);
     
-    let note: Note = {
+    let note: NoteToSend = {
       damagedCarNumber: carNumInput,
       imageSource: imageRef,
       date: new Date().toLocaleDateString('en-GB'),
@@ -126,7 +121,6 @@ const handleSubmit = async ():Promise<void> =>{
     </View>
   );
 
-  
 };
 
 const styles = StyleSheet.create({
