@@ -1,17 +1,20 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { View,  StyleSheet, Animated } from 'react-native';
 import LottieView from 'lottie-react-native';
-import animationData from '../assets/lottie.Animation/safteycar.json';
+import animationData from '../assets/lottie.Animation/loadingb.json';
 import { Text } from '@rneui/base';
-
+import { ThemeContext } from '../context/ThemeContext';
+import { Text as IText } from '../utils/interfaces/interfaces';
 interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
 
 const SplashScreen: React.FC<Props> = ({ navigation }) => {
   const [fadeAnimation] = useState(new Animated.Value(0));
-
+  const {theme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
   useEffect(() => {
     const splashTimeout = setTimeout(() => {
       Animated.timing(fadeAnimation, {
@@ -32,17 +35,19 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
         <Text h1 style={styles.text}>Leave a Note</Text>
       </Animated.View>
       <View style={styles.animationContainer}>
-        <LottieView source={animationData} autoPlay loop style={styles.animation} />
+       <LottieView source={animationData} autoPlay loop style={styles.animation} />
+
       </View>
     </View>
   );
 };
-const styles = StyleSheet.create({
+const createStyles = (primary:string,secondary:string,text:IText,background:string) => 
+StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor:background,
   },
   animationContainer: {
     flex: 1,
@@ -59,6 +64,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     fontWeight: 'bold',
+    color:text.primary
   },
 });
 

@@ -9,7 +9,10 @@ const CustomButton = ({ title, buttonStyle, titleStyle, containerStyle, onPress,
     backgroundColor: primary,
     borderRadius:17,
   };
-
+ const primaryBorder1 ={
+    borderColor: text.primary,
+    borderWidth:1,
+  };
   const defaultTitleStyle = {
     color: text.primary,
   };
@@ -20,9 +23,9 @@ const defaultContainerStyle ={
   return (
     <Button
       title={title}
-      buttonStyle={[defaultButtonStyle, buttonStyle]}
+      buttonStyle={[defaultButtonStyle, buttonStyle,primaryBorder1]}
       titleStyle={[defaultTitleStyle, titleStyle]}
-      containerStyle={[defaultContainerStyle, containerStyle]}
+      containerStyle={[defaultContainerStyle,, containerStyle]}
       onPress={onPress}
       disabled={disabled}
       {...rest}

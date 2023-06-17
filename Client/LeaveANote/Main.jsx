@@ -42,7 +42,6 @@ export default function Main() {
       }
     };
   getData();
-   setIsLoading(false); //
   }, []);
 
   if (isLoading) {

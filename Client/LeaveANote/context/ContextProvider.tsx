@@ -48,114 +48,114 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     phoneNumber: '0533406789',
     carNum: '8333368',
     unreadMessages: [
-      {
-        id: '1',
-        hittingDriver: {
-          name: 'Koren Kaplan',
-          carNumber: '8333368',
-          phoneNumber: '0533406789',
-        },
-        date: '02/12/2023',
-        type: 'note',
-        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg',
-      },
-      {
-        id: '2',
-        hittingDriver: {
-          name: 'Ofri Malka',
-          carNumber: '69354401',
-          phoneNumber: '0528942612',
-        },
-        reporter: {
-          name: 'Koren Kaplan',
-          phoneNumber: '0533406789',
-        },
-        date: '04/12/2023',
-        type: 'report',
-        isAnonymous: true,
-        isIdentify: true,
-        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg',
-      },
+      // {
+      //   id: '1',
+      //   hittingDriver: {
+      //     name: 'Koren Kaplan',
+      //     carNumber: '8333368',
+      //     phoneNumber: '0533406789',
+      //   },
+      //   date: '02/12/2023',
+      //   type: 'note',
+      //   imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg',
+      // },
+      // {
+      //   id: '2',
+      //   hittingDriver: {
+      //     name: 'Ofri Malka',
+      //     carNumber: '69354401',
+      //     phoneNumber: '0528942612',
+      //   },
+      //   reporter: {
+      //     name: 'Koren Kaplan',
+      //     phoneNumber: '0533406789',
+      //   },
+      //   date: '04/12/2023',
+      //   type: 'report',
+      //   isAnonymous: true,
+      //   isIdentify: true,
+      //   imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg',
+      // },
  
     ],
     notes:[
-      {
-        id: '10',
-        hittingDriver: {
-          name: 'Koren Kaplan',
-          carNumber: '8333368',
-          phoneNumber: '0533406789',
-        },
-        date: '02/12/2023',
-        type: 'note',
-        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg',
-      },
+      // {
+      //   id: '10',
+      //   hittingDriver: {
+      //     name: 'Koren Kaplan',
+      //     carNumber: '8333368',
+      //     phoneNumber: '0533406789',
+      //   },
+      //   date: '02/12/2023',
+      //   type: 'note',
+      //   imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-3.jpg',
+      // },
     ],
     reports:[
-      {
-        id: '2',
-        hittingDriver: {
-          name: 'Ofri Malka',
-          carNumber: '69354401',
-          phoneNumber: '0528942612',
-        },
-        reporter: {
-          name: 'Koren Kaplan',
-          phoneNumber: '0533406789',
-        },
-        date: '04/12/2023',
-        type: 'report',
-        isAnonymous: true,
-        isIdentify: true,
-        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg',
-      },
-      {
-        id: '3',
-        hittingDriver: {
-          carNumber: '8333368',
-        },
-        reporter: {
-          name: 'Koren Kaplan',
-          phoneNumber: '0533406789',
-        },
-        date: '03/12/2023',
-        type: 'report',
-        isAnonymous: false,
-        isIdentify: false,
-        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-2.jpg',
-      },
-      {
-        id: '4',
-        hittingDriver: {
-          name: 'Ofri Malka',
-          carNumber: '69354401',
-          phoneNumber: '0528942612',
-        },
-        reporter: {
-          name: 'Koren Kaplan',
-          phoneNumber: '0533406789',
-        },
-        date: '04/12/2023',
-        type: 'report',
-        isAnonymous: false,
-        isIdentify: true,
-        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467044/cld-sample.jpg',
-      },
-      {
-        id: '5',
-        hittingDriver: {
-          carNumber: '8333368',
-        },
-        reporter: {
-          name: 'Koren Kaplan',
-          phoneNumber: '0533406789',
-        },
-        date: '03/12/2023',
-        type: 'report',
-        isAnonymous: true,
-        isIdentify: false,
-        imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467034/samples/landscapes/nature-mountains.jpg',
-      },
+      // {
+      //   id: '2',
+      //   hittingDriver: {
+      //     name: 'Ofri Malka',
+      //     carNumber: '69354401',
+      //     phoneNumber: '0528942612',
+      //   },
+      //   reporter: {
+      //     name: 'Koren Kaplan',
+      //     phoneNumber: '0533406789',
+      //   },
+      //   date: '04/12/2023',
+      //   type: 'report',
+      //   isAnonymous: true,
+      //   isIdentify: true,
+      //   imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467046/cld-sample-4.jpg',
+      // },
+      // {
+      //   id: '3',
+      //   hittingDriver: {
+      //     carNumber: '8333368',
+      //   },
+      //   reporter: {
+      //     name: 'Koren Kaplan',
+      //     phoneNumber: '0533406789',
+      //   },
+      //   date: '03/12/2023',
+      //   type: 'report',
+      //   isAnonymous: false,
+      //   isIdentify: false,
+      //   imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467045/cld-sample-2.jpg',
+      // },
+      // {
+      //   id: '4',
+      //   hittingDriver: {
+      //     name: 'Ofri Malka',
+      //     carNumber: '69354401',
+      //     phoneNumber: '0528942612',
+      //   },
+      //   reporter: {
+      //     name: 'Koren Kaplan',
+      //     phoneNumber: '0533406789',
+      //   },
+      //   date: '04/12/2023',
+      //   type: 'report',
+      //   isAnonymous: false,
+      //   isIdentify: true,
+      //   imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467044/cld-sample.jpg',
+      // },
+      // {
+      //   id: '5',
+      //   hittingDriver: {
+      //     carNumber: '8333368',
+      //   },
+      //   reporter: {
+      //     name: 'Koren Kaplan',
+      //     phoneNumber: '0533406789',
+      //   },
+      //   date: '03/12/2023',
+      //   type: 'report',
+      //   isAnonymous: true,
+      //   isIdentify: false,
+      //   imageSource: 'https://res.cloudinary.com/dz3brwyob/image/upload/v1686467034/samples/landscapes/nature-mountains.jpg',
+      // },
     ],
   });
 const api: AxiosInstance = axios.create({
