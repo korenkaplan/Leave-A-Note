@@ -3,17 +3,21 @@ import {StyleSheet, ScrollView,RefreshControl } from 'react-native';
 import { ListItem, Avatar, Button,Icon } from '@rneui/themed';
 import EmptyListAnimation from '../../Components/accidentsHistory/EmptyListAnimation';
 import { MainContext } from '../../context/ContextProvider';
-import {Accident} from '../../utils/interfaces/interfaces';
+import {Accident, Theme} from '../../utils/interfaces/interfaces';
 import { useNavigation } from '@react-navigation/native';
-
+import { ThemeContext } from '../../context/ThemeContext';
+import { Text } from '../../utils/interfaces/interfaces';
 const AccidentsHistory: FC = ()=> {
   const navigation = useNavigation();
+  const radius = 20;
   const {getUserById, currentUser, setCurrentUser, deleteAReportById, deleteANoteById} = useContext(MainContext);
   //const [reports, setReports] = useState(currentUser.reports);
   const [notes, setNotes] = useState(currentUser.notes);
   const [refreshing, setRefreshing] = useState(false);
   const [accidents, setAccidents] = useState<Accident[]>([...currentUser.notes, ...currentUser.reports]);
-
+  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
   const handleRefresh = async () => {
    //call getUserById() that will get the user from the database and set the current user.
    await getUserById(currentUser.id);
@@ -93,15 +97,16 @@ const AccidentsHistory: FC = ()=> {
     if (item.type === 'note') {
       return (
         <ListItem.Swipeable
+        containerStyle={[styles.item,styles.textPrimaryBorder]}
           bottomDivider
           key={item.id}
-          style={{backgroundColor: 'gray'}}
           leftContent={reset => (
             <Button
               title="Info"
+              color={primary}
               onPress={() => handleInfoPress(item)}
-              icon={{name: 'info', color: 'white'}}
-              buttonStyle={{minHeight: '100%'}}
+              icon={{name: 'info', color: text.primary}}
+              buttonStyle={styles.hiddenButton}
             />
           )}
           rightContent={reset => (
@@ -109,16 +114,17 @@ const AccidentsHistory: FC = ()=> {
               title="Delete"
               onPress={() => handleDelete(index)}
               icon={{name: 'delete', color: 'white'}}
-              buttonStyle={{minHeight: '100%', backgroundColor: 'red'}}
+              buttonStyle={[styles.hiddenButton, styles.deleteButton]}
             />
           )}>
-            <Icon style={styles.iconNote}
+            <Icon style={[styles.iconNote,styles.textPrimaryBorder]}
               name = 'document-outline'
               type = 'ionicon'
+              color= {text.primary}
               />
           <ListItem.Content>
-            <ListItem.Title>{item.hittingDriver.name}</ListItem.Title>
-            <ListItem.Subtitle>{item.date}</ListItem.Subtitle>
+            <ListItem.Title  style={styles.Title}>{item.hittingDriver.name}</ListItem.Title>
+            <ListItem.Subtitle style={styles.Subtitle}>{item.date}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem.Swipeable>
@@ -126,15 +132,17 @@ const AccidentsHistory: FC = ()=> {
     } else {
       return (
         <ListItem.Swipeable
+        containerStyle={[styles.item,styles.textPrimaryBorder]}
           bottomDivider
           key={item.id}
-          style={{backgroundColor: 'gray'}}
           leftContent={reset => (
             <Button
               title="Info"
               onPress={() => handleInfoPress(item)}
-              icon={{name: 'info', color: 'white'}}
-              buttonStyle={{minHeight: '100%'}}
+              color={primary}
+              icon={{name: 'info', color:text.primary}}
+              buttonStyle={styles.hiddenButton}
+
             />
           )}
           rightContent={reset => (
@@ -142,20 +150,23 @@ const AccidentsHistory: FC = ()=> {
               title="Delete"
               onPress={() => handleDelete(index)}
               icon={{name: 'delete', color: 'white'}}
-              buttonStyle={{minHeight: '100%', backgroundColor: 'red'}}
+              buttonStyle={[styles.hiddenButton, styles.deleteButton]}
+
             />
           )}>
-           <Icon style={styles.iconReport}
-              name = 'eye-outline'
-              type = 'ionicon'
-              />
+      <Icon
+  containerStyle={[styles.iconReport,styles.textPrimaryBorder]}
+  name="eye-outline"
+  type="ionicon"
+  color={text.primary}
+/>
           <ListItem.Content>
-            <ListItem.Title>
+            <ListItem.Title style={styles.Title}>
               {item.isIdentify
                 ? item.hittingDriver.name
                 : item.hittingDriver.carNumber}
             </ListItem.Title>
-            <ListItem.Subtitle>{item.date}</ListItem.Subtitle>
+            <ListItem.Subtitle style={styles.Subtitle}>{item.date}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem.Swipeable>
@@ -163,6 +174,8 @@ const AccidentsHistory: FC = ()=> {
     }
   });
     return (
+
+
     <ScrollView contentContainerStyle={styles.container}
     refreshControl={
       <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
@@ -172,18 +185,32 @@ const AccidentsHistory: FC = ()=> {
     </ScrollView>
   );
 };
-const styles = StyleSheet.create({
+const createStyles = (primary:string,secondary:string,text:Text,background:string) => 
+StyleSheet.create({
+  deleteButton:{
+     backgroundColor: 'red',
+     
+  },
+  hiddenButton:{
+    borderRadius:20,
+    height:'96%'
+  },
+
+  textPrimaryBorder:{
+    borderWidth: 1, 
+    borderColor: text.primary
+  },
   container: {
     flexGrow: 1,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: background,
   },
     iconNote:{
     size:30,
     borderWidth:1,
     borderRadius:50,
     padding:10,
-    backgroundColor:'lightgray',
+    backgroundColor:primary,
 
   },
   iconReport:{
@@ -191,7 +218,32 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderRadius:50,
     padding:10,
-    backgroundColor:'lightblue',
+    backgroundColor:secondary,
   },
+  Title: {
+    color: text.primary,
+  },
+  Subtitle: {
+    color: text.secondary,
+  },
+  item:{
+    backgroundColor:background,
+    borderRadius:20,
+    marginBottom:5,
+
+  },
+  rightRadius:{
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  leftRadius:{
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  
 });
 export default AccidentsHistory;

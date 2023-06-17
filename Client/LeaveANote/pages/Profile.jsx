@@ -2,14 +2,15 @@ import { View,StyleSheet,LogBox  } from 'react-native'
 import React,{useState} from 'react'
 import ProfileTopView from '../Components/profile/ProfileTopView'
 import ProfileTabView from '../Components/profile/ProfileTabView';
+import ThemedView from '../Components/uiComponents/ThemedView';
 
 export default function Profile({ navigation }) {
   return (
-    <View style ={styles.container}>
+    <ThemedView style ={styles.container}>
       <View style={{flex: 9, }}>
      <ProfileTabView />
       </View>
-    </View>
+    </ThemedView>
   )
 }     
 const styles =  StyleSheet.create({

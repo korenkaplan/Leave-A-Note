@@ -1,49 +1,45 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import {View, StyleSheet, Linking} from 'react-native';
 import { Image, ListItem,Icon } from '@rneui/themed';
 import { Button } from 'native-base';
 import { number } from 'yup';
-import { Accident } from '../../utils/interfaces/interfaces';
-interface NoteProps {
-  route:
-   {
-      params:
-        {
-          item: Accident;
-        };
-  };
-  }
+import { ThemeContext } from '../../context/ThemeContext';
+import ThemedView from '../../Components/uiComponents/ThemedView';
+import CustomButton from '../../Components/uiComponents/CustomButton';
+import { MessageProps } from '../../utils/interfaces/interfaces';
 
-const NoteView: React.FC<NoteProps> = ( {route}) => {
+const NoteView: React.FC<MessageProps> = ( {route}) => {
   //const message = navigation.getParam('message','no message');
 
   
   const {item } = route.params;
   const {hittingDriver, date, imageSource} = item;
- 
+  const {theme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
 
 const noteDetails = (
-  <>
-    <ListItem>
-      <Icon name="calendar" type="ionicon" color="grey" />
+  <View  >
+    <ListItem  containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="calendar" type="ionicon" color={text.primary}  />
       <ListItem.Content>
-        <ListItem.Title>{date}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{date}</ListItem.Title>
+      </ListItem.Content>
+    </ListItem >
+    <ListItem  containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="person-outline" type="ionicon" color={text.primary}  />
+      <ListItem.Content>
+        <ListItem.Title style={styles.Title}>{hittingDriver.name}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
-    <ListItem>
-      <Icon name="person-outline" type="ionicon" color="grey" />
+    <ListItem  containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="car-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title>{hittingDriver.name}</ListItem.Title>
-      </ListItem.Content>
-    </ListItem>
-    <ListItem>
-      <Icon name="car-outline" type="ionicon" color="grey" />
-      <ListItem.Content>
-        <ListItem.Title>{hittingDriver.carNumber}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
 
-  </>
+  </View>
 );
 const image = (
   <Image
@@ -71,22 +67,21 @@ const moveToSmsDialog = () => {
       <View style={styles.imageContainer}>
         {image}
         </View>
-
-        <View>
+        <View  style={styles.detailsContainer}>
        {noteDetails}
         </View>
-        <View style={styles.btnContainer}>
-        <ListItem style={styles.phoneRow}> 
-      <Icon name="phone-portrait" type="ionicon" color="grey" />
-      <ListItem.Content>
-        <ListItem.Title>{hittingDriver.phoneNumber}</ListItem.Title>
+        <View style={[styles.btnContainer,styles.ListItem,styles.textPrimaryBorder]}>
+        <ListItem containerStyle={[styles.ListItem,styles.phoneRow,]}> 
+      <Icon name="phone-portrait" type="ionicon" color={text.primary}  />
+      <ListItem.Content >
+        <ListItem.Title style={styles.Title}>{hittingDriver.phoneNumber}</ListItem.Title>
       </ListItem.Content>
-    </ListItem>
-          <Button style={styles.callBtn} onPress={moveToPhoneDialog}>
-            <Icon name="call" type="ionicon" color="white" />
+    </ListItem >
+          <Button style={[styles.callBtn]}  onPress={moveToPhoneDialog}>
+            <Icon name="call" type="ionicon" color={text.primary} />
           </Button>
-          <Button style={styles.textBtn} onPress={moveToSmsDialog}>
-            <Icon name="sms" type="font-awesome-5" color="white" />
+          <Button style={[styles.textBtn]} onPress={moveToSmsDialog}>
+            <Icon name="sms" type="font-awesome-5" color={text.primary} />
           </Button>
         </View>
     </View>
@@ -95,42 +90,70 @@ const moveToSmsDialog = () => {
 
 export default NoteView;
 
-const styles = StyleSheet.create({
+const createStyles = (primary,secondary,text,background) => 
+ StyleSheet.create({
+  Title:{
+    color:text.primary,
+  },
+
+  detailsContainer:{
+backgroundColor:secondary, 
+paddingTop:20, 
+  },
+  textPrimaryBorder:{
+    borderWidth: 1, 
+    borderColor: text.primary,
+    marginBottom:10,
+    
+
+  },
+  ListItem: {
+    backgroundColor:background,
+    width:'90%',
+    alignSelf: 'center',
+    borderRadius:10,
+
+  },
   callBtn:{
     height:50,
     marginRight:10,
-    backgroundColor:'#3b5998',
+    width:55,
+    backgroundColor:primary,
+    borderWidth: 1, 
+    borderColor: text.primary,
 
   },
   textBtn:{
     height:50,
     marginRight:10,
-    backgroundColor:'#8b9dc3',
+    width:75,
+    backgroundColor:secondary,
+    borderWidth: 1, 
+    borderColor: text.primary,
   },
   phoneRow:{
-    width:'50%',
+    width:200,
   },
   imageContainer:{
-    backgroundColor:'#dfe3ee',
+    backgroundColor:background,
     alignItems: 'center',
     padding:20,
-    shadowColor: 'black',
+    shadowColor:primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 10,
   },
-  divider:{
-  height:10,
-  backgroundColor:'red',
-  },
   btnContainer:{
     flexDirection:'row',
     height:60,
+    alignItems: 'center',
+    backgroundColor:background,
+    
   },
   MainContainer: {
     flex: 1,
-    backgroundColor:'white',
+    backgroundColor:secondary,
   },
   container: {
   flex: 1,
@@ -139,7 +162,7 @@ const styles = StyleSheet.create({
   image:{
     aspectRatio: 1,
     borderWidth:10,
-    borderColor:'black',
+    borderColor:text.primary,
     width: 200,
      height: 200,
      borderRadius:20,

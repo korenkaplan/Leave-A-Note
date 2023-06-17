@@ -5,13 +5,18 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {passwordSchema,} from '../../utils/validation/validationSchemas'
 import { MainContext } from '../../context/ContextProvider';
+import { ThemeContext } from '../../context/ThemeContext';
+import CustomButton from '../../Components/uiComponents/CustomButton';
+
 export default function EditPassword() {
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true)
   const [newPasswordSecure, setNewPasswordSecure] = useState(true)
   const [repeatPasswordSecure, setRepeatPasswordSecure] = useState(true)
   const [isValid, setIsValid] = useState(false)
   const {updateUserPassword} = useContext(MainContext);
-
+  const {theme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
  
   const validationSchema = Yup.object().shape({
     currentPassword: passwordSchema,
@@ -58,8 +63,11 @@ export default function EditPassword() {
             onChangeText={handleChange('currentPassword')}
             value={values.currentPassword}
             secureTextEntry={oldPasswordSecure}
-            leftIcon={{type:'ionicon', name: 'lock-closed-outline'}}
-           rightIcon={{type:'ionicon', name : oldPasswordSecure?'eye-off-outline':'eye-outline',  onPress: () => setOldPasswordSecure(!oldPasswordSecure)}}
+            inputContainerStyle={styles.inputContainer}
+            inputStyle={styles.input}
+
+            leftIcon={{type:'ionicon',color:text.primary, name: 'lock-closed-outline'}}
+           rightIcon={{type:'ionicon',color:text.primary, name : oldPasswordSecure?'eye-off-outline':'eye-outline',  onPress: () => setOldPasswordSecure(!oldPasswordSecure)}}
             placeholder="Enter current password"
           />
           {errors.currentPassword && <Text style={styles.error}>{errors.currentPassword}</Text>}
@@ -67,9 +75,11 @@ export default function EditPassword() {
           <Input
             onChangeText={handleChange('newPassword')}
             value={values.newPassword}
+            inputContainerStyle={styles.inputContainer}
+            inputStyle={styles.input}
             secureTextEntry={newPasswordSecure}
-            leftIcon={{type:'ionicon', name: 'lock-closed-outline'}}
-            rightIcon={{type:'ionicon', name : newPasswordSecure?'eye-off-outline':'eye-outline',  onPress: () => setNewPasswordSecure(!newPasswordSecure)}}
+            leftIcon={{type:'ionicon', name: 'lock-closed-outline',color:text.primary}}
+            rightIcon={{type:'ionicon',color:text.primary, name : newPasswordSecure?'eye-off-outline':'eye-outline',  onPress: () => setNewPasswordSecure(!newPasswordSecure)}}
             placeholder="Enter new password"
           />
           {errors.newPassword && <Text style={styles.error}>{errors.newPassword}</Text>}
@@ -78,20 +88,26 @@ export default function EditPassword() {
             onChangeText={handleChange('repeatPassword')}
             value={values.repeatPassword}
             secureTextEntry={repeatPasswordSecure}
-            leftIcon={{type:'ionicon', name: 'lock-closed-outline'}}
-            rightIcon={{type:'ionicon', name : repeatPasswordSecure?'eye-off-outline':'eye-outline',  onPress: () => setRepeatPasswordSecure(!repeatPasswordSecure)}}
+            leftIcon={{type:'ionicon',color:text.primary, name: 'lock-closed-outline'}}
+            rightIcon={{type:'ionicon',color:text.primary, name : repeatPasswordSecure?'eye-off-outline':'eye-outline',  onPress: () => setRepeatPasswordSecure(!repeatPasswordSecure)}}
+            inputStyle={styles.input}
             placeholder="Repeat new password"
+            inputContainerStyle={styles.inputContainer}
+
           />
           {errors.repeatPassword && <Text style={styles.error} >{errors.repeatPassword}</Text>}
 
-          <Button  title="Submit" onPress={handleSubmit} />
+          <View style={styles.bottomContainer}>
+             <CustomButton buttonStyle={styles.submitBtn}  onPress={handleSubmit} title={'Submit'} />
+             </View>
+
         </View>
       )}
     </Formik>
     </View>
   )
 }
-const styles = StyleSheet.create({
+const createStyles = (primary,secondary,text,background) =>  StyleSheet.create({
   container:{
     width: '100%',
     height: '100%',
@@ -99,6 +115,25 @@ const styles = StyleSheet.create({
   },
   error:{
     color:'red'
-  }
+  },
+    inputContainer:{
+    borderWidth: 1,
+    borderColor: text.primary,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+  },
+  bottomContainer:{
+    width: '100%',
+    alignItems: 'center',
+  },
+  submitBtn:{
+    backgroundColor: secondary,
+    borderColor:text.primary,
+    borderWidth:1,
+    borderRadius:10,
+  },
+  input:{
+    color:text.primary,
+  },
 });
 

@@ -19,7 +19,7 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
   const {currentUser} = useContext(MainContext);
-  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
 
@@ -152,7 +152,7 @@ StyleSheet.create({
     backgroundColor: primary,
   },
   title: {
-    color: text.secondary,
+    color: text.primary,
   },
   backIcon: {
     headerTintColor: 'white',

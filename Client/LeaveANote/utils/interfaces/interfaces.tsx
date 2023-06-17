@@ -15,8 +15,22 @@ export interface Theme {
     regular: string;
     bold: string; 
   },
-}
 
+}
+export interface MessageProps {
+  // Define your component props here
+  route:
+  {
+     params:
+       {
+         item: Accident;
+       };
+ };
+};
+export interface Text {
+  primary: string;
+  secondary: string;
+}
 // the interface of a connected user.
 export interface User {
     id:string;

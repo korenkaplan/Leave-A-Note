@@ -10,21 +10,19 @@ import { ThemeContext } from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
 export default function Main() {
   const { authenticated, setAuthenticated } = useContext(MainContext);
-  const {setTheme,lightTheme,darkTheme} = useContext(ThemeContext);
-  const [isReady, setIsReady] = useState(false);
+  const {theme,setTheme,lightTheme,darkTheme} = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true); // Add isLoading state
   const colorScheme = useColorScheme();
   useEffect(() => {
-    if(colorScheme === 'dark')
-    {
-      setTheme(darkTheme);
-    }
-    else
-    {
-      setTheme(lightTheme);
-      
-    }
+       if(colorScheme === 'dark')
+       {
 
+        setTheme(darkTheme)
+       }
+       else if (colorScheme === 'light')
+       {
+        setTheme(lightTheme)
+       }
   }, [colorScheme])
   
   useEffect(() => {
@@ -43,8 +41,8 @@ export default function Main() {
           },3200);
       }
     };
-
-    getData();
+  getData();
+   setIsLoading(false); //
   }, []);
 
   if (isLoading) {

@@ -1,25 +1,16 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { View, StyleSheet,Linking } from 'react-native';
 import { Image, ListItem,Icon,Divider } from '@rneui/themed';
 import { Button } from 'native-base';
-import { Accident } from '../../utils/interfaces/interfaces';
+import {MessageProps } from '../../utils/interfaces/interfaces';
+import { ThemeContext } from '../../context/ThemeContext';
 
-interface ComponentProps {
-  // Define your component props here
-  route:
-  {
-     params:
-       {
-         item: Accident;
-       };
- };
-};
-
-const ReportView: React.FC<ComponentProps> = ({route}) => {
+const ReportView: React.FC<MessageProps> = ({route}) => {
   const {item} = route.params;
     const {hittingDriver, date, imageSource,isAnonymous,isIdentify, reporter} = item;
-        //return the header of the page
-  
+    const {theme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
       //return the image
       const image = (
         <Image
@@ -43,67 +34,67 @@ const ReportView: React.FC<ComponentProps> = ({route}) => {
       };
       //return in case that the damaging driver is not in the system
       const unknownDamagingReport = (
-        <>
-         <ListItem>
-      <Icon name="calendar" type="ionicon" color="grey" />
+        <View style={styles.detailsContainer}>
+         <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="calendar" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title>{date}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{date}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
-    <ListItem>
-      <Icon name="person-outline" type="ionicon" color="grey" />
+    <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="person-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title>Unknown Driver</ListItem.Title>
-        <ListItem.Subtitle>Damaging Driver</ListItem.Subtitle>
+        <ListItem.Title style={styles.Title}>Unknown Driver</ListItem.Title>
+        <ListItem.Subtitle style={styles.Subtitle}>Damaging Driver</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
-    <ListItem>
-      <Icon name="car-outline" type="ionicon" color="grey" />
+    <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="car-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title>{hittingDriver.carNumber}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
-        </>
+        </View>
       );
 
       //return in case that the damaging driver is in the system
       const knownDamagingReport = (
-        <>
-         <ListItem>
-      <Icon name="calendar" type="ionicon" color="grey" />
+        <View style={styles.detailsContainer}>
+         <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="calendar" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title>{date}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{date}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
-    <ListItem>
-      <Icon name="person-outline" type="ionicon" color="grey" />
+    <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="person-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title>{hittingDriver.name}</ListItem.Title>
-        <ListItem.Subtitle>Damaging Driver</ListItem.Subtitle>
+        <ListItem.Title style={styles.Title}>{hittingDriver.name}</ListItem.Title>
+        <ListItem.Subtitle style={styles.Subtitle}>Damaging Driver</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
-    <ListItem>
-      <Icon name="car-outline" type="ionicon" color="grey" />
+    <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
+      <Icon name="car-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title>{hittingDriver.carNumber}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
-    <View style={styles.btnContainer}>
-          <ListItem style={styles.phoneRow}> 
-        <Icon name="person" type="ionicon" color="grey" />
+    <View style={[styles.btnContainer,styles.ListItem,styles.textPrimaryBorder]}>
+          <ListItem  containerStyle={[styles.ListItem,styles.phoneRow,]}> 
+        <Icon name="person" type="ionicon" color={text.primary} />
         <ListItem.Content>
-          <ListItem.Title>{hittingDriver.phoneNumber}</ListItem.Title>
+          <ListItem.Title style={styles.Title}> {hittingDriver.phoneNumber}</ListItem.Title>
         </ListItem.Content>
       </ListItem>
             <Button style={styles.callBtn} onPress={()=>{moveToPhoneDialog(hittingDriver.phoneNumber)}}>
-              <Icon name="call" type="ionicon" color="white" />
+              <Icon name="call" type="ionicon" color={text.primary} />
             </Button>
             <Button style={styles.textBtn} onPress={()=>{moveToSmsDialog(hittingDriver.phoneNumber,hittingDriver.name)}}>
-              <Icon name="sms" type="font-awesome-5" color="white" />
+              <Icon name="sms" type="font-awesome-5" color={text.primary} />
             </Button>
           </View>
     
-        </>
+        </View>
       );
       //reporter information , if anonymous display information else don't display
       const reporterInformation = ()=>{
@@ -111,11 +102,11 @@ const ReportView: React.FC<ComponentProps> = ({route}) => {
         if(isAnonymous)
         {
             return (
-                <ListItem>
-                <Icon name="person" type="ionicon" color="grey" />
+                <ListItem containerStyle={styles.reporterItem}>
+                <Icon name="person" type="ionicon" color={text.primary} />
                 <ListItem.Content>
-                  <ListItem.Title>Anonymous Reporter</ListItem.Title>
-                  <ListItem.Subtitle>Reporter</ListItem.Subtitle>
+                  <ListItem.Title style={styles.Title}>Anonymous Reporter</ListItem.Title>
+                  <ListItem.Subtitle style={styles.Subtitle}>Reporter</ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
             );
@@ -123,12 +114,12 @@ const ReportView: React.FC<ComponentProps> = ({route}) => {
         //if reporter is not anonymous display infomration
         else{
             return (
-                <View style={styles.btnContainer}>
-          <ListItem style={styles.phoneRow}> 
-        <Icon name="person" type="ionicon" color="grey" />
+                <View style={[styles.btnContainer,styles.reporterItem]}>
+          <ListItem containerStyle={[styles.ListItem,styles.phoneRow,]}> 
+        <Icon name="person" type="ionicon" color={text.primary} />
         <ListItem.Content>
-          <ListItem.Title>{reporter.name}</ListItem.Title>
-          <ListItem.Subtitle>Reporter</ListItem.Subtitle>
+          <ListItem.Title style={styles.Title}>{reporter.name}</ListItem.Title>
+          <ListItem.Subtitle style={styles.Subtitle}>Reporter</ListItem.Subtitle>
         </ListItem.Content>
       </ListItem>
             <Button style={styles.callBtn} onPress={()=>{moveToPhoneDialog(reporter.phoneNumber)}}>
@@ -147,6 +138,7 @@ const ReportView: React.FC<ComponentProps> = ({route}) => {
         <View style={styles.imageContainer}>
           {image}
           </View>
+          <Divider style={styles.divider}/>
             {reporterInformation()}
             <Divider style={styles.divider}/>
             {isIdentify ? knownDamagingReport : unknownDamagingReport}
@@ -156,27 +148,47 @@ const ReportView: React.FC<ComponentProps> = ({route}) => {
   );
 };
 
-const styles = StyleSheet.create({
-    callBtn:{
-      height:50,
-      marginRight:10,
-      backgroundColor:'#3b5998',
+const createStyles = (primary,secondary,text,background) => 
+ StyleSheet.create({
+  Title:{
+    color:text.primary,
+  }, 
+  detailsContainer:{
+    backgroundColor:secondary, 
+    paddingTop:20, 
+      },
+      callBtn:{
+        height:50,
+        marginRight:10,
+        width:55,
+        backgroundColor:primary,
+        borderWidth: 1, 
+        borderColor: text.primary,
+    
+      },
+    textPrimaryBorder:{
+      borderWidth: 1, 
+      borderColor: text.primary,
+      marginBottom:10,
+      
   
     },
     textBtn:{
       height:50,
       marginRight:10,
-      backgroundColor:'#8b9dc3',
+      width:75,
+      backgroundColor:secondary,
+      borderWidth: 1, 
+      borderColor: text.primary,
     },
     phoneRow:{
-      width:'50%',
+      width:200,
     },
     imageContainer:{
-      backgroundColor:'#dfe3ee',
+      backgroundColor:background,
       alignItems: 'center',
       padding:20,
-      marginBottom:20,
-      shadowColor: 'black',
+      shadowColor:primary,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.2,
       shadowRadius: 4,
@@ -184,8 +196,8 @@ const styles = StyleSheet.create({
     },
     divider:{
     height:2,
-    backgroundColor:'black',
-    shadowColor: 'black',
+    backgroundColor:text.primary,
+    shadowColor: text.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -193,11 +205,13 @@ const styles = StyleSheet.create({
     },
     btnContainer:{
       flexDirection:'row',
-      height:60,
+      alignItems: 'center',
+      backgroundColor:background,
+      
     },
     MainContainer: {
       flex: 1,
-      backgroundColor:'white',
+    backgroundColor:secondary,
     },
     container: {
     flex: 1,
@@ -206,11 +220,26 @@ const styles = StyleSheet.create({
     image:{
       aspectRatio: 1,
       borderWidth:10,
-      borderColor:'black',
+      borderColor:text.primary,
       width: 200,
        height: 200,
        borderRadius:20,
-    }
+    },
+    reporterItem: {
+      backgroundColor: background,
+      minHeight: 'auto', // Adjust the minHeight property to achieve the desired effect
+    },
+    
+    ListItem: {
+      backgroundColor:background,
+      width:'90%',
+      alignSelf: 'center',
+      borderRadius:10,
+  
+    },
+    Subtitle:{
+      color:text.primary,
+    },
   });
   
 

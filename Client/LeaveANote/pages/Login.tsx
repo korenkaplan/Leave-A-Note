@@ -7,6 +7,11 @@ import { Button, Input, Text, CheckBox } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 import { emailSchema, passwordSchema } from '../utils/validation/validationSchemas';
+import { ThemeContext } from '../context/ThemeContext';
+import { Text as IText } from '../utils/interfaces/interfaces';
+import CustomButton from '../Components/uiComponents/CustomButton';
+import ThemedView from '../Components/uiComponents/ThemedView';
+import CustomInput from '../Components/uiComponents/CustomInput';
 
 interface LoginFormValues {
   email: string;
@@ -26,6 +31,9 @@ const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
   const { loginAttempt } = useContext(MainContext);
+  const {theme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background);
 
   const handleFormSubmit = async (values: LoginFormValues) => {
     // Handle login form submission
@@ -48,22 +56,23 @@ const Login: FC<Props> = ({ navigation }) => {
       >
         {({ handleChange, handleSubmit, values, errors }) => (
           <>
-            <Input
+            <CustomInput
               placeholder="Enter your email"
               value={values.email}
               onChangeText={handleChange('email')}
-              leftIcon={{ type: 'ionicon', name: 'mail-outline' }}
+              leftIcon={{ type: 'ionicon', name: 'mail-outline', color:text.primary, }}
               errorMessage={errors.email}
             />
-            <Input
+            <CustomInput
               placeholder="Enter your password"
               secureTextEntry={hidePassword}
               value={values.password}
               onChangeText={handleChange('password')}
-              leftIcon={{ type: 'ionicon', name: 'lock-closed-outline' }}
+              leftIcon={{ type: 'ionicon', name: 'lock-closed-outline', color:text.primary }}
               rightIcon={{
                 type: 'ionicon',
                 name: hidePassword ? 'eye-off-outline' : 'eye-outline',
+                 color:text.primary,
                 onPress: () => setHidePassword(!hidePassword),
               }}
               errorMessage={errors.password}
@@ -72,32 +81,70 @@ const Login: FC<Props> = ({ navigation }) => {
               title="Remember Me"
               checked={rememberMe}
               onPress={() => setRememberMe(!rememberMe)}
-              textStyle={{ color: 'black', backgroundColor: 'transparent' }}
+              containerStyle={{ backgroundColor: background }}
+              textStyle={{ color:text.primary, backgroundColor: 'transparent' }}
             />
-            <Button title="Login" onPress={handleSubmit} />
+       <View style={styles.buttonContainer}>
+      <CustomButton
+        buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
+        onPress={handleSubmit}
+        title={'Login'}
+      />
+    </View>
+
           </>
         )}
       </Formik>
-      <DividerWithText text="Don't have an account?" />
-      <Button title="Register" type="outline" onPress={() => navigation.navigate('SignUp')} />
+      <DividerWithText title="Don't have an account?" />
+      <View style={styles.buttonContainer}>
+      <CustomButton
+        buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
+        onPress={() => navigation.navigate('SignUp')}
+        title={'Register'}
+      />
+    </View>
+
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (primary:string,secondary:string,text:IText,background:string) =>  StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor:background,
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:10,
+  },
+  primaryBorder1:{
+    borderColor: text.primary,
+    borderWidth:1,
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color:text.primary,
   },
   subHeading: {
     fontSize: 18,
     marginBottom: 20,
+    color:text.secondary,
+
   },
+  inputContainer:{
+    borderWidth: 1,
+    borderColor: text.primary,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+  },
+  input:{
+    color:text.primary,
+  },
+
 });
 
 export default Login;

@@ -5,8 +5,8 @@ import {RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainContext } from '../../context/ContextProvider';
 import { Chip } from '@rneui/themed';
-import { NoteToSend } from '../../utils/interfaces/interfaces';
-
+import { NoteToSend, Text} from '../../utils/interfaces/interfaces';
+import { ThemeContext } from '../../context/ThemeContext';
 interface Params {
   carNumber: string;
   image: string;
@@ -20,7 +20,9 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const { carNumInput,submitNote, uploadPhotoToStorage} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
-
+  const {theme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
 
   useEffect(() => {
     if (image) {
@@ -89,17 +91,18 @@ const handleSubmit = async ():Promise<void> =>{
       <View style={styles.bottomContainer}>
       <View >
       <Chip
-            title={`Car Number ${carNumInput}`}
-            icon={{
-              name: 'car',
-              type: 'font-awesome',
-              size: 20,
-              color: 'purple',
-            }}
-            type="outline"
-            containerStyle={styles.chip}
-            titleStyle={styles.chipTitle}
-          />
+  title={`Car Number ${carNumInput}`}
+  icon={{
+    name: 'car',
+    type: 'font-awesome',
+    size: 20,
+    color: text.primary,
+  }}
+  color={secondary}
+  containerStyle={styles.chip}
+  titleStyle={styles.chipTitle}
+/>
+
           <Chip
           disabled={disableSendBtn}
           disabledStyle={styles.disableBtn}
@@ -114,7 +117,7 @@ const handleSubmit = async ():Promise<void> =>{
   onPress={handleSubmit}
   type="outline"
   containerStyle={styles.sendBtn}
-  titleStyle={styles.sendBtnTitle} // Add this line
+           titleStyle={styles.sendBtnTitle} // Add this line
 />
   </View>
       </View>
@@ -123,28 +126,30 @@ const handleSubmit = async ():Promise<void> =>{
 
 };
 
-const styles = StyleSheet.create({
+const createStyles = (primary: string, secondary: string, text: Text, background: string) =>  StyleSheet.create({
   disableBtn:{
     backgroundColor:'lightgray',
   },
   sendBtn: {
-    backgroundColor: 'purple',
-    alignSelf:'center',
-    minWidth:'50%',
+    backgroundColor: primary,
+    alignSelf: 'center',
+    minWidth: '50%',
   },
   sendBtnTitle: {
-    color: 'white',
+    color: text.primary,
   },
   bottomContainer:{
     flex:1,
   },
   chip: {
-    margin:30,
- alignSelf:'center',
- color:'purple',
+    margin: 30,
+    alignSelf: 'center',
+    borderColor: text.primary,
+    borderWidth: 2,
   },
+  
   chipTitle: {
-    color: 'purple',
+    color: text.primary,
   },
   divider: {
     height: 5,
@@ -157,13 +162,15 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  avatar:{
+  avatar: {
     alignSelf: 'center',
-    borderColor:'purple',
-    borderWidth:5,
+    borderColor: primary,
+    borderWidth: 5,
   },
-  avatarAccessory:{
-backgroundColor:'purple',
+  avatarAccessory: {
+    backgroundColor: primary,
+    borderColor: text.primary,
+    borderWidth: 2,
   },
   topContainer:{
     height:'50%',
@@ -175,6 +182,7 @@ backgroundColor:'purple',
   },
   MainContainer: {
     flex: 1,
+    backgroundColor: background,
   },
 
 });

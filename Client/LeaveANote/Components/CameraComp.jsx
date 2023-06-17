@@ -1,12 +1,18 @@
 import { View, Text,StyleSheet,ActivityIndicator,TouchableOpacity  } from 'react-native'
-import React,{useRef,useState,useEffect} from 'react'
+import React,{useRef,useState,useEffect,useContext} from 'react'
 import { Camera, useCameraDevices,CameraPermissionStatus } from 'react-native-vision-camera'
 import { Button, Icon, Image } from '@rneui/base';
+import { Text as IText } from '../utils/interfaces/interfaces';
+import { ThemeContext } from '../context/ThemeContext';
+import CustomButton from './uiComponents/CustomButton';
 export default function CameraComp({ navigation, route }) {
   const {previous} = route.params;
   const [cameraPermission, setCameraPermission] = useState("not-determined");
   const [imageData, setImageData] = useState('')
   const [takePhotoClicked, setTakePhotoClicked] = useState(false)
+  const {theme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background)
   const devices = useCameraDevices()
   const device = devices.back
   const camera = useRef(null);
@@ -72,8 +78,8 @@ export default function CameraComp({ navigation, route }) {
         <View style={styles.imageContainer}>
         <Image style={styles.image} source={{uri:imageData}} alt='image here'/>
         <View style={styles.buttonContainer}>
-        <Button title={'Use Photo'} onPress={moveBackToPreviousScreen}/>
-        <Button title={'Retake Photo'} onPress={()=> setTakePhotoClicked(false)}/>
+        <CustomButton containerStyle={{width:150}} title={'Use Photo'} onPress={moveBackToPreviousScreen}/>
+        <CustomButton containerStyle={{width:150}} title={'Retake Photo'} onPress={()=> setTakePhotoClicked(false)}/>
         </View>
       </View>
       );
@@ -99,7 +105,7 @@ export default function CameraComp({ navigation, route }) {
     </>
   )
 }
-const styles = StyleSheet.create({
+const createStyles = (primary,secondary,text,background) =>  StyleSheet.create({
   buttonContainer: {
     position: 'absolute',
     bottom: 50,

@@ -1,5 +1,5 @@
-import {View, StyleSheet, Dimensions, ActivityIndicator,Alert,TouchableOpacity} from 'react-native';
-import React, {useState,useContext} from 'react';
+import {View, StyleSheet,Animated, Dimensions, ActivityIndicator,Alert,useColorScheme} from 'react-native';
+import React, {useState,useContext,useEffect,useRef} from 'react';
 import { MainContext } from '../context/ContextProvider';
 import {Heading} from 'native-base';
 import Logo from '../assets/note-taking.svg';
@@ -7,11 +7,8 @@ import {Input, Icon, Chip,Button, Switch  } from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView'
 import CustomButton from '../Components/uiComponents/CustomButton';
-
-
-
 export default function Homepage({navigation}) {
-  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
   const widthPercent = 100;
@@ -26,8 +23,9 @@ export default function Homepage({navigation}) {
   const [iconName, setIconName] = useState('search');
   const [isNumberValid, setIsNumberValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const colorScheme = useColorScheme();
   const isNumLengthValid = searchValue.length > 6 && searchValue.length < 9;
-  const [checked, setChecked] = useState(false);
+ 
 
   /**
   Contains the props of the right icon of the input element
@@ -37,6 +35,8 @@ export default function Homepage({navigation}) {
     marginRight: 10,
     color: text.primary,
     backgroundColor: isNumLengthValid ? primary : 'transparent',
+    borderWidth:1,
+    borderColor:text.primary,
     borderRadius: 50,
     padding: 3,
     // disabled: !isNumLengthValid,
@@ -67,7 +67,6 @@ export default function Homepage({navigation}) {
     setIconName('search');
     setSearchValue(searchValue);
   };
-
   /**
    * This function checks the car number input in the database.
    * after submit event
@@ -125,7 +124,6 @@ export default function Homepage({navigation}) {
       buttonStyle: { backgroundColor: 'orange' }, // Custom style for the buttons
     }
   );
-
   return (
     <ThemedView style={styles.MainContainer} >
    <Icon
@@ -135,9 +133,9 @@ export default function Homepage({navigation}) {
   color={primary}
   onPress={logOutAlert}
   iconStyle={{ color: text.primary }} // Specify the color of the icon
-  containerStyle={{ marginLeft: 20 }}
+  containerStyle={[{ marginLeft: 20 },styles.primaryBorder1]}
 />
-           
+
         <View style={styles.container}>
       <Logo width={width} height={height} />
       <Heading style={{color:text.primary}}>Leave A Note</Heading>
@@ -152,8 +150,8 @@ export default function Homepage({navigation}) {
           keyboardType="numeric"
         />
       </View>
-      <CustomButton disabled={!isNumberValid} onPress={handleSearchPress} title={'Leave a Note'} />
-      <CustomButton buttonStyle={{backgroundColor: secondary}}  onPress={handleSearchPress} title={'Report'} />
+      <CustomButton buttonStyle={[styles.primaryBorder1]} disabled={!isNumberValid} onPress={moveToNotePage} title={'Leave a Note'} />
+      <CustomButton buttonStyle={[{backgroundColor: secondary},styles.primaryBorder1]}  onPress={moveToReportPage} title={'Report'} />
     </View>
     </ThemedView>
 
@@ -161,6 +159,10 @@ export default function Homepage({navigation}) {
 }
 
 const createStyles = (primary,secondary,text,background) => StyleSheet.create({
+  primaryBorder1:{
+    borderColor: text.primary,
+    borderWidth:1,
+  },
   text:{
     color: text.primary
   },

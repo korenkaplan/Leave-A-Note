@@ -7,7 +7,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 
 export default function Inbox({ navigation }) {
-  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
 
@@ -23,11 +23,11 @@ export default function Inbox({ navigation }) {
       if (message.type === 'note') {
         return (
           <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
-            <ListItem bottomDivider containerStyle={styles.noteItem}>
-              <Icon style={styles.iconNote} name='document-outline' type='ionicon' color={text.primary} />
+            <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
+              <Icon containerStyle={[styles.iconNote,styles.textPrimaryBorder]} name='document-outline' type='ionicon' color={text.primary} />
               <ListItem.Content>
-                <ListItem.Title style={styles.noteTitle}>{message.hittingDriver.name}</ListItem.Title>
-                <ListItem.Subtitle style={styles.noteSubtitle}>{message.date}</ListItem.Subtitle>
+                <ListItem.Title style={styles.Title}>{message.hittingDriver.name}</ListItem.Title>
+                <ListItem.Subtitle style={styles.Subtitle}>{message.date}</ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
@@ -38,11 +38,11 @@ export default function Inbox({ navigation }) {
       else {
         return (
           <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
-            <ListItem bottomDivider containerStyle={styles.reportItem}>
-              <Icon style={styles.iconReport} name='eye-outline' type='ionicon' color={text.primary} />
+            <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
+              <Icon containerStyle={[styles.iconReport,styles.textPrimaryBorder]} name='eye-outline' type='ionicon' color={text.primary} />
               <ListItem.Content>
-                <ListItem.Title style={styles.reportTitle}>{message.isIdentify ? message.hittingDriver.name : message.hittingDriver.carNumber}</ListItem.Title>
-                <ListItem.Subtitle style={styles.reportSubtitle}>{message.date}</ListItem.Subtitle>
+                <ListItem.Title style={styles.Title}>{message.isIdentify ? message.hittingDriver.name : message.hittingDriver.carNumber}</ListItem.Title>
+                <ListItem.Subtitle style={styles.Subtitle}>{message.date}</ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron />
             </ListItem>
@@ -138,22 +138,20 @@ const createStyles = (primary,secondary,text,background) =>
     padding:10,
     backgroundColor:secondary,
   },
-  noteTitle: {
+  Title: {
     color: text.primary,
   },
-  noteSubtitle: {
+  Subtitle: {
     color: text.secondary,
   },
-  reportTitle: {
-    color: text.primary,
-  },
-  reportSubtitle: {
-    color: text.secondary,
-  },
-  noteItem: {
+  item:{
     backgroundColor:background,
+    borderRadius:20,
+    marginBottom:5,
+
   },
-  reportItem: {
-    backgroundColor:background,
+  textPrimaryBorder:{
+    borderWidth: 1, 
+    borderColor: text.primary
   },
 });

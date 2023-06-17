@@ -7,6 +7,12 @@ import { Button, Input, Text, CheckBox  } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import { emailSchema, passwordSchema, phoneNumberSchema,carNumberSchema,fullNameSchema } from '../utils/validation/validationSchemas';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
+import CustomInput from '../Components/uiComponents/CustomInput';
+import CustomButton from '../Components/uiComponents/CustomButton';
+import { Text as IText } from '../utils/interfaces/interfaces';
+import { ThemeContext } from '../context/ThemeContext';
+import ThemedView from '../Components/uiComponents/ThemedView';
+import { Divider } from '@rneui/themed';
 interface SignUpFormValues {
   email: string;
   password: string;
@@ -32,6 +38,9 @@ const SignUp: FC<Props> = ({ navigation }) => {
 const [hidePassowrd, setHidePassowrd] = useState(true);
 const [hideRepPassowrd, setHideRepPassowrd] = useState(true);
 const {signupAttempt} = useContext(MainContext);
+const {theme} = useContext(ThemeContext);
+const {primary,secondary,text,background} = theme.colors
+const styles = createStyles(primary,secondary,text,background)
   const handleFormSubmit = async (values: SignUpFormValues,{setFieldError}) => {
     try {
       let result: number = await signupAttempt(values);
@@ -71,8 +80,10 @@ const {signupAttempt} = useContext(MainContext);
     {text: 'Move to sign in', onPress: () => navigation.navigate('Login')},
   ]);
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView style={styles.scroll}>
+      <DividerWithText title="Sign Up And Lets Begin "/>
+
       <Formik
         initialValues={{ email: 'k@gmail.com', password: '123456',repeatPassword:'123456',phoneNumber:'0533406789',carNumber:'8333368',fullName:'koren kaplan' }}
         validationSchema={validationSchema}
@@ -80,70 +91,93 @@ const {signupAttempt} = useContext(MainContext);
       >
         {({ handleChange, handleSubmit, values, errors }) => (
           <>
-            <Input
+            <CustomInput
               placeholder="Enter your email"
               value={values.email}
               onChangeText={handleChange('email')}
-              leftIcon={{type:'ionicon', name: 'mail-outline'}}
+              leftIcon={{type:'ionicon', name: 'mail-outline',color:text.primary}}
               errorMessage={errors.email}
+              
             />
-                  <Input
+        
+                  <CustomInput
               placeholder="Enter your full name"
               value={values.fullName}
               onChangeText={handleChange('fullName')}
-              leftIcon={{type:'ionicon', name: 'person-outline'}}
+              leftIcon={{type:'ionicon', name: 'person-outline',color:text.primary}}
               errorMessage={errors.fullName}
             />
-            <Input
+            <CustomInput
               placeholder="Enter your password"
               secureTextEntry={hidePassowrd}
               value={values.password}
               onChangeText={handleChange('password')}
-              leftIcon={{type:'ionicon', name: 'lock-closed-outline'}}
-           rightIcon={{type:'ionicon', name : hidePassowrd ? 'eye-off-outline' : 'eye-outline',  onPress: () => setHidePassowrd(!hidePassowrd)}}
+              leftIcon={{type:'ionicon', name: 'lock-closed-outline',color:text.primary}}
+           rightIcon={{type:'ionicon',color:text.primary, name : hidePassowrd ? 'eye-off-outline' : 'eye-outline',  onPress: () => setHidePassowrd(!hidePassowrd)}}
               errorMessage={errors.password}
             />
-               <Input
+               <CustomInput
               placeholder="Repeat your password"
               secureTextEntry={hideRepPassowrd}
               value={values.repeatPassword}
               onChangeText={handleChange('repeatPassword')}
-              leftIcon={{type:'ionicon', name: 'lock-closed-outline'}}
-           rightIcon={{type:'ionicon', name : hideRepPassowrd ? 'eye-off-outline' : 'eye-outline',  onPress: () => setHideRepPassowrd(!hideRepPassowrd)}}
+              leftIcon={{type:'ionicon',color:text.primary, name: 'lock-closed-outline',color:text.primary}}
+           rightIcon={{type:'ionicon',color:text.primary, name : hideRepPassowrd ? 'eye-off-outline' : 'eye-outline',  onPress: () => setHideRepPassowrd(!hideRepPassowrd)}}
               errorMessage={errors.repeatPassword}
             />
-             <Input
+             <CustomInput
               placeholder="Enter your car number"
               value={values.carNumber}
               onChangeText={handleChange('carNumber')}
-              leftIcon={{type:'ionicon', name: 'car-outline'}}
+              leftIcon={{type:'ionicon',color:text.primary, name: 'car-outline'}}
               errorMessage={errors.carNumber}
             />
-            <Input
+            <CustomInput
               placeholder="Enter your phone number"
               value={values.phoneNumber}
               onChangeText={handleChange('phoneNumber')}
-              leftIcon={{type:'ionicon', name: 'phone-portrait-outline'}}
+              leftIcon={{type:'ionicon',color:text.primary, name: 'phone-portrait-outline'}}
               errorMessage={errors.phoneNumber}
             />
-            <Button title="Sign Up" onPress={handleSubmit} />
+                <View style={styles.buttonContainer}>
+      <CustomButton
+        buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
+        onPress={handleSubmit}
+        title={'Register'}
+      />
+    </View>
           </>
         )}
       </Formik>
-      <DividerWithText text="Already Have An Account ?"/>
-      <Button title="Sign in" type="outline" onPress={() => navigation.navigate('Login')} />
-      </ScrollView>
+      <DividerWithText title="Already Have An Account ?"/>
+      <View style={styles.buttonContainer}>
+      <CustomButton
+        buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
+        onPress={() => navigation.navigate('Login')}
+        title={'Login'}
+      />
     </View>
+      </ScrollView>
+    </ThemedView>
   );
 };
-const styles = StyleSheet.create({
+const createStyles = (primary:string,secondary:string,text:IText,background:string) =>  StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
   },
+  primaryBorder1:{
+    borderColor: text.primary,
+    borderWidth:1,
+  },
   scroll:{
     flexGrow: 1,
     padding: 10,
+  },
+  buttonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:10,
   },
 });
 export default SignUp;

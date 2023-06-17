@@ -1,15 +1,17 @@
 import React, { createContext, useState, ReactNode} from 'react';
 import {Theme} from '../utils/interfaces/interfaces'
+import { useSafeArea } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Create the theme context
 interface ThemeContextType {
     theme: Theme;
-    setTheme:  React.Dispatch<React.SetStateAction<Theme>>;
-    darkTheme: Theme;
+    setTheme: React.Dispatch<React.SetStateAction<Theme>>;
     lightTheme: Theme;
-    toggleTheme: () => void;
-}
+    darkTheme: Theme;
 
+}
+type ColorScheme = 'dark' | 'light';
 export const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
 // Create the theme provider component
 function ThemeContextProvider({ children }: { children: ReactNode; }) {
@@ -35,13 +37,13 @@ function ThemeContextProvider({ children }: { children: ReactNode; }) {
       // Define the dark mode theme
       const darkTheme: Theme = {
         colors: {
-          primary: '#7289da',
+          primary: 'purple',
           secondary: '#424549',
           text: {
             primary: '#ffffff',
             secondary: '#cccccc',
           },
-          background: '#000000',
+          background: '#222222',
           // Add more colors as needed
         },
         fonts: {
@@ -51,21 +53,35 @@ function ThemeContextProvider({ children }: { children: ReactNode; }) {
         },
       };
       
-  
   const [theme, setTheme] = useState(lightTheme);
-  
-  // Function to toggle between light and dark mode
-  const toggleTheme = () => {
-    console.log('here');
-    setTheme((prevTheme) => (prevTheme === lightTheme ? darkTheme : lightTheme));
+  const [icon, setIcon] = useState('');
+
+const setColorScheme= async (colorScheme:ColorScheme) => {
+}
+const saveColorSchemePreference = async (colorScheme:string) => {
+  try {
+    await AsyncStorage.setItem('colorScheme', colorScheme);
+  } catch (error) {
+    // Handle the error
+    console.log('Error saving color scheme preference:', error);
+  }
+};
+const getColorSchemePreference = async () => {
+  try {
+    const colorScheme: string | null = await AsyncStorage.getItem('colorScheme');
+    return colorScheme;
+  } catch (error) {
+    // Handle the error
+    return null;
+    console.log('Error retrieving color scheme preference:', error);
+  }
 };
 
   const value: ThemeContextType = {
     theme,
     setTheme,
-    toggleTheme,
     lightTheme,
-    darkTheme
+    darkTheme,
   };
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

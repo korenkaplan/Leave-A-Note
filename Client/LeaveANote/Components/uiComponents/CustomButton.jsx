@@ -7,6 +7,7 @@ const CustomButton = ({ title, buttonStyle, titleStyle, containerStyle, onPress,
 
   const defaultButtonStyle = {
     backgroundColor: primary,
+    borderRadius:17,
   };
 
   const defaultTitleStyle = {
