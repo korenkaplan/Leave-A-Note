@@ -46,7 +46,7 @@ class App{
         const dbOptions = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            dbName: 'MyLearnings' // Specify the database name here
+            dbName: DB_NAME // Specify the database name here
           };
         mongoose.connect(
             `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`,dbOptions

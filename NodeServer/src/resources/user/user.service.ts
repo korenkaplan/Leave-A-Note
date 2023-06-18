@@ -1,14 +1,15 @@
 import UserModel from "@/resources/user/user.model";
 import token from "@/utils/token";
-
+import Accident from "../accident/accident.interface";
+import IUser from '@/resources/user/user.interface'
 class UserService {
     private user = UserModel;
     /**
      * Register a new user
      */
-    public async register(name: string, email: string, password: string,role: string): Promise<string | Error> {
+    public async register(name: string, email: string,carNumber: string,phoneNumber: string, password: string,role: string ): Promise<string | Error> {
         try {
-            const user = await this.user.create({name, email, password, role});
+            const user = await this.user.create({ name, email, password,phoneNumber,carNumber, role, accidents: [], unreadMessages: [] });
             const accessToken = token.createToken(user);
             return accessToken;
         } catch (error: any) {
@@ -38,5 +39,23 @@ class UserService {
             throw new Error('Unable to login: ' + error.message);     
         }
     };
+
+    public async getUserByCarNumber(carNumber: string): Promise<IUser | null> {
+        try {
+          const user = await this.user.findOne({ carNumber });
+          return user;
+        } catch (error: any) {
+          throw new Error('getUserByCarNumber service: ' + error.message);
+        }
+      }
+      
+      public async getUserById(id: string): Promise<IUser | null> {
+        try {
+            return this.user.findOne({_id:id });
+        } catch (error:any) {
+            throw new Error('getUserById service: ' + error.message);
+        }
+      };
+    
 };
 export default UserService;

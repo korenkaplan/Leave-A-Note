@@ -55,6 +55,7 @@ export interface ReportToSend {
 //The interface of a note to send out by the connected user
 export interface NoteToSend {
     damagedCarNumber: string;
+    hittingCarNumber: string;
     imageSource: string;
     date: string;
   }
