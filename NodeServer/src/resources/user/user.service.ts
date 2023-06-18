@@ -1,6 +1,6 @@
 import UserModel from "@/resources/user/user.model";
 import token from "@/utils/token";
-import Accident from "../accident/accident.interface";
+import IAccident from "../accident/accident.interface";
 import IUser from '@/resources/user/user.interface'
 class UserService {
     private user = UserModel;
@@ -49,13 +49,27 @@ class UserService {
         }
       }
       
-      public async getUserById(id: string): Promise<IUser | null> {
+    public async getUserById(id: string): Promise<IUser | null> {
         try {
             return this.user.findOne({_id:id });
         } catch (error:any) {
             throw new Error('getUserById service: ' + error.message);
         }
       };
+
+    public async addMessageToUser(accident: IAccident,damagedUser: IUser):Promise<boolean | Error>{
+        try {
+            //add to user messages
+           damagedUser.accidents.push(accident);
+           
+           damagedUser.unreadMessages.push(accident);
+           await damagedUser.save();
+           console.log('saved successfully');
+            return true;
+        } catch (error: any) {
+            throw new Error('addNoteToUserMessages: ' + error.message);
+        }
+    };
     
 };
 export default UserService;

@@ -26,6 +26,7 @@ if (args.length < 1) {
 }
 
 const folderName = args[0];
+const folderNameCapitalized = folderName.charAt(0).toUpperCase() + folderName.slice(1);
 const absoluteFolderPath = path.join(folderPath, folderName);
 
 createFolder(absoluteFolderPath);
@@ -41,10 +42,10 @@ const filesToCreate = [
 filesToCreate.forEach((fileName) => {
   let fileContent = `// ${fileName} content`;
 
-  if (fileName === `${folderName}.interface.ts`) {
+         if (fileName === `${folderName}.interface.ts`) {
     fileContent = `import { Document } from 'mongoose';
 
-export default interface ${folderName.charAt(0).toUpperCase() + folderName.slice(1)} extends Document {
+export default interface ${folderNameCapitalized} extends Document {
 
 };
 `;
@@ -54,7 +55,7 @@ import IController from '@/utils/interfaces/controller.interface';
 import HttpException from '@/utils/exceptions/http.exception';
 import validationMiddleware from '@/middleware/validation.middleware';
 
-class ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Controller implements IController {
+class ${folderNameCapitalized}Controller implements IController {
     public path = '/${folderName}s';
     public router = Router();
 
@@ -67,29 +68,29 @@ class ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Controller impl
     }
 }
 
-export default ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Controller;
+export default ${folderNameCapitalized}Controller;
 `;
   } else if (fileName === `${folderName}.model.ts`) {
     fileContent = `import { Schema, model } from 'mongoose';
-import ${folderName.charAt(0).toUpperCase() + folderName.slice(1)} from '@/resources/${folderName}/${folderName}.interface';
+import ${folderNameCapitalized} from '@/resources/${folderName}/${folderName}.interface';
 
-const ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Schema = new Schema(
+const ${folderNameCapitalized}Schema = new Schema(
   {
     // Enter fields here
   },
   { timestamps: true, collection: '${folderName}s' } // Merge options into a single object
 );
 
-export default model<${folderName.charAt(0).toUpperCase() + folderName.slice(1)}>('${folderName.charAt(0).toUpperCase() + folderName.slice(1)}', ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Schema);
+export default model<${folderNameCapitalized}>('${folderNameCapitalized}', ${folderNameCapitalized}Schema);
 `;
   } else if (fileName === `${folderName}.service.ts`) {
-    fileContent = `import ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Model from '@/resources/${folderName}/${folderName}.model';
+    fileContent = `import ${folderNameCapitalized}Model from '@/resources/${folderName}/${folderName}.model';
 
-class ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Service {
-    private ${folderName} = ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Model;
+class ${folderNameCapitalized}Service {
+    private ${folderName} = ${folderNameCapitalized}Model;
 }
 
-export default ${folderName.charAt(0).toUpperCase() + folderName.slice(1)}Service;
+export default ${folderNameCapitalized}Service;
 `;
   } else if (fileName === `${folderName}.validation.ts`) {
     fileContent = `import Joi from 'joi';
