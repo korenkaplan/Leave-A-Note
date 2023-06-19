@@ -5,7 +5,6 @@ import cors from 'cors';
 import morgan from 'morgan';
 import Controller from '@/utils/interfaces/controller.interface';
 import helmet from 'helmet';
-import { log } from 'console';
 import errorMiddleware from '@/middleware/error.middleware';
 
 class App{
@@ -46,7 +45,7 @@ class App{
         const dbOptions = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            dbName: 'MyLearnings' // Specify the database name here
+            dbName: DB_NAME // Specify the database name here
           };
         mongoose.connect(
             `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`,dbOptions

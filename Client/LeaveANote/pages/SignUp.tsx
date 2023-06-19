@@ -3,7 +3,6 @@ import { View, StyleSheet,ScrollView,Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, Input, Text, CheckBox  } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import { emailSchema, passwordSchema, phoneNumberSchema,carNumberSchema,fullNameSchema } from '../utils/validation/validationSchemas';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
@@ -41,7 +40,7 @@ const {signupAttempt} = useContext(MainContext);
 const {theme} = useContext(ThemeContext);
 const {primary,secondary,text,background} = theme.colors
 const styles = createStyles(primary,secondary,text,background)
-  const handleFormSubmit = async (values: SignUpFormValues,{setFieldError}) => {
+  const handleFormSubmit = async (values: SignUpFormValues,{setFieldError}: any) => {
     try {
       let result: number = await signupAttempt(values);
 
@@ -75,7 +74,7 @@ const styles = createStyles(primary,secondary,text,background)
     console.log(values);
   };
   const createAlert = () =>
-  Alert.alert('Registered Successfully', 'Toy account has been created, now sign in to get started', [
+  Alert.alert('Registered Successfully', 'Your account has been created, now sign in to get started', [
  
     {text: 'Move to sign in', onPress: () => navigation.navigate('Login')},
   ]);
@@ -92,59 +91,52 @@ const styles = createStyles(primary,secondary,text,background)
         {({ handleChange, handleSubmit, values, errors }) => (
           <>
             <CustomInput
-              placeholder="Enter your email"
-              value={values.email}
-              onChangeText={handleChange('email')}
-              leftIcon={{type:'ionicon', name: 'mail-outline',color:text.primary}}
-              errorMessage={errors.email}
-              
+                placeholder="Enter your email"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                leftIcon={{ type: 'ionicon', name: 'mail-outline', color: text.primary }}
+                errorMessage={errors.email} inputContainerStyle={undefined} inputStyle={undefined}              
             />
         
                   <CustomInput
-              placeholder="Enter your full name"
-              value={values.fullName}
-              onChangeText={handleChange('fullName')}
-              leftIcon={{type:'ionicon', name: 'person-outline',color:text.primary}}
-              errorMessage={errors.fullName}
-            />
+                placeholder="Enter your full name"
+                value={values.fullName}
+                onChangeText={handleChange('fullName')}
+                leftIcon={{ type: 'ionicon', name: 'person-outline', color: text.primary }}
+                errorMessage={errors.fullName} inputContainerStyle={undefined} inputStyle={undefined}            />
             <CustomInput
-              placeholder="Enter your password"
-              secureTextEntry={hidePassowrd}
-              value={values.password}
-              onChangeText={handleChange('password')}
-              leftIcon={{type:'ionicon', name: 'lock-closed-outline',color:text.primary}}
-           rightIcon={{type:'ionicon',color:text.primary, name : hidePassowrd ? 'eye-off-outline' : 'eye-outline',  onPress: () => setHidePassowrd(!hidePassowrd)}}
-              errorMessage={errors.password}
-            />
+                placeholder="Enter your password"
+                secureTextEntry={hidePassowrd}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                leftIcon={{ type: 'ionicon', name: 'lock-closed-outline', color: text.primary }}
+                rightIcon={{ type: 'ionicon', color: text.primary, name: hidePassowrd ? 'eye-off-outline' : 'eye-outline', onPress: () => setHidePassowrd(!hidePassowrd) }}
+                errorMessage={errors.password} inputContainerStyle={undefined} inputStyle={undefined}            />
                <CustomInput
-              placeholder="Repeat your password"
-              secureTextEntry={hideRepPassowrd}
-              value={values.repeatPassword}
-              onChangeText={handleChange('repeatPassword')}
-              leftIcon={{type:'ionicon',color:text.primary, name: 'lock-closed-outline',color:text.primary}}
-           rightIcon={{type:'ionicon',color:text.primary, name : hideRepPassowrd ? 'eye-off-outline' : 'eye-outline',  onPress: () => setHideRepPassowrd(!hideRepPassowrd)}}
-              errorMessage={errors.repeatPassword}
-            />
+                placeholder="Repeat your password"
+                secureTextEntry={hideRepPassowrd}
+                value={values.repeatPassword}
+                onChangeText={handleChange('repeatPassword')}
+                leftIcon={{ type: 'ionicon', color: text.primary, name: 'lock-closed-outline', color: text.primary }}
+                rightIcon={{ type: 'ionicon', color: text.primary, name: hideRepPassowrd ? 'eye-off-outline' : 'eye-outline', onPress: () => setHideRepPassowrd(!hideRepPassowrd) }}
+                errorMessage={errors.repeatPassword} inputContainerStyle={undefined} inputStyle={undefined}            />
              <CustomInput
-              placeholder="Enter your car number"
-              value={values.carNumber}
-              onChangeText={handleChange('carNumber')}
-              leftIcon={{type:'ionicon',color:text.primary, name: 'car-outline'}}
-              errorMessage={errors.carNumber}
-            />
+                placeholder="Enter your car number"
+                value={values.carNumber}
+                onChangeText={handleChange('carNumber')}
+                leftIcon={{ type: 'ionicon', color: text.primary, name: 'car-outline' }}
+                errorMessage={errors.carNumber} inputContainerStyle={undefined} inputStyle={undefined}            />
             <CustomInput
-              placeholder="Enter your phone number"
-              value={values.phoneNumber}
-              onChangeText={handleChange('phoneNumber')}
-              leftIcon={{type:'ionicon',color:text.primary, name: 'phone-portrait-outline'}}
-              errorMessage={errors.phoneNumber}
-            />
+                placeholder="Enter your phone number"
+                value={values.phoneNumber}
+                onChangeText={handleChange('phoneNumber')}
+                leftIcon={{ type: 'ionicon', color: text.primary, name: 'phone-portrait-outline' }}
+                errorMessage={errors.phoneNumber} inputContainerStyle={undefined} inputStyle={undefined}            />
                 <View style={styles.buttonContainer}>
       <CustomButton
-        buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
-        onPress={handleSubmit}
-        title={'Register'}
-      />
+                  buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
+                  onPress={handleSubmit}
+                  title={'Register'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
     </View>
           </>
         )}
@@ -152,10 +144,9 @@ const styles = createStyles(primary,secondary,text,background)
       <DividerWithText title="Already Have An Account ?"/>
       <View style={styles.buttonContainer}>
       <CustomButton
-        buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
-        onPress={() => navigation.navigate('Login')}
-        title={'Login'}
-      />
+            buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
+            onPress={() => navigation.navigate('Login')}
+            title={'Login'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
     </View>
       </ScrollView>
     </ThemedView>
