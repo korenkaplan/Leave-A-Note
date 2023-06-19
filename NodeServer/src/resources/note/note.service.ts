@@ -1,4 +1,4 @@
-import IAccident from '@/resources/accident/accident.interface';
+import {IAccident} from '@/resources/accident/accident.interface';
 import IUser from '@/resources/user/user.interface';
 import UserService from '../user/user.service';
 class NoteService {
@@ -8,7 +8,8 @@ class NoteService {
         try {
             //find the damaged user by id
            // const damagedUser: IUser | null = await this.user.findById(new Types.ObjectId('648f447388cf8e6657912c2d'));
-            const damagedUser: IUser | null = await this.user.getUserById(damage_user_id);
+            const damagedUser: IUser | null = await this.user.GetUserQuery({"_id":damage_user_id});
+            console.log(damagedUser);
             
             if(!damagedUser){return false;}
   
@@ -23,7 +24,7 @@ class NoteService {
             imageSource: imageSource,
             type: 'note',
             isAnonymous: false,
-            isIdentify: false,
+            isIdentify: true,
             reporter: undefined,
         };
             //add the note to the user messages and accidents
@@ -39,7 +40,6 @@ class NoteService {
         const year = String(currentDate.getFullYear()).slice(-2);
         const formattedDate = `${day}/${month}/${year}`;
         
-        console.log(formattedDate); // Output: 18/06/23
         return formattedDate;        
     }
     

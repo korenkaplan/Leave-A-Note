@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
-import Report from '@/resources/report/report.interface';
+import { Schema, model,InferSchemaType } from 'mongoose';
+import IReport from '@/resources/report/report.interface';
 
-const ReportSchema = new Schema<Report>(
+const ReportSchema = new Schema<IReport>(
   {
     imageUrl: {
       type: String,
@@ -31,5 +31,5 @@ const ReportSchema = new Schema<Report>(
     },
   },
 );
-
-export default model<Report>('Report', ReportSchema);
+type Report = InferSchemaType<typeof ReportSchema>;
+export default model<IReport>('Report', ReportSchema);

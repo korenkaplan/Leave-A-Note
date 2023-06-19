@@ -7,8 +7,8 @@ const reportValidationSchema = Joi.object({
   isAnonymous: Joi.boolean().required(),
   reporter: Joi.object({
     name: Joi.string().required(),
-    carNumber: Joi.string().min(7).max(8).required(),
+    phoneNumber: Joi.string().length(10),
   }).required(),
 });
 
-export default reportValidationSchema;
+export default {reportValidationSchema};

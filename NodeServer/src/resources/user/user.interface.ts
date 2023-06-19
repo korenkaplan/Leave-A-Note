@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import Accident from '@/resources/accident/accident.interface';
+import {IAccident} from '@/resources/accident/accident.interface';
 
 export default interface IUser extends Document {
   email: string;
@@ -8,8 +8,8 @@ export default interface IUser extends Document {
   carNumber: string;
   phoneNumber: string;
   role: string;
-  accidents: Accident[]; // an array of Accident objects
-  unreadMessages: Accident[]; // an array of Accident objects in inbox
+  accidents: IAccident[]; // an array of Accident objects
+  unreadMessages: IAccident[]; // an array of Accident objects in inbox
 
   isValidPassword(password: string): Promise<Error | boolean>;
 }

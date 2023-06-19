@@ -5,7 +5,6 @@ import cors from 'cors';
 import morgan from 'morgan';
 import Controller from '@/utils/interfaces/controller.interface';
 import helmet from 'helmet';
-import { log } from 'console';
 import errorMiddleware from '@/middleware/error.middleware';
 
 class App{

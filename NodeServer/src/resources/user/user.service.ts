@@ -1,7 +1,8 @@
 import UserModel from "@/resources/user/user.model";
 import token from "@/utils/token";
-import IAccident from "../accident/accident.interface";
+import {IAccident} from "@/resources/accident/accident.interface";
 import IUser from '@/resources/user/user.interface'
+import { FilterQuery, ProjectionFields, Types  } from "mongoose";
 class UserService {
     private user = UserModel;
     /**
@@ -16,7 +17,6 @@ class UserService {
             throw new Error('register service: ' + error.message);
         }
     };
-    
      /**
      * Attempt to login a user
      */
@@ -39,26 +39,11 @@ class UserService {
             throw new Error('Unable to login: ' + error.message);     
         }
     };
-
-    public async getUserByCarNumber(carNumber: string): Promise<IUser | null> {
-        try {
-          const user = await this.user.findOne({ carNumber });
-          return user;
-        } catch (error: any) {
-          throw new Error('getUserByCarNumber service: ' + error.message);
-        }
-      }
-      
-    public async getUserById(id: string): Promise<IUser | null> {
-        try {
-            return this.user.findOne({_id:id });
-        } catch (error:any) {
-            throw new Error('getUserById service: ' + error.message);
-        }
-      };
-
     public async addMessageToUser(accident: IAccident,damagedUser: IUser):Promise<boolean | Error>{
         try {
+
+        // Set the _id field of the accident object to the generated ObjectId
+           accident._id = new Types.ObjectId();
             //add to user messages
            damagedUser.accidents.push(accident);
            
@@ -70,6 +55,13 @@ class UserService {
             throw new Error('addNoteToUserMessages: ' + error.message);
         }
     };
-    
+    public async GetUserQuery(query: FilterQuery<IUser>= {}, projection: ProjectionFields<IUser>= {}): Promise<IUser | null> {
+        try {
+          const user = await this.user.findOne(query, projection);
+          return user;
+        } catch (error: any) {
+          throw new Error('getUserByCarNumber service: ' + error.message);
+        }
+      }
 };
 export default UserService;

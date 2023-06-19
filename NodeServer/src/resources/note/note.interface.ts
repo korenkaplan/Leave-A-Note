@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export default interface Note extends Document {
+export default interface INote extends Document {
   damaged_user_id: string;
   hitting_user_car: string;
   hitting_user_phone: string;

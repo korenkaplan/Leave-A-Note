@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
-import Note from '@/resources/note/note.interface';
+import INote from '@/resources/note/note.interface';
 
-const NoteSchema = new Schema<Note>(
+const NoteSchema = new Schema<INote>(
   {
     damaged_user_id: {
       type: String,
@@ -27,4 +27,4 @@ const NoteSchema = new Schema<Note>(
   {collection:'users'}
 );
 
-export default model<Note>('Note', NoteSchema);
+export default model<INote>('Note', NoteSchema);

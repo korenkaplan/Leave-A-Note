@@ -4,7 +4,6 @@ import HttpException from '@/utils/exceptions/http.exception';
 import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/note/note.validation'
 import NoteService from '@/resources/note/note.service';
-import { log } from 'console';
 class NoteController implements IController {
     public path = '/notes';
     public router = Router();
