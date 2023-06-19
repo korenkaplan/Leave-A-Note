@@ -5,6 +5,7 @@ import NoteService from '@/resources/note/note.service';
 import HttpException from '@/utils/exceptions/http.exception';
 import { IAccident } from '@/resources/accident/accident.interface';
 import UnMatchedReportsService from '@/resources/unMatchedReports/unMatchedReports.service';
+import { Types } from 'mongoose';
 import { log } from 'console';
 class ReportService {
     private ReportModel = ReportModel;
@@ -56,6 +57,7 @@ class ReportService {
         imageUrl: string
     ): Promise<boolean | Error> {
         const accidentData: IAccident = {
+            _id: new Types.ObjectId(),
             hittingDriver: {
                 name: hittingUser.name,
                 carNumber: hittingUser.carNumber,

@@ -2,15 +2,25 @@ import UserModel from "@/resources/user/user.model";
 import token from "@/utils/token";
 import {IAccident} from "@/resources/accident/accident.interface";
 import IUser from '@/resources/user/user.interface'
+import ReportModel from "@/resources/report/report.model";
 import { FilterQuery, ProjectionFields, Types  } from "mongoose";
+import UnMatchedReportsModel from "@/resources/unMatchedReports/unMatchedReports.model";
+import IUnMatchedReports from "../unMatchedReports/unMatchedReports.interface";
+import userModel from "@/resources/user/user.model";
 class UserService {
     private user = UserModel;
+    private unMatchedReportsModel = UnMatchedReportsModel;
     /**
      * Register a new user
      */
     public async register(name: string, email: string,carNumber: string,phoneNumber: string, password: string,role: string ): Promise<string | Error> {
         try {
-            const user = await this.user.create({ name, email, password,phoneNumber,carNumber, role, accidents: [], unreadMessages: [] });
+            const user: IUser = await this.user.create({ name, email, password,phoneNumber,carNumber, role, accidents: [], unreadMessages: [] });
+            const unMatchedReports = await this.SearchUnmatchedReports(user);
+            if(unMatchedReports){
+            await this.AddUnmatchedReportsToUser(user,unMatchedReports)
+            console.log('successfully Added unMatchedReports');
+            }
             const accessToken = token.createToken(user);
             return accessToken;
         } catch (error: any) {
@@ -39,14 +49,14 @@ class UserService {
             throw new Error('Unable to login: ' + error.message);     
         }
     };
-    public async addMessageToUser(accident: IAccident,damagedUser: IUser):Promise<boolean | Error>{
+    /**
+     * Add new message to user's unread messages and accidents.
+     */
+    public async addMessageToUser(accident: IAccident ,damagedUser: IUser):Promise<boolean | Error>{
         try {
-
-        // Set the _id field of the accident object to the generated ObjectId
-           accident._id = new Types.ObjectId();
+            accident._id = new Types.ObjectId();
             //add to user messages
            damagedUser.accidents.push(accident);
-           
            damagedUser.unreadMessages.push(accident);
            await damagedUser.save();
            console.log('saved successfully');
@@ -55,6 +65,9 @@ class UserService {
             throw new Error('addNoteToUserMessages: ' + error.message);
         }
     };
+      /**
+     * Find user by any query
+     */
     public async GetUserQuery(query: FilterQuery<IUser>= {}, projection: ProjectionFields<IUser>= {}): Promise<IUser | null> {
         try {
           const user = await this.user.findOne(query, projection);
@@ -62,6 +75,37 @@ class UserService {
         } catch (error: any) {
           throw new Error('getUserByCarNumber service: ' + error.message);
         }
+      }
+      /**
+     * Search for reports in the the unmatched collection for the new registered user car number
+     */
+      private async SearchUnmatchedReports(user: IUser): Promise<IUnMatchedReports[] | null>{
+        try {
+            const carNumber: string = user.carNumber;
+            const matchedReports = await this.unMatchedReportsModel.find({"damagedCarNumber": carNumber})
+            await this.unMatchedReportsModel.deleteMany({"damagedCarNumber": carNumber})
+            return matchedReports;   
+        } catch (error: any) {
+            throw new Error('SearchUnmatchedReports: ' + error.message);
+        }
+      };
+    /**
+     * Add all the reports found in the unmatched collection for the new registered user car number
+     */
+      private async AddUnmatchedReportsToUser(user: IUser, reports: IUnMatchedReports []): Promise<void>{
+       try {
+        reports.forEach(async(report: IUnMatchedReports)=>{
+            const accident: IAccident = report.accident;
+            accident._id = new Types.ObjectId();
+            user.accidents.push(accident);
+            user.unreadMessages.push(accident);
+            console.log(accident)
+            
+        });
+        await user.save();
+       }  catch (error: any) {
+        throw new Error('addNoteToUserMessages: ' + error.message);
+    }
       }
 };
 export default UserService;

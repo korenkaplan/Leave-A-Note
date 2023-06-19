@@ -4,6 +4,8 @@ import HttpException from '@/utils/exceptions/http.exception';
 import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/report/report.validation'
 import ReportService from '@/resources/report/report.service';
+import authenticated from '@/middleware/authenticated.middleware';
+
 class ReportController implements IController {
     public path = '/reports';
     public router = Router();

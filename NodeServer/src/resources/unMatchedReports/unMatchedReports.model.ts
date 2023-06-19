@@ -7,7 +7,7 @@ const UnMatchedReportsSchema = new Schema<IUnMatchedReports>(
     accident: {type: Object, required: true},
     damagedCarNumber:{type: String, required: true},
   },
-  { collection: 'unMatchedReports' } // Merge options into a single object
+  { collection: 'unMatchedReports' } 
 );
 
 export default model<IUnMatchedReports>('UnMatchedReports', UnMatchedReportsSchema);

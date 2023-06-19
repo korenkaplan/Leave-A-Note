@@ -60,23 +60,21 @@ const Login: FC<Props> = ({ navigation }) => {
               placeholder="Enter your email"
               value={values.email}
               onChangeText={handleChange('email')}
-              leftIcon={{ type: 'ionicon', name: 'mail-outline', color:text.primary, }}
-              errorMessage={errors.email}
-            />
+              leftIcon={{ type: 'ionicon', name: 'mail-outline', color: text.primary, }}
+              errorMessage={errors.email} inputContainerStyle={undefined} inputStyle={undefined}            />
             <CustomInput
               placeholder="Enter your password"
               secureTextEntry={hidePassword}
               value={values.password}
               onChangeText={handleChange('password')}
-              leftIcon={{ type: 'ionicon', name: 'lock-closed-outline', color:text.primary }}
+              leftIcon={{ type: 'ionicon', name: 'lock-closed-outline', color: text.primary }}
               rightIcon={{
                 type: 'ionicon',
                 name: hidePassword ? 'eye-off-outline' : 'eye-outline',
-                 color:text.primary,
+                color: text.primary,
                 onPress: () => setHidePassword(!hidePassword),
               }}
-              errorMessage={errors.password}
-            />
+              errorMessage={errors.password} inputContainerStyle={undefined} inputStyle={undefined}            />
             <CheckBox
               title="Remember Me"
               checked={rememberMe}
@@ -86,10 +84,9 @@ const Login: FC<Props> = ({ navigation }) => {
             />
        <View style={styles.buttonContainer}>
       <CustomButton
-        buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
-        onPress={handleSubmit}
-        title={'Login'}
-      />
+                buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
+                onPress={handleSubmit}
+                title={'Login'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
     </View>
 
           </>
@@ -98,10 +95,9 @@ const Login: FC<Props> = ({ navigation }) => {
       <DividerWithText title="Don't have an account?" />
       <View style={styles.buttonContainer}>
       <CustomButton
-        buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
-        onPress={() => navigation.navigate('SignUp')}
-        title={'Register'}
-      />
+          buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
+          onPress={() => navigation.navigate('SignUp')}
+          title={'Register'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
     </View>
 
     </View>

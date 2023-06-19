@@ -1,8 +1,8 @@
-import React,{useContext} from 'react';
+import React from 'react';
 import { ThemeContext } from '../../context/ThemeContext';
 import { Input } from '@rneui/themed';
 const CustomInput = ({ inputContainerStyle,inputStyle, ...rest}) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = react.useContext(ThemeContext);
   const {primary,secondary,text } = theme.colors;
 
   const inputContainer = {
