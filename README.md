@@ -2,7 +2,8 @@
 
 ## Introduction
 
-Welcome to Leave a note App! Our application is designed to help drivers who have accidentally hit a parked car and need to communicate with the owner when they are not around. With our app, you can search for the car owner using their car number and leave a note, enabling seamless communication between both parties.
+Welcome to Leave a note App! My application is designed to help drivers who have accidentally hit a parked car and need to communicate with the owner when they are not around. With our app, you can search for the car owner using their car number and leave a note, enabling seamless communication between both parties.
+Clone the repository and watch the walkthrough video of the app on the mobile device
 
 ### Key Features
 
