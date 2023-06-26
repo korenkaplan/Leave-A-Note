@@ -37,7 +37,6 @@ const Login: FC<Props> = ({ navigation }) => {
 
   const handleFormSubmit = async (values: LoginFormValues) => {
     // Handle login form submission
-    console.log(values);
     await loginAttempt(values.email, values.password, rememberMe);
   };
 

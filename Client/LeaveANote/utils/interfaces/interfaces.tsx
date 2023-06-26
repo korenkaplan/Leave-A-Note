@@ -33,8 +33,8 @@ export interface Text {
 }
 // the interface of a connected user.
 export interface User {
-    id:string;
-    fullname: string;
+    _id:string;
+    name: string;
     email: string;
     phoneNumber: string;
     carNum: string;

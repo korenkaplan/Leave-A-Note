@@ -15,12 +15,12 @@ const AccidentsHistory: FC = ()=> {
   const [notes, setNotes] = useState(currentUser.notes);
   const [refreshing, setRefreshing] = useState(false);
   const [accidents, setAccidents] = useState<Accident[]>([...currentUser.notes, ...currentUser.reports]);
-  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
   const handleRefresh = async () => {
    //call getUserById() that will get the user from the database and set the current user.
-   await getUserById(currentUser.id);
+   await getUserById(currentUser._id);
    
     setTimeout(() => {
       

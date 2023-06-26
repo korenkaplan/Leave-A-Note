@@ -4,8 +4,8 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {storage} from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import jwt_decode from "jwt-decode";
 import {User, Accident, NoteToSend, SignUpFormValues, ReportToSend , UserDataToUpdate} from '../utils/interfaces/interfaces';
-
 interface MainContextType {
   currentUser: User;
   setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
@@ -42,8 +42,8 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const [carNumInput, setCarNumInput] = useState<string>('');
   const [damagedUserId, setDamagedUserId] = useState<string>('');
   const [currentUser, setCurrentUser] = useState<User>({
-    id:'1',
-    fullname: 'test name',
+    _id:'1',
+    name: 'test name',
     email: 'testemail@gmail.com',
     phoneNumber: '0533406789',
     carNum: '8333368',
@@ -163,9 +163,13 @@ const api: AxiosInstance = axios.create({
   // You can also configure other Axios options here
 });
   const getUserById = async (id: string):Promise<void> =>{
+    const query = {"_id": id};
+    const projection = {"password":0}
     try {
-      const response: AxiosResponse = await api.get(`users/${id}`);
+      const response: AxiosResponse = await api.post(`https://leave-a-note-nodejs-server.onrender.com/api/users/getUser`,{query,projection});
       const user: User = response.data;
+      console.log(user);
+      
       setCurrentUser(user);
       
     } catch (error: any) {
@@ -238,27 +242,30 @@ const api: AxiosInstance = axios.create({
     console.log('submit report from context');
   };
   //try to login
-  const loginAttempt = async (email: string, password: string, rememberMeValue: boolean): Promise<boolean | void> => {
-    // const loginData = {
-    //   email,
-    //   password,
-    // };
-    // const response = await api.post(`/users/login`,loginData);
-    
-    console.log(email, password, rememberMeValue);
-
-    if (email === 'k@gmail.com' && password === '123456') {
-      setAuthenticated(true);
-      if (rememberMeValue) {
-        //set the user token to the async storage
-        await storeObject('connectedUser', { email, password });
-      }
+  const loginAttempt = async (email: string, password: string, rememberMeValue: boolean): Promise<boolean> => {
+    const loginData = {
+      email,
+      password,
+    };
+    const response = await api.post(`https://leave-a-note-nodejs-server.onrender.com/api/users/login`,loginData);
+    console.log(response.status);
+    const token = response.data.token
+    if(!token)
+    {
+      setAuthenticated(false)
       return false;
     }
-    setAuthenticated(false);
-
+    setAuthenticated(true);
+    updateRememberMe(rememberMeValue,token)
+    return true;
   };
-  const storeObject = async (key: string, value: object): Promise<void> => {
+  const updateRememberMe = async (rememberMeValue: boolean,token: string): Promise<void> => {
+    if(rememberMeValue)
+    storeObject('connectedUser',token)
+    else 
+    AsyncStorage.removeItem('connectedUser');
+  };
+  const storeObject = async (key: string, value: string): Promise<void> => {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
@@ -285,7 +292,7 @@ const api: AxiosInstance = axios.create({
   //Get all notes from database
   const getAllNotes = async(): Promise<Accident[]>=>{
     try {
-      const response = await api.get(`/users/all/notes/${currentUser.id}`);
+      const response = await api.get(`/users/all/notes/${currentUser._id}`);
       const notes: Accident[] = response.data;
        return notes;
 
@@ -297,7 +304,7 @@ const api: AxiosInstance = axios.create({
   //Get all reports from database
   const getAllReports = async(): Promise<Accident[]>=>{
       try {
-        const response = await api.get(`/users/all/reports/${currentUser.id}`);
+        const response = await api.get(`/users/all/reports/${currentUser._id}`);
         const reports: Accident[] = response.data;
          return reports;
       } catch (error) {
@@ -308,7 +315,7 @@ const api: AxiosInstance = axios.create({
   //update user information
   const updateUserInformation = async(data: UserDataToUpdate): Promise<boolean>=>{
     try {
-      const response = await api.post<UserDataToUpdate>(`/users/update/${currentUser.id}`,data);
+      const response = await api.post<UserDataToUpdate>(`/users/update/${currentUser._id}`,data);
       const updatedData = response.data;
       if(updatedData !== null) {
         setCurrentUser((prevUser: User)=>({
