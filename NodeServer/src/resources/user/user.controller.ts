@@ -17,6 +17,7 @@ class UserController implements IController {
     private initializeRoutes(): void {
         this.router.post(`${this.path}/register`, validationMiddleware(validate.register), this.register);
         this.router.post(`${this.path}/login`, validationMiddleware(validate.login), this.login);
+        this.router.post(`${this.path}/passwordUpdate`, this.updateUserPassword);
         this.router.post(`${this.path}/deleteMessage`, validationMiddleware(validate.deleteMessage), this.deleteMessageById);
         this.router.get(`${this.path}/getUser`, authenticated, this.getUserQuery);
     }
@@ -61,5 +62,15 @@ class UserController implements IController {
     private deleteReadMessage = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 
     };
+    private updateUserPassword = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+        try {
+          const {userId, oldPassword, newPassword} = req.body; 
+          const result: boolean = await this.UserService.updateUserPassword(userId, oldPassword, newPassword);
+          return res.status(200).json({ result });
+        } catch (error: any) {
+            res.status(400).status(error.message)
+        }
+    };
+  
 };
 export default UserController;

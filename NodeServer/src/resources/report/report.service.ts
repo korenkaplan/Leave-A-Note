@@ -20,19 +20,12 @@ class ReportService {
             let result: Error | boolean = false;
 
             if (hittingUser && damagedUser) {
-                console.log('hittingUser && damagedUser');
                 result = await this.handleBothDriversFound(hittingUser, damagedUser, isAnonymous, reporter, imageUrl);
             } else if (!hittingUser && damagedUser) {
-                console.log('!hittingUser && damagedUser');
-
                 result = await this.handleHittingDriverNotFound(damagedUser, hittingCarNumber, isAnonymous, reporter, imageUrl);
             } else if (hittingUser && !damagedUser) {
-                console.log('hittingUser && !damagedUser');
-
                 result = await this.handleDamagedDriverNotFound(hittingUser, damagedCarNumber, isAnonymous, reporter, imageUrl);
             } else {
-                console.log('else');
-
                 result = await this.handleBothDriversNotFound(damagedCarNumber, hittingCarNumber, isAnonymous, reporter, imageUrl);
             }
             return result;

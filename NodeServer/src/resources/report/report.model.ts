@@ -31,5 +31,4 @@ const ReportSchema = new Schema<IReport>(
     },
   },
 );
-type Report = InferSchemaType<typeof ReportSchema>;
 export default model<IReport>('Report', ReportSchema);

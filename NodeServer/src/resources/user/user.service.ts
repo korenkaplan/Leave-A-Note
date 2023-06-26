@@ -2,12 +2,12 @@ import UserModel from "@/resources/user/user.model";
 import token from "@/utils/token";
 import { IAccident } from "@/resources/accident/accident.interface";
 import IUser from '@/resources/user/user.interface'
-import ReportModel from "@/resources/report/report.model";
 import { FilterQuery, ProjectionFields, Types } from "mongoose";
 import UnMatchedReportsModel from "@/resources/unMatchedReports/unMatchedReports.model";
 import IUnMatchedReports from "../unMatchedReports/unMatchedReports.interface";
-import userModel from "@/resources/user/user.model";
 import HttpException from "@/utils/exceptions/http.exception";
+import bcrypt from 'bcrypt';
+
 class UserService {
     private user = UserModel;
     private unMatchedReportsModel = UnMatchedReportsModel;
@@ -108,6 +108,9 @@ class UserService {
             throw new Error('addNoteToUserMessages: ' + error.message);
         }
     }
+    /**
+     *  delete a message from the users accidents array
+     */
     public async deleteMessage(userId: string, messageId: string): Promise<boolean> {
         try {
             const user = await this.user.findById(userId);
@@ -130,6 +133,34 @@ class UserService {
             throw new HttpException(400, error.message);
         }
     }
+    /**
+     * Update the user's password in the database
+     */
+    public async updateUserPassword(userId: string, oldPassword: string,newPassword: string): Promise<boolean> {
+        try {
+            const connectedUer = await this.user.findById(userId);
+            console.log(connectedUer?.password);
+            
+            // check if user exits
+            if (!connectedUer) 
+                throw new HttpException(404, 'User not found');
+            //check if the oldPassword match the password in the db
+            if(! await connectedUer.isValidPassword(oldPassword)) 
+            {
+                throw new HttpException(404, 'Currant password is incorrect');
+            }
+    
+            //update the user's password (The hashing is in the User Model Pre functions)
+            connectedUer.password = newPassword;
+            await connectedUer.save();
+            return true;
+        } catch (error: any) {
+            throw new HttpException(400, error.message);
+        }
+    }
+    /**
+     * 
+     */
 
 
 };

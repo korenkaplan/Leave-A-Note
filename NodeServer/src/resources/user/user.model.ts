@@ -39,11 +39,11 @@ const UserSchema = new Schema<User>(
 );
 
 /**
- * Hash the user's password
+ * Hash the new password when updating a password  to the user
  */
 UserSchema.pre<User>('save', async function (next) {
   if (!this.isModified('password')) {
-    return next();
+   next();
   }
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
