@@ -20,7 +20,7 @@ interface MainContextType {
   submitNote: (note: NoteToSend) => Promise<void>;
   submitReport: (report: ReportToSend) => Promise<void>;
   searchCarNumber: (carNumber: string) => Promise<boolean>;
-  loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean | void>;
+  loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
   signupAttempt: (newUser: SignUpFormValues) => Promise<number>;
   handleLogOut: () => Promise<void>;
   getAllNotes: () => Promise<Accident[]>;
@@ -243,21 +243,20 @@ const api: AxiosInstance = axios.create({
   };
   //try to login
   const loginAttempt = async (email: string, password: string, rememberMeValue: boolean): Promise<boolean> => {
+  try {
     const loginData = {
       email,
       password,
     };
     const response = await api.post(`https://leave-a-note-nodejs-server.onrender.com/api/users/login`,loginData);
-    console.log(response.status);
     const token = response.data.token
     if(!token)
-    {
-      setAuthenticated(false)
       return false;
-    }
-    setAuthenticated(true);
     updateRememberMe(rememberMeValue,token)
     return true;
+  } catch (error) {
+    return false;
+  }
   };
   const updateRememberMe = async (rememberMeValue: boolean,token: string): Promise<void> => {
     if(rememberMeValue)

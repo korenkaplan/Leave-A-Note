@@ -12,7 +12,7 @@ import { Text as IText } from '../utils/interfaces/interfaces';
 import CustomButton from '../Components/uiComponents/CustomButton';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomInput from '../Components/uiComponents/CustomInput';
-
+import CustomSlide from '../Components/uiComponents/CustomSlide';
 interface LoginFormValues {
   email: string;
   password: string;
@@ -30,18 +30,31 @@ const validationSchema = Yup.object().shape({
 const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
-  const { loginAttempt } = useContext(MainContext);
-  const {theme} = useContext(ThemeContext);
-  const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background);
+  const [showError, setShowError] = useState(false);
+  const { loginAttempt, setAuthenticated } = useContext(MainContext);
+  const { theme } = useContext(ThemeContext);
+  const { primary, secondary, text, background } = theme.colors
+  const styles = createStyles(primary, secondary, text, background);
 
   const handleFormSubmit = async (values: LoginFormValues) => {
     // Handle login form submission
-    await loginAttempt(values.email, values.password, rememberMe);
+    const result = await loginAttempt(values.email, values.password, rememberMe);
+    if (result === false) {
+      showErrorSlide();
+      return;
+    }
+    setAuthenticated(true);
   };
-
+  const showErrorSlide = () => {
+    setShowError(true);
+    setTimeout(() => {
+      // Code to be executed after the delay
+      setShowError(false);
+    }, 3000);
+  };
   return (
     <View style={styles.container}>
+      <CustomSlide isShowing={showError} status='error' title="Sorry... Wrong Email or Password" />
       <Text style={styles.heading} h1>
         Hello, Welcome
       </Text>
@@ -60,7 +73,7 @@ const Login: FC<Props> = ({ navigation }) => {
               value={values.email}
               onChangeText={handleChange('email')}
               leftIcon={{ type: 'ionicon', name: 'mail-outline', color: text.primary, }}
-              errorMessage={errors.email} inputContainerStyle={undefined} inputStyle={undefined}            />
+              errorMessage={errors.email} inputContainerStyle={undefined} inputStyle={undefined} />
             <CustomInput
               placeholder="Enter your password"
               secureTextEntry={hidePassword}
@@ -73,71 +86,71 @@ const Login: FC<Props> = ({ navigation }) => {
                 color: text.primary,
                 onPress: () => setHidePassword(!hidePassword),
               }}
-              errorMessage={errors.password} inputContainerStyle={undefined} inputStyle={undefined}            />
+              errorMessage={errors.password} inputContainerStyle={undefined} inputStyle={undefined} />
             <CheckBox
               title="Remember Me"
               checked={rememberMe}
               onPress={() => setRememberMe(!rememberMe)}
               containerStyle={{ backgroundColor: background }}
-              textStyle={{ color:text.primary, backgroundColor: 'transparent' }}
+              textStyle={{ color: text.primary, backgroundColor: 'transparent' }}
             />
-       <View style={styles.buttonContainer}>
-      <CustomButton
+            <View style={styles.buttonContainer}>
+              <CustomButton
                 buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
                 onPress={handleSubmit}
-                title={'Login'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
-    </View>
+                title={'Login'} titleStyle={undefined} containerStyle={undefined} disabled={undefined} />
+            </View>
 
           </>
         )}
       </Formik>
       <DividerWithText title="Don't have an account?" />
       <View style={styles.buttonContainer}>
-      <CustomButton
+        <CustomButton
           buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
           onPress={() => navigation.navigate('SignUp')}
-          title={'Register'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
-    </View>
+          title={'Register'} titleStyle={undefined} containerStyle={undefined} disabled={undefined} />
+      </View>
 
     </View>
   );
 };
 
-const createStyles = (primary:string,secondary:string,text:IText,background:string) =>  StyleSheet.create({
+const createStyles = (primary: string, secondary: string, text: IText, background: string) => StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor:background,
+    backgroundColor: background,
   },
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:10,
+    marginTop: 10,
   },
-  primaryBorder1:{
+  primaryBorder1: {
     borderColor: text.primary,
-    borderWidth:1,
+    borderWidth: 1,
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    color:text.primary,
+    color: text.primary,
   },
   subHeading: {
     fontSize: 18,
     marginBottom: 20,
-    color:text.secondary,
+    color: text.secondary,
 
   },
-  inputContainer:{
+  inputContainer: {
     borderWidth: 1,
     borderColor: text.primary,
     borderRadius: 10,
     paddingHorizontal: 10,
   },
-  input:{
-    color:text.primary,
+  input: {
+    color: text.primary,
   },
 
 });

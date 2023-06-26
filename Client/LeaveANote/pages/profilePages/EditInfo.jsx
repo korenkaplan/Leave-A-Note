@@ -41,14 +41,14 @@ export default function EditInfo() {
   return (
     <ThemedView >
       <Formik
-      initialValues={{fullname: currentUser.fullname, carNum: currentUser.carNum, phoneNumber:currentUser.phoneNumber,email:currentUser.email}}
+      initialValues={{name: currentUser.name, carNum: currentUser.carNum, phoneNumber:currentUser.phoneNumber,email:currentUser.email}}
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}>
         {({handleChange, handleSubmit, values, errors,resetForm}) => (
           <View style={styles.container}>
             <Input
             onChangeText={handleChange('fullname')}
-            value={values.fullname}
+            value={values.name}
             leftIcon={{type:'ionicon', name: 'person-outline', color:text.primary}}
             placeholder='Full-Name'
             inputContainerStyle={styles.inputContainer}
