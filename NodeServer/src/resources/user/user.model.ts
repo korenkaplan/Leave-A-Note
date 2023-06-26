@@ -22,7 +22,7 @@ const UserSchema = new Schema<User>(
       type: String,
       required: true,
     },
-     carNumber: {
+    carNumber: {
       type: String,
       required: true,
       unique: true,

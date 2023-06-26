@@ -14,5 +14,9 @@ const login = Joi.object({
     email: Joi.string().required().email(),
     password: Joi.string().required()
 });
+const deleteMessage = Joi.object({
+  userId: Joi.string().required(),
+  messageId: Joi.string().required(),
+});
 
-export default {login, register,carSearch};
+export default {login, register,carSearch,deleteMessage};

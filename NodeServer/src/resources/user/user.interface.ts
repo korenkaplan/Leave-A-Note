@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import {IAccident} from '@/resources/accident/accident.interface';
+import { IAccident } from '@/resources/accident/accident.interface';
 
 export default interface IUser extends Document {
   email: string;

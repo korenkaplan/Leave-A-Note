@@ -16,22 +16,22 @@ class ReportService {
         try {
             const hittingUser = await this.UserService.GetUserQuery({ carNumber: hittingCarNumber });
             const damagedUser = await this.UserService.GetUserQuery({ carNumber: damagedCarNumber });
-            
+
             let result: Error | boolean = false;
 
             if (hittingUser && damagedUser) {
-            console.log('hittingUser && damagedUser');
+                console.log('hittingUser && damagedUser');
                 result = await this.handleBothDriversFound(hittingUser, damagedUser, isAnonymous, reporter, imageUrl);
             } else if (!hittingUser && damagedUser) {
-            console.log('!hittingUser && damagedUser');
-                
+                console.log('!hittingUser && damagedUser');
+
                 result = await this.handleHittingDriverNotFound(damagedUser, hittingCarNumber, isAnonymous, reporter, imageUrl);
             } else if (hittingUser && !damagedUser) {
-            console.log('hittingUser && !damagedUser');
+                console.log('hittingUser && !damagedUser');
 
                 result = await this.handleDamagedDriverNotFound(hittingUser, damagedCarNumber, isAnonymous, reporter, imageUrl);
             } else {
-            console.log('else');
+                console.log('else');
 
                 result = await this.handleBothDriversNotFound(damagedCarNumber, hittingCarNumber, isAnonymous, reporter, imageUrl);
             }
@@ -73,7 +73,7 @@ class ReportService {
                 phoneNumber: reporter.phoneNumber,
             },
         };
-            return await this.UserService.addMessageToUser(accidentData, damagedUser);
+        return await this.UserService.addMessageToUser(accidentData, damagedUser);
     }
     private async handleHittingDriverNotFound(
         damagedUser: IUser,
@@ -105,7 +105,7 @@ class ReportService {
         reporter: { name: string; phoneNumber: string },
         imageUrl: string
     ): Promise<boolean | Error> {
-        const accidentData: IAccident= {
+        const accidentData: IAccident = {
             hittingDriver: {
                 name: hittingUser.name,
                 carNumber: hittingUser.carNumber,
@@ -121,7 +121,7 @@ class ReportService {
                 phoneNumber: reporter.phoneNumber,
             },
         };
-        
+
         return await this.addToUnmatchedReportsCollection(accidentData, damagedCarNumber);
     }
     private async handleBothDriversNotFound(

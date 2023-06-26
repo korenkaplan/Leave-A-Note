@@ -1,25 +1,26 @@
 import UserModel from "@/resources/user/user.model";
 import token from "@/utils/token";
-import {IAccident} from "@/resources/accident/accident.interface";
+import { IAccident } from "@/resources/accident/accident.interface";
 import IUser from '@/resources/user/user.interface'
 import ReportModel from "@/resources/report/report.model";
-import { FilterQuery, ProjectionFields, Types  } from "mongoose";
+import { FilterQuery, ProjectionFields, Types } from "mongoose";
 import UnMatchedReportsModel from "@/resources/unMatchedReports/unMatchedReports.model";
 import IUnMatchedReports from "../unMatchedReports/unMatchedReports.interface";
 import userModel from "@/resources/user/user.model";
+import HttpException from "@/utils/exceptions/http.exception";
 class UserService {
     private user = UserModel;
     private unMatchedReportsModel = UnMatchedReportsModel;
     /**
      * Register a new user
      */
-    public async register(name: string, email: string,carNumber: string,phoneNumber: string, password: string,role: string ): Promise<string | Error> {
+    public async register(name: string, email: string, carNumber: string, phoneNumber: string, password: string, role: string): Promise<string | Error> {
         try {
-            const user: IUser = await this.user.create({ name, email, password,phoneNumber,carNumber, role, accidents: [], unreadMessages: [] });
+            const user: IUser = await this.user.create({ name, email, password, phoneNumber, carNumber, role, accidents: [], unreadMessages: [] });
             const unMatchedReports = await this.SearchUnmatchedReports(user);
-            if(unMatchedReports){
-            await this.AddUnmatchedReportsToUser(user,unMatchedReports)
-            console.log('successfully Added unMatchedReports');
+            if (unMatchedReports) {
+                await this.AddUnmatchedReportsToUser(user, unMatchedReports)
+                console.log('successfully Added unMatchedReports');
             }
             const accessToken = token.createToken(user);
             return accessToken;
@@ -27,85 +28,109 @@ class UserService {
             throw new Error('register service: ' + error.message);
         }
     };
-     /**
-     * Attempt to login a user
-     */
+    /**
+    * Attempt to login a user
+    */
     public async login(email: string, password: string): Promise<string | Error> {
         try {
 
             //search for a user with this email in the database
-            const user = await this.user.findOne({email});
-            if(!user){ //if not found
+            const user = await this.user.findOne({ email });
+            if (!user) { //if not found
                 throw new Error('User not found with email: ' + email);
             }
-            
+
             //if found validate the password , else throw and error that the credentials are incorrect
-            if(await user.isValidPassword(password)){
+            if (await user.isValidPassword(password)) {
                 return token.createToken(user);
-            }else{
+            } else {
                 throw new Error('Wrong credentials were provided')
             }
         } catch (error: any) {
-            throw new Error('Unable to login: ' + error.message);     
+            throw new Error('Unable to login: ' + error.message);
         }
     };
     /**
      * Add new message to user's unread messages and accidents.
      */
-    public async addMessageToUser(accident: IAccident ,damagedUser: IUser):Promise<boolean | Error>{
+    public async addMessageToUser(accident: IAccident, damagedUser: IUser): Promise<boolean | Error> {
         try {
             accident._id = new Types.ObjectId();
             //add to user messages
-           damagedUser.accidents.push(accident);
-           damagedUser.unreadMessages.push(accident);
-           await damagedUser.save();
-           console.log('saved successfully');
+            damagedUser.accidents.push(accident);
+            damagedUser.unreadMessages.push(accident);
+            await damagedUser.save();
+            console.log('saved successfully');
             return true;
         } catch (error: any) {
             throw new Error('addNoteToUserMessages: ' + error.message);
         }
     };
-      /**
-     * Find user by any query
-     */
-    public async GetUserQuery(query: FilterQuery<IUser>= {}, projection: ProjectionFields<IUser>= {}): Promise<IUser | null> {
+    /**
+   * Find user by any query
+   */
+    public async GetUserQuery(query: FilterQuery<IUser> = {}, projection: ProjectionFields<IUser> = {}): Promise<IUser | null> {
         try {
-          const user = await this.user.findOne(query, projection);
-          return user;
+            const user = await this.user.findOne(query, projection);
+            return user;
         } catch (error: any) {
-          throw new Error('getUserByCarNumber service: ' + error.message);
+            throw new Error('getUserByCarNumber service: ' + error.message);
         }
-      }
-      /**
-     * Search for reports in the the unmatched collection for the new registered user car number
-     */
-      private async SearchUnmatchedReports(user: IUser): Promise<IUnMatchedReports[] | null>{
+    }
+    /**
+   * Search for reports in the the unmatched collection for the new registered user car number
+   */
+    private async SearchUnmatchedReports(user: IUser): Promise<IUnMatchedReports[] | null> {
         try {
             const carNumber: string = user.carNumber;
-            const matchedReports = await this.unMatchedReportsModel.find({"damagedCarNumber": carNumber})
-            await this.unMatchedReportsModel.deleteMany({"damagedCarNumber": carNumber})
-            return matchedReports;   
+            const matchedReports = await this.unMatchedReportsModel.find({ "damagedCarNumber": carNumber })
+            await this.unMatchedReportsModel.deleteMany({ "damagedCarNumber": carNumber })
+            return matchedReports;
         } catch (error: any) {
             throw new Error('SearchUnmatchedReports: ' + error.message);
         }
-      };
+    };
     /**
      * Add all the reports found in the unmatched collection for the new registered user car number
      */
-      private async AddUnmatchedReportsToUser(user: IUser, reports: IUnMatchedReports []): Promise<void>{
-       try {
-        reports.forEach(async(report: IUnMatchedReports)=>{
-            const accident: IAccident = report.accident;
-            accident._id = new Types.ObjectId();
-            user.accidents.push(accident);
-            user.unreadMessages.push(accident);
-            console.log(accident)
-            
-        });
-        await user.save();
-       }  catch (error: any) {
-        throw new Error('addNoteToUserMessages: ' + error.message);
+    private async AddUnmatchedReportsToUser(user: IUser, reports: IUnMatchedReports[]): Promise<void> {
+        try {
+            reports.forEach(async (report: IUnMatchedReports) => {
+                const accident: IAccident = report.accident;
+                accident._id = new Types.ObjectId();
+                user.accidents.push(accident);
+                user.unreadMessages.push(accident);
+                console.log(accident)
+
+            });
+            await user.save();
+        } catch (error: any) {
+            throw new Error('addNoteToUserMessages: ' + error.message);
+        }
     }
-      }
+    public async deleteMessage(userId: string, messageId: string): Promise<boolean> {
+        try {
+            const user = await this.user.findById(userId);
+
+            if (!user) {
+                throw new HttpException(404, 'User not found');
+            }
+
+            const index = user.accidents.findIndex(accident => accident._id?.equals(new Types.ObjectId(messageId)));
+
+            if (index === -1) {
+                throw new HttpException(404, 'Accident not found');
+            }
+
+            user.accidents.splice(index, 1);
+            await user.save();
+
+            return true;
+        } catch (error: any) {
+            throw new HttpException(400, error.message);
+        }
+    }
+
+
 };
 export default UserService;
