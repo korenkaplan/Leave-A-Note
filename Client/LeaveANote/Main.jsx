@@ -8,8 +8,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text } from 'react-native-svg';
 import { ThemeContext } from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
+import jwt_decode from "jwt-decode";
+import { Token } from './utils/interfaces/interfaces';
 export default function Main() {
-  const { authenticated, setAuthenticated } = useContext(MainContext);
+  const { authenticated, setAuthenticated, setCurrentUser,getUserById, setToken} = useContext(MainContext);
   const {theme,setTheme,lightTheme,darkTheme} = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true); // Add isLoading state
   const colorScheme = useColorScheme();
@@ -28,9 +30,17 @@ export default function Main() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const isLoggedIn = await AsyncStorage.getItem('connectedUser');
-        if (isLoggedIn !== null) {
-          setAuthenticated(true);
+        const token = await AsyncStorage.getItem('connectedUser');
+        if (token !== null) {
+          const decoded = jwt_decode(token);
+          const currantUser = await getUserById(decoded.id);
+
+          if(currantUser != null)
+          {
+            setToken(token);
+            setCurrentUser(currantUser);
+            setAuthenticated(true);
+          }
         }
       } catch (e) {
         console.log(e);

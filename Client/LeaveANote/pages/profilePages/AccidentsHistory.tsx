@@ -20,8 +20,7 @@ const AccidentsHistory: FC = ()=> {
   const styles = createStyles(primary,secondary,text,background)
   const handleRefresh = async () => {
    //call getUserById() that will get the user from the database and set the current user.
-   await getUserById(currentUser._id);
-   
+   //TODO: handle the refresh event   
     setTimeout(() => {
       
      setRefreshing(false);

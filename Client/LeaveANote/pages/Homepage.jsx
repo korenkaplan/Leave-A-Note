@@ -74,21 +74,17 @@ export default function Homepage({navigation}) {
    */
   const handleSearchPress = async () => {
     setIsLoading(true); // Set loading state to true
-    // Simulate an asynchronous operation (e.g., API call) with a timeout
-    setTimeout( async () => {
-      setError('');
-      setIsLoading(false); // Set loading state to false after the operation completes
-      const resultUserID = await searchCarNumber(searchValue);
-      console.log('resultUserID:', resultUserID);
-      if (resultUserID) {
-        setIconName('check');
-        setIsNumberValid(true);
-      } else {
-        setIconName('error');
-        setError('Car number not found');
-        setIsNumberValid(false);
-      }
-    }, 1500); // Replace 2000 with the actual duration of your asynchronous operation
+    const isUserExists = await searchCarNumber(searchValue);
+    setIsLoading(false); // Set loading state to true
+    if (isUserExists) {
+      setIconName('check');
+      setIsNumberValid(true);
+    } else {
+      setIconName('error');
+      setError('Car number not found');
+      setIsNumberValid(false);
+    }
+ 
   };
 
   const moveToNotePage = ()=>{

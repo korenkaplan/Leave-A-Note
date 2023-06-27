@@ -1,3 +1,11 @@
+
+export interface IHttpResponse<T> {
+  success:boolean;
+  data?:T;
+  message:string;
+  error?:string;
+  tokenError?:boolean;
+  }
 //the interface for a theme
 export interface Theme {
   colors:
@@ -37,12 +45,16 @@ export interface User {
     name: string;
     email: string;
     phoneNumber: string;
-    carNum: string;
+    carNumber: string;
     unreadMessages: Accident[];
-    notes: Accident[];
-    reports: Accident[];
+    accidents: Accident[];
   }
-
+export interface PartialUserDataForAccident{
+  _id:string;
+  name: string;
+  phoneNumber: string;
+  carNum: string;
+}
 //The interface of a report to send out by the connected user
 export interface ReportToSend {
     imageUrl: string;
@@ -51,15 +63,11 @@ export interface ReportToSend {
     date:string;
     isAnonymous: boolean;
   }
-
 //The interface of a note to send out by the connected user
 export interface NoteToSend {
     damagedCarNumber: string;
-    hittingCarNumber: string;
     imageSource: string;
-    date: string;
   }
-
 //the structure for a new user to sign up. before adding the new empty arrays(notes , reports , unread messages)
 export interface SignUpFormValues {
     email: string;
@@ -77,10 +85,9 @@ export interface UserDataToUpdate{
     phoneNumber: string;
     carNum: string;
   }
-
 //The interface that holds the properties of both Note and Report.
 export interface Accident {
-  id: string;
+  _id: string;
   hittingDriver: {
     name?: string;
     carNumber: string;
@@ -95,4 +102,9 @@ export interface Accident {
     name: string;
     phoneNumber: string;
   };
+}
+export  interface Token{
+  exp: number;
+  iat: number;
+  id: string;
 }

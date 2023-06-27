@@ -20,9 +20,11 @@ export default function Inbox({ navigation }) {
      //convert objects from database to list items
      const convertedMessages = currentUser.unreadMessages.map((message, index) => {
       // If the message is of type note
+
       if (message.type === 'note') {
+        console.log(message._id);
         return (
-          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
+          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message._id} >
             <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
               <Icon containerStyle={[styles.iconNote,styles.textPrimaryBorder]} name='document-outline' type='ionicon' color={text.primary} />
               <ListItem.Content>

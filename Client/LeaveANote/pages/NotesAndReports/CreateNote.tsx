@@ -37,36 +37,38 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
       params:{'previous':'CreateNote'},
     });
   };
-  const createTwoButtonAlert = () =>{
- Alert.alert('Note Sent Successfully', `Your Note was deliverd to the owner of car number ${carNumInput}`, [
+  const createTwoButtonAlert = (isSuccess: boolean) =>{
+    const title = isSuccess ? 'Note  Sent Successfully' : 'Note wasn\'t Sent Successfully';
+    const alertBody = isSuccess ? `Your Note was deliverd to the owner of car number ${carNumInput}`: `Your Note wasn\'t deliverd to the owner of car number ${carNumInput}`;
+ Alert.alert(title, alertBody, [
     {
+    
       text: 'Back Home',
       onPress: () => navigation.navigate('Home'),
       style: 'default',
-    }
+    },
+    {
+      text: 'Try Again',
+      style: 'cancel',
+    },
    ]); } 
- 
+
 const handleSubmit = async ():Promise<void> =>{
-  try
-  {
-    const imageRef: string = await uploadPhotoToStorage(imgSource);
+
+   const imageRef: string = await uploadPhotoToStorage(imgSource);
+  console.log(imageRef);
     
     let note: NoteToSend = {
       damagedCarNumber: carNumInput,
       imageSource: imageRef,
-      date: new Date().toLocaleDateString('en-GB'),
     };
-    console.log(note);
-    
       // send to context function the image url
-  await submitNote(note);
+  const isSent = await submitNote(note);
+  
   //show dialog
-  createTwoButtonAlert();
-  }
-    catch(error)
-    {
-      console.log(error);
-    }
+  createTwoButtonAlert(isSent);
+
+
 };
 
   return (
