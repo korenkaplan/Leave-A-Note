@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/FirebaseConfig'
@@ -32,7 +32,7 @@ interface MainContextType {
   updateUserPassword: (oldPassword: string, newPassword: string) => Promise<number>; // update the user password: return 0 if updated successfully, 1 if wrong old password, 2 id problem at database.
   deleteANoteById: (noteId: string) => Promise<boolean>;
   deleteAReportById: (id: string) => Promise<boolean>;
-  getUserById: (id: string, token: Token) => Promise<User | null>; // get a user by Id and set CurrantUser state.
+  getUserById: (id: string, token: string) => Promise<User | null>; // get a user by Id and set CurrantUser state.
   deleteFromUnreadMessages: (id: string) => Promise<boolean>;
 }
 
@@ -45,11 +45,12 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const [damagedUserId, setDamagedUserId] = useState<string>('');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [token, setToken] = useState<string>('');
-
   const api: AxiosInstance = axios.create({
     baseURL: 'https://api.example.com', // Set your base URL
     // You can also configure other Axios options here
   });
+
+  
   //try to login  ------------------------------------------------------------------------------------ done
   const loginAttempt = async (email: string, password: string, rememberMeValue: boolean): Promise<boolean> => {
     const loginData = {
@@ -60,10 +61,11 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       const response = await api.post(`https://leave-a-note-nodejs-server.onrender.com/api/users/login`, loginData);
       const responseData: IHttpResponse<{ token: string }> = response.data;
       if (!responseData.success || responseData.data === undefined) { return false; }
-      setToken(responseData.data.token)
+      const token = responseData.data.token
+      setToken(token)
       updateRememberMe(rememberMeValue, token)
       const decoded: Token = jwt_decode(token);
-      const connectedUser: User | null = await getUserById(decoded.id)
+      const connectedUser: User | null = await getUserById(decoded.id, token)
       if (!connectedUser) {
         console.error('Problem with Token')
         return false;
@@ -90,7 +92,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     }
   };
   //get user by the id ------------------------------------------------------------------------------------ done
-  const getUserById = async (id: string): Promise<User | null> => {
+  const getUserById = async (id: string,token: string): Promise<User | null> => {
     const requestBody = {
       query: {
         _id: id,
@@ -145,7 +147,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return false;
     }
   };
-  // submit new note
+  // submit new note ------------------------------------------------------------------------------------ done
   const submitNote = async (note: NoteToSend): Promise<boolean> => {
     if (!currentUser) {
       return false;
@@ -186,7 +188,6 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return false;
     }
   };
-
   //submit a new report
   const submitReport = async (report: ReportToSend): Promise<void> => {
     // TODO: implement submit note to database

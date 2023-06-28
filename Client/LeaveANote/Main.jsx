@@ -33,23 +33,19 @@ export default function Main() {
         const token = await AsyncStorage.getItem('connectedUser');
         if (token !== null) {
           const decoded = jwt_decode(token);
-          const currantUser = await getUserById(decoded.id);
+          setToken(token)
+          const currantUser = await getUserById(decoded.id,token);
 
           if(currantUser != null)
           {
-            setToken(token);
             setCurrentUser(currantUser);
             setAuthenticated(true);
           }
         }
+        setIsLoading(false);
       } catch (e) {
         console.log(e);
-      } finally {
-          setTimeout(() => {
-          // check if user is connected in async storage
-          setIsLoading(false); // Set isLoading to false when data retrieval is complete
-          },3200);
-      }
+      } 
     };
   getData();
   }, []);

@@ -37,9 +37,20 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
       params:{'previous':'CreateNote'},
     });
   };
-  const createTwoButtonAlert = (isSuccess: boolean) =>{
-    const title = isSuccess ? 'Note  Sent Successfully' : 'Note wasn\'t Sent Successfully';
-    const alertBody = isSuccess ? `Your Note was deliverd to the owner of car number ${carNumInput}`: `Your Note wasn\'t deliverd to the owner of car number ${carNumInput}`;
+  const successAlert = () =>{
+    const title = 'Note  Sent Successfully';
+    const alertBody = `Your Note was deliverd to the owner of car number ${carNumInput}`;
+ Alert.alert(title, alertBody, [
+    {
+    
+      text: 'Back Home',
+      onPress: () => navigation.navigate('Home'),
+      style: 'default',
+    },
+   ]); } 
+   const failureAlert = () =>{
+    const title = 'Note wasn\'t Sent Successfully';
+    const alertBody =  `Your Note wasn\'t deliverd to the owner of car number ${carNumInput}`;
  Alert.alert(title, alertBody, [
     {
     
@@ -51,8 +62,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
       text: 'Try Again',
       style: 'cancel',
     },
-   ]); } 
-
+   ]); }
 const handleSubmit = async ():Promise<void> =>{
 
    const imageRef: string = await uploadPhotoToStorage(imgSource);
@@ -66,8 +76,7 @@ const handleSubmit = async ():Promise<void> =>{
   const isSent = await submitNote(note);
   
   //show dialog
-  createTwoButtonAlert(isSent);
-
+    isSent?  successAlert() : failureAlert();
 
 };
 
@@ -125,7 +134,6 @@ const handleSubmit = async ():Promise<void> =>{
       </View>
     </View>
   );
-
 };
 
 const createStyles = (primary: string, secondary: string, text: Text, background: string) =>  StyleSheet.create({
