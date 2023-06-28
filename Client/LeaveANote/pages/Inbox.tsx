@@ -1,26 +1,28 @@
 import {View, Text,StyleSheet, ScrollView, TouchableOpacity,RefreshControl, LogBox} from 'react-native';
-import React,{useState,useContext} from 'react';
+import React,{useState,useContext,FC} from 'react';
 import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
 import { ListItem,Avatar, Icon} from '@rneui/themed';
 import { MainContext } from '../context/ContextProvider';
 import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
+import { useNavigation } from '@react-navigation/native';
+import {Accident, Theme} from '../utils/interfaces/interfaces';
 
-export default function Inbox({ navigation }) {
+const Inbox: FC = () =>{
+  const navigation = useNavigation();
   const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
 
   //a temporary state containing the list of items,
-  const {currentUser, setCurrentUser, getUserById, deleteAReportById, deleteANoteById, deleteFromUnreadMessages} = useContext(MainContext);
+  const {currentUser, setCurrentUser, getUserById,deleteFromUnreadMessages} = useContext(MainContext);
   //TODO get messages from the server 
-  const [messages, setMessages] = useState(currentUser.unreadMessages);
+  const [messages, setMessages] = useState(currentUser? currentUser.unreadMessages: []);
   const [refreshing, setRefreshing] = useState(false);
    
      //convert objects from database to list items
-     const convertedMessages = messages.map((message, index) => {
+     const convertedMessages = messages.map((message: Accident, index: number) => {
       // If the message is of type note
-      console.log(message._id);
       if (message.type === 'note') {
         return (
           <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message._id} >
@@ -38,7 +40,7 @@ export default function Inbox({ navigation }) {
       // If the message is of type report
       else {
         return (
-          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
+          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message._id} >
             <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
               <Icon containerStyle={[styles.iconReport,styles.textPrimaryBorder]} name='eye-outline' type='ionicon' color={text.primary} />
               <ListItem.Content>
@@ -54,14 +56,14 @@ export default function Inbox({ navigation }) {
     
     const handleRefresh = async () => {
      //call getUserById() that will get the user from the database and set the current user.
-   await getUserById(currentUser.id);
    setTimeout(() => {
     setRefreshing(false);
    }, 3000); // Adjust the delay time as needed
   };
      //create a function to handle the press of a message
-     const handlePress = (item, index) => {
+     const handlePress = (item: Accident, index:number) => {
       //todo check if the message is a note or a report
+      handleDelete(index,item._id)
       navigation.navigate({
         name: item.type ==='note'? 'NoteView': 'ReportView',
         params: {item},
@@ -69,31 +71,27 @@ export default function Inbox({ navigation }) {
       });
       //the timeout is so the animation won't show for a brief second if the list is empty before moving to view the message.
       setTimeout(() => {
-        handleDelete(index)
+        deleteMessageFromState(index)
       }, 2000);
        //delete message from the message list
      }
      //create a function to delete the message from the message list
-     const handleDelete = async (index) => {
-      try {
-      //  const result = await deleteFromUnreadMessages(message[index].id)
-      //  if(!result) {return; } //if delete was'nt successful from database don't delete the message.
-      // Remove the message from the message list
-      const updatedMessages = [...messages];
-      updatedMessages.splice(index, 1);
-      setMessages(updatedMessages);
-      // Update the currentUser state
-      setCurrentUser((prevUser) => ({
-        ...prevUser,
-        unreadMessages: updatedMessages,
-      }));
-
-      } catch (error) {
-        
-      }
+     const handleDelete = async (index: number, id: string) => {
+    const isDeleted = await deleteFromUnreadMessages(id);
+    console.log(isDeleted);
+    
 
     };
-    //check if the message list is empty or not and dispaly the list or animation
+    const deleteMessageFromState = (index: number) => {
+      let updatedMessages = [...messages];
+      updatedMessages.splice(index, 1);
+      setCurrentUser(prev=> ({
+        ...prev!,
+        unreadMessages: updatedMessages,
+      }));
+    };
+    
+    //check if the message list is empty or not and display the list or animation
     const renderContent = () => {
       if (messages.length > 0) {
         return (
@@ -115,7 +113,7 @@ export default function Inbox({ navigation }) {
   );
 }
 
-const createStyles = (primary,secondary,text,background) => 
+const createStyles = (primary: string,secondary: string,text: {primary: string,secondary: string},background:string) => 
   StyleSheet.create({
   container:{
     flex: 1,
@@ -156,3 +154,4 @@ const createStyles = (primary,secondary,text,background) =>
     borderColor: text.primary
   },
 });
+export default Inbox;

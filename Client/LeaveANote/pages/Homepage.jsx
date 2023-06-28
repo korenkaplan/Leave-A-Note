@@ -7,6 +7,7 @@ import {Input, Icon, Chip,Button, Switch  } from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView'
 import CustomButton from '../Components/uiComponents/CustomButton';
+
 export default function Homepage({navigation}) {
   const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors

@@ -72,34 +72,45 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
     });
   };
   //create the alert for succesfully sending a report
-  const createTwoButtonAlert = (carNumberToShow: string): void => {
-    Alert.alert('Note Sent Successfully', `Your Note was deliverd to the owner of car number ${carNumberToShow}`, [
-      {
-        text: 'Back Home',
-        onPress: () => navigation.navigate('Home'),
-        style: 'default',
-      }
-    ]);
-  };
-
+  const successAlert = (carNumInput: string) =>{
+    const title = 'Report  Sent Successfully';
+    const alertBody = `Your report was deliverd to the owner of car number ${carNumInput}`;
+ Alert.alert(title, alertBody, [
+    {
+    
+      text: 'Back Home',
+      onPress: () => navigation.navigate('Home'),
+      style: 'default',
+    },
+   ]); } 
+   const failureAlert = (carNumInput: string) =>{
+    const title = 'Report wasn\'t Sent Successfully';
+    const alertBody =  `Your report wasn\'t deliverd to the owner of car number ${carNumInput}`;
+ Alert.alert(title, alertBody, [
+    {
+    
+      text: 'Back Home',
+      onPress: () => navigation.navigate('Home'),
+      style: 'default',
+    },
+    {
+      text: 'Try Again',
+      style: 'cancel',
+    },
+   ]); }
   // handle the submit: cal function from context and show alert
-  const handleFormSubmit = async (values: Values, { resetForm }): Promise<void> => {
+  const handleFormSubmit = async (values: Values): Promise<void> => {
     try {
       const imageRef: string = await uploadPhotoToStorage(imgSource);
       let report: ReportToSend = {
         imageUrl: imageRef,
         damagedCarNumber: values.damagedCarNumber,
         hittingCarNumber: values.hittingCarNumber,
-        date: new Date().toLocaleDateString('en-GB'),
         isAnonymous: isChecked,
       };
-      await submitReport(report);
-
-      // Clear the form inputs
-      resetForm();
+      const isSent = await submitReport(report);
       //show alert
-      createTwoButtonAlert(values.damagedCarNumber);
-
+      isSent? successAlert(values.damagedCarNumber): failureAlert(values.damagedCarNumber);
       //reset car number in context and clear fields
       setCarNumInput('');
     }
@@ -108,7 +119,6 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
     }
   };
   const toggleCheckbox = () => setIsChecked(!isChecked);
-
   //create the validation schema for a car number input.
   const carNumberValidationSchema = Yup.string()
     .required('Car number is required')
@@ -195,7 +205,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                   size: 20,
                   color: 'white',
                 }}
-                onPress={handleSubmit}
+                onPress={()=>handleSubmit()}
                 type="outline"
                 containerStyle={styles.sendBtn}
                 titleStyle={styles.sendBtnTitle} // Add this line
@@ -206,8 +216,6 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       </View>
     </View>
   );
-
-
 };
 
 const createStyles = (primary: string, secondary: string, text: TextColor, background: string) =>

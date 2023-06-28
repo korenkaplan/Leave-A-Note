@@ -7,17 +7,19 @@ import {passwordSchema,} from '../../utils/validation/validationSchemas'
 import { MainContext } from '../../context/ContextProvider';
 import { ThemeContext } from '../../context/ThemeContext';
 import CustomButton from '../../Components/uiComponents/CustomButton';
-
+import CustomSlide from '../../Components/uiComponents/CustomSlide';
 export default function EditPassword() {
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true)
   const [newPasswordSecure, setNewPasswordSecure] = useState(true)
   const [repeatPasswordSecure, setRepeatPasswordSecure] = useState(true)
   const [isValid, setIsValid] = useState(false)
+  const [isShowing, setIsShowing] = useState(false)
+  const [slideMessage, setSlideMessage] = useState('');
+  const [slideStatus, setSlideStatus] = useState('error');;
   const {updateUserPassword} = useContext(MainContext);
   const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
- 
   const validationSchema = Yup.object().shape({
     currentPassword: passwordSchema,
     newPassword: passwordSchema.notOneOf([Yup.ref('currentPassword')], 'New password cannot be the same as the old password'),
@@ -30,28 +32,22 @@ export default function EditPassword() {
  */
   const handleFormSubmit = async (values, { resetForm, setFieldError }) => {
 
-      const result = await updateUserPassword(values.currentPassword, values.newPassword)
-      switch (result) {
-        case 0:
-          {
-            Alert.alert('successfully changed password')
-            resetForm();
-            break;
-          }
-          case 1:
-            {
-              setFieldError('currentPassword','password is incorrect')
-              break;
-            }
-            case 2:
-              {
-                Alert.alert('There was a problem try again later..')
-              }
-      }
-
+  const [isUpdated, message] = await updateUserPassword(values.currentPassword, values.newPassword)
+  setSlideMessage(message);
+  setSlideStatus(isUpdated ? 'success' : 'error');    
+  showSlide()
   };
+  const showSlide = () =>{
+    setTimeout(() => {
+      setIsShowing(true)
+      setTimeout(() => {
+        setIsShowing(false)
+      }, 2500)
+    }, 500);
+  }
   return (
     <View style={styles.container}>
+      <CustomSlide isShowing={isShowing} status={slideStatus} title={slideMessage} />
        <Formik
       initialValues={{ currentPassword: '', newPassword: '', repeatPassword: '' }}
       validationSchema={validationSchema}

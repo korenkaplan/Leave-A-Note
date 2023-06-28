@@ -13,7 +13,7 @@ const CustomSlide: React.FC<Props> = ({ title, status, isShowing }) => {
     return (
         <Slide in={isShowing} placement="left">
             <Alert justifyContent="center" status={status} safeAreaTop={4}>
-                <Text h4 color="error.600" fontWeight="medium">
+                <Text  color="error.600" fontWeight="medium">
                     {title}
                 </Text>
             </Alert>

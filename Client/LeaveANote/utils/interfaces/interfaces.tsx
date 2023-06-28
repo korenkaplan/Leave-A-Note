@@ -60,7 +60,6 @@ export interface ReportToSend {
     imageUrl: string;
     damagedCarNumber:string;
     hittingCarNumber: string;
-    date:string;
     isAnonymous: boolean;
   }
 //The interface of a note to send out by the connected user
@@ -80,10 +79,10 @@ export interface SignUpFormValues {
 
 // only the information of the user to be updated not including the notes and reports arrays.
 export interface UserDataToUpdate{
-    fullname: string;
+    name: string;
     email: string;
     phoneNumber: string;
-    carNum: string;
+    carNumber: string;
   }
 //The interface that holds the properties of both Note and Report.
 export interface Accident {

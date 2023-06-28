@@ -90,7 +90,7 @@ const moveToSmsDialog = () => {
 
 export default NoteView;
 
-const createStyles = (primary,secondary,text,background) => 
+const createStyles = (primary: string,secondary: string,text: {primary: string,secondary: string },background: string) => 
  StyleSheet.create({
   Title:{
     color:text.primary,

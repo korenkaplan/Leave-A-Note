@@ -10,7 +10,6 @@ import { emailSchema, passwordSchema } from '../utils/validation/validationSchem
 import { ThemeContext } from '../context/ThemeContext';
 import { Text as IText } from '../utils/interfaces/interfaces';
 import CustomButton from '../Components/uiComponents/CustomButton';
-import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomInput from '../Components/uiComponents/CustomInput';
 import CustomSlide from '../Components/uiComponents/CustomSlide';
 interface LoginFormValues {
@@ -30,8 +29,7 @@ const validationSchema = Yup.object().shape({
 const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const { loginAttempt, setAuthenticated } = useContext(MainContext);
+  const { loginAttempt, setAuthenticated,showErrorSlide,showError } = useContext(MainContext);
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
   const styles = createStyles(primary, secondary, text, background);
@@ -40,18 +38,12 @@ const Login: FC<Props> = ({ navigation }) => {
     // Handle login form submission
     const result = await loginAttempt(values.email, values.password, rememberMe);
     if (result === false) {
-      showErrorSlide();
+      showErrorSlide(3000);
       return;
     }
     setAuthenticated(true);
   };
-  const showErrorSlide = () => {
-    setShowError(true);
-    setTimeout(() => {
-      // Code to be executed after the delay
-      setShowError(false);
-    }, 3000);
-  };
+
   return (
     <View style={styles.container}>
       <CustomSlide isShowing={showError} status='error' title="Sorry... Wrong Email or Password" />

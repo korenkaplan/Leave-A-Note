@@ -8,6 +8,7 @@ import jwt_decode from "jwt-decode";
 import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse } from '../utils/interfaces/interfaces';
 interface MainContextType {
   currentUser: User | undefined;
+  showError: boolean;
   setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>;
   authenticated: boolean;
   setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,20 +21,17 @@ interface MainContextType {
   token: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
   submitNote: (note: NoteToSend) => Promise<boolean>;
-  submitReport: (report: ReportToSend) => Promise<void>;
+  submitReport: (report: ReportToSend) => Promise<boolean>;
   searchCarNumber: (carNumber: string) => Promise<boolean>;
   loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
   signupAttempt: (newUser: SignUpFormValues) => Promise<number>;
   handleLogOut: () => Promise<void>;
-  getAllNotes: () => Promise<Accident[]>;
-  getAllReports: () => Promise<Accident[]>;
   uploadPhotoToStorage: (uri: string) => Promise<string>;
-  updateUserInformation: (data: UserDataToUpdate) => Promise<boolean>;
-  updateUserPassword: (oldPassword: string, newPassword: string) => Promise<number>; // update the user password: return 0 if updated successfully, 1 if wrong old password, 2 id problem at database.
-  deleteANoteById: (noteId: string) => Promise<boolean>;
-  deleteAReportById: (id: string) => Promise<boolean>;
+  updateUserInformation: (data: UserDataToUpdate) => Promise<[boolean, string]>;
+  updateUserPassword: (oldPassword: string, newPassword: string) => Promise<[boolean, string]>; // update the user password: return 0 if updated successfully, 1 if wrong old password, 2 id problem at database.
+  deleteAccident: (messageId: string) => Promise<[boolean, string]>;
   getUserById: (id: string, token: string) => Promise<User | null>; // get a user by Id and set CurrantUser state.
-  deleteFromUnreadMessages: (id: string) => Promise<boolean>;
+  deleteFromUnreadMessages: (messageId: string) => Promise<boolean>;
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -42,15 +40,16 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [carNumInput, setCarNumInput] = useState<string>('');
+  const [showError, setShowError] = useState(false);
   const [damagedUserId, setDamagedUserId] = useState<string>('');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [token, setToken] = useState<string>('');
   const api: AxiosInstance = axios.create({
-    baseURL: 'https://api.example.com', // Set your base URL
+    baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
     // You can also configure other Axios options here
   });
 
-  
+
   //try to login  ------------------------------------------------------------------------------------ done
   const loginAttempt = async (email: string, password: string, rememberMeValue: boolean): Promise<boolean> => {
     const loginData = {
@@ -58,7 +57,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       password,
     };
     try {
-      const response = await api.post(`https://leave-a-note-nodejs-server.onrender.com/api/users/login`, loginData);
+      const response = await api.post(`/users/login`, loginData);
       const responseData: IHttpResponse<{ token: string }> = response.data;
       if (!responseData.success || responseData.data === undefined) { return false; }
       const token = responseData.data.token
@@ -76,7 +75,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return false;
     }
   };
-  //sing up attempt
+  //sing up attempt //TODO Sign up function handle the errors of exisiting (email password car number) with custom slide
   const signupAttempt = async (newUser: SignUpFormValues): Promise<number> => {
     //return: 0 -> success,1 -> phone number already in use, 2 -> email already in use, 3 -> car number already in use.
     try {
@@ -92,7 +91,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     }
   };
   //get user by the id ------------------------------------------------------------------------------------ done
-  const getUserById = async (id: string,token: string): Promise<User | null> => {
+  const getUserById = async (id: string, token: string): Promise<User | null> => {
     const requestBody = {
       query: {
         _id: id,
@@ -102,15 +101,10 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       },
     };
     try {
-      const response: AxiosResponse = await api.post("https://leave-a-note-nodejs-server.onrender.com/api/users/getUser", requestBody,
-        {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        });
+      const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: 'Bearer ' + token, } });
       const responseData: IHttpResponse<User> = response.data;
-      if (responseData.tokenError)
-        handleTokenError()
+      if (responseData.tokenError) { handleTokenError() }
+
 
       if (responseData.data === undefined) { return null; }
       return responseData.data;
@@ -130,17 +124,10 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       },
     };
     try {
-      const response: AxiosResponse = await api.post(
-        "https://leave-a-note-nodejs-server.onrender.com/api/users/getUser",
-        requestBody,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: `Bearer ${token}`, } });
       const responseData: IHttpResponse<User> = response.data;
-      console.log(responseData)
+      if (responseData.tokenError) { handleTokenError() }
+
       return responseData.success;
     } catch (error: any) {
       console.log(error.message);
@@ -149,11 +136,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   };
   // submit new note ------------------------------------------------------------------------------------ done
   const submitNote = async (note: NoteToSend): Promise<boolean> => {
-    if (!currentUser) {
-      return false;
-    }
-    console.log(currentUser);
-
+    if (!currentUser) { return false; }
     const requestBody = {
       damaged_user_car_num: note.damagedCarNumber,
       hitting_user_car: currentUser.carNumber,
@@ -163,43 +146,49 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     };
 
     try {
-      console.log(requestBody);
 
-      const response = await api.post(
-        "https://leave-a-note-nodejs-server.onrender.com/api/notes/createNote",
-        requestBody,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await api.post("/notes/createNote", requestBody, { headers: { Authorization: `Bearer ${token}`, } });
 
       const responseData: IHttpResponse<void> = response.data;
-      console.log(responseData.message);
+      if (responseData.tokenError) { handleTokenError() }
+
       return responseData.success;
     } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        console.log("Error 400: Bad Request");
-        console.log(error.response.data); // Log the error response data for further analysis
-      } else {
-        console.log("An error occurred:", error.message);
-      }
+      console.error(error.response.data); // Log the error response data for further analysis
       return false;
     }
   };
-  //submit a new report
-  const submitReport = async (report: ReportToSend): Promise<void> => {
-    // TODO: implement submit note to database
-    // const response = await api.post(`/reports/addReport/${damagedUserId}`,note);
-    console.log(report);
-    console.log('submit report from context');
+  //submit a new report  ------------------------------------------------------------------------------------ done
+  const submitReport = async (report: ReportToSend): Promise<boolean> => {
+    try {
+      if (!currentUser) { return false; }
+      const requestBody = {
+        imageUrl: report.imageUrl,
+        damagedCarNumber: report.damagedCarNumber,
+        hittingCarNumber: report.hittingCarNumber,
+        isAnonymous: report.isAnonymous,
+        reporter: {
+          name: currentUser.name,
+          phoneNumber: currentUser.phoneNumber
+        }
+      }
+      const response = await api.post('/reports/createReport', requestBody, { headers: { Authorization: `Bearer ${token}`, } });
+
+      const responseData: IHttpResponse<void> = response.data;
+      if (responseData.tokenError) { handleTokenError() }
+
+      return responseData.success;
+    } catch (error: any) {
+      console.error(error.response.data); // Log the error response data for further analysis
+      return false;
+    }
   };
-  async function handleTokenError<T>(): Promise<void> {
-    await AsyncStorage.removeItem('connectedUser');
-    setAuthenticated(false);
+  //TODO show dialog and after the click:  return to login page and remove the token from the Async storage
+  async function handleTokenError(): Promise<void> {
+    // show the dialog 
+    handleLogOut();
   }
-  //upload the image to firebase storage 
+  //upload the image to firebase storage ------------------------------------------------------------------------------------ done
   const uploadPhotoToStorage = async (uri: string): Promise<string> => {
     const timestamp: string = Date.now().toString();
     const photoRef = ref(storage, `photos/${carNumInput}/${timestamp}`);
@@ -220,18 +209,19 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return error.message;
     }
   };
-  //user logout: Remove from async storage  set Authenticated to false return to login page 
+  //user logout: Remove from async storage  set Authenticated to false return to login page  ------------------------------------------------------------------------------------ done
   const handleLogOut = async (): Promise<void> => {
     await AsyncStorage.removeItem('connectedUser');
     setAuthenticated(false);
   };
-
+  // If checked set the token to AsyncStorage for auto login next app launch ------------------------------------------------------------------------------------ done
   const updateRememberMe = async (rememberMeValue: boolean, token: string): Promise<void> => {
     if (rememberMeValue)
       storeObject('connectedUser', token)
     else
       AsyncStorage.removeItem('connectedUser');
   };
+  //The function receives a key and value and stores it in Async storage ------------------------------------------------------------------------------------ done
   const storeObject = async (key: string, value: string): Promise<void> => {
     try {
       await AsyncStorage.setItem(key, value);
@@ -239,99 +229,75 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       console.log('Error storing object:', error);
     }
   };
-
-  //Get all notes from database
-  const getAllNotes = async (): Promise<Accident[]> => {
+  //update user information  ------------------------------------------------------------------------------------ done
+  const updateUserInformation = async (data: UserDataToUpdate): Promise<[boolean, string]> => {
     try {
-      const response = await api.get(`/users/all/notes/${currentUser?._id}`);
-      const notes: Accident[] = response.data;
-      return notes;
-
-    } catch (error) {
-      console.error('Error occurred during signup:', error);
-      throw new Error('An error occurred during signup.');
-    }
-  };
-  //Get all reports from database
-  const getAllReports = async (): Promise<Accident[]> => {
-    try {
-      const response = await api.get(`/users/all/reports/${currentUser._id}`);
-      const reports: Accident[] = response.data;
-      return reports;
-    } catch (error) {
-      console.error('Error occurred during signup:', error);
-      throw new Error('An error occurred during signup.');
-    }
-  };
-  //update user information
-  const updateUserInformation = async (data: UserDataToUpdate): Promise<boolean> => {
-    try {
-      const response = await api.post<UserDataToUpdate>(`/users/update/${currentUser?._id}`, data);
-      const updatedData = response.data;
-      if (updatedData !== null) {
-        setCurrentUser((prevUser: User) => ({
-          ...prevUser,
-          fullname: updatedData.fullname,
-          email: updatedData.email,
-          carNum: updatedData.carNum,
-          phoneNumber: updatedData.phoneNumber,
-        }));
-        return true;
+      if (!currentUser) return [false, 'Problem with connection try to login again'];
+      const requestBody = {
+        userId: currentUser._id,
+        update: {
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          carNumber: data.carNumber,
+          name: data.name,
+        }
       }
-      return false;
-    } catch (error) {
-      console.error('Error occurred during signup:', error);
-      throw new Error('An error occurred during signup.');
-    }
-  };
-  // update the user password: return 0 if updated successfully, 1 if wrong old password, 2 id problem at database
-  const updateUserPassword = async (oldPassword: string, newPassword: string): Promise<number> => {
-    const data = {
-      oldPassword,
-      newPassword,
-    }
+      const response = await api.post('/users/informationUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } })
+      const responseData: IHttpResponse<void> = response.data;
+      if (responseData.tokenError) { handleTokenError() }
 
-    try {
-      const response = await api.post<number>('/users/updatePassowrd', data);
-      const result = response.data;
-      return result;
-    } catch (error) {
-      console.error('Error occurred during signup:', error);
-      throw new Error('An error occurred during signup.');
-    }
-  };
-  const deleteANoteById = async (noteId: string): Promise<boolean> => {
-    try {
-      // return true; //for testing purposes
-      const response = await api.delete(`/notes/delete/${noteId}`);
-      const result: boolean = response.data;
-      return result;
+      //as [boolean,string] : I add this just because i know that if ! successful then error won't be undefined 100%
+      return responseData.success ? [true, responseData.message] : [false, responseData.error] as [boolean, string];
+
     } catch (error: any) {
-      console.log(error.message);
-      return false;
-    }
-  };
-  const deleteAReportById = async (reportId: string): Promise<boolean> => {
+      console.error(error.response.data); // Log the error response data for further analysis
+      return [false, error.response.data.error];
+    };
+  }
+  // update the user password:  ------------------------------------------------------------------------------------ done
+  const updateUserPassword = async (oldPassword: string, newPassword: string): Promise<[boolean, string]> => {
     try {
-      // return true; //for testing purposes
-      const response = await api.delete(`/reports/delete/${reportId}`);
-      const result: boolean = response.data;
-      return result;
-    } catch (error: any) {
-      console.log(error.message);
-      return false;
+      if (!currentUser) return [false, 'Problem with connection try to login again'];
+      const requestBody = {
+        userId: currentUser._id,
+        oldPassword,
+        newPassword
+      }
+      const response = await api.post('/users/passwordUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const responseData: IHttpResponse<void> = response.data;
+      if (responseData.tokenError) { handleTokenError() }
+      return responseData.success ? [responseData.success, responseData.message] : [responseData.success, responseData.error] as [boolean, string];
     }
-  };
-  const deleteFromUnreadMessages = async (id: string): Promise<boolean> => {
+    catch (error: any) {
+      return [false, error.response.data.error];
+    };
+  }
+
+  // delete accident from the users accidents history list ------------------------------------------------------------------------------------ done
+  const deleteAccident = async (messageId: string): Promise<[boolean, string]> => {
     try {
-      const response = await api.delete<boolean>(`/users/unread/${id}`);
-      const result = response.data;
-      return result;
+      if (!currentUser) return [false, 'Problem with connection try to login again'];
+
+      const requestBody = { userId: currentUser._id, messageId };
+      const response = await api.post('/users/deleteMessage', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const responseData: IHttpResponse<void> = response.data;
+      if (responseData.tokenError) { handleTokenError() }
+      return [responseData.success, responseData.message];
+
     } catch (error: any) {
-      console.log(error.message);
-      return false;
+      return [false, error.response.data.error]
     }
   };
+  // delete accident from the users inbox list ------------------------------------------------------------------------------------ done
+  const deleteFromUnreadMessages = async (messageId: string): Promise<boolean> => {
+    if (!currentUser) return false;
+    const requestBody = { userId: currentUser._id, messageId };
+    const response = await api.post('/users/deleteMessageInbox', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+    const responseData: IHttpResponse<void> = response.data;
+    if (responseData.tokenError) { handleTokenError() }
+    return responseData.success;
+  };
+
   const value: MainContextType = {
     authenticated,
     setAuthenticated,
@@ -349,17 +315,15 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     loginAttempt,
     signupAttempt,
     handleLogOut,
-    getAllNotes,
-    getAllReports,
     uploadPhotoToStorage,
     updateUserInformation,
     updateUserPassword,
-    deleteANoteById,
-    deleteAReportById,
+    deleteAccident,
     getUserById,
     deleteFromUnreadMessages,
     token,
-    setToken
+    setToken,
+    showError
   };
 
 
