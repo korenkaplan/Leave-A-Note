@@ -423,9 +423,6 @@ try {
     showError,
     autoLoginNewUser
   };
-
-
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 }
-
 export default MainContextProvider;
