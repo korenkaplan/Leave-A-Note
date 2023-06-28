@@ -7,11 +7,12 @@ interface Props {
     title: string;
     status: string;
     isShowing: boolean;
+    placement: 'top' | 'bottom'| 'left' | 'right';
 }
 
-const CustomSlide: React.FC<Props> = ({ title, status, isShowing }) => {
+const CustomSlide: React.FC<Props> = ({ title, status, isShowing, placement }) => {
     return (
-        <Slide in={isShowing} placement="left">
+        <Slide in={isShowing} placement={placement}>
             <Alert justifyContent="center" status={status} safeAreaTop={4}>
                 <Text  color="error.600" fontWeight="medium">
                     {title}

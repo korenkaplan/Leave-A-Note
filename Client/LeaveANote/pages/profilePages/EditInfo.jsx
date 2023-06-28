@@ -46,7 +46,7 @@ const showSlide = () =>{
 }
   return (
     <ThemedView>
-      <CustomSlide isShowing={isShowing} status={slideStatus} title={slideMessage} />
+      <CustomSlide placement='left'  isShowing={isShowing} status={slideStatus} title={slideMessage} />
       <Formik
         initialValues={{
           name: currentUser.name,

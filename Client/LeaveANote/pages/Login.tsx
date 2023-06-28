@@ -29,7 +29,8 @@ const validationSchema = Yup.object().shape({
 const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
-  const { loginAttempt, setAuthenticated,showErrorSlide,showError } = useContext(MainContext);
+  const { loginAttempt, setAuthenticated,showError } = useContext(MainContext);
+  const [isShowing, setIsShowing] = useState(false)
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
   const styles = createStyles(primary, secondary, text, background);
@@ -38,15 +39,22 @@ const Login: FC<Props> = ({ navigation }) => {
     // Handle login form submission
     const result = await loginAttempt(values.email, values.password, rememberMe);
     if (result === false) {
-      showErrorSlide(3000);
+      showSlide();
       return;
     }
     setAuthenticated(true);
   };
-
+  const showSlide = () =>{
+    setTimeout(() => {
+      setIsShowing(true)
+      setTimeout(() => {
+        setIsShowing(false)
+      }, 2500)
+    }, 500);
+  }
   return (
     <View style={styles.container}>
-      <CustomSlide isShowing={showError} status='error' title="Sorry... Wrong Email or Password" />
+      <CustomSlide placement='top' isShowing={isShowing} status='error' title="Sorry... Wrong Email or Password" />
       <Text style={styles.heading} h1>
         Hello, Welcome
       </Text>

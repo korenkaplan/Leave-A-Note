@@ -142,7 +142,7 @@ const AccidentsHistory: FC = ()=> {
   });
     return (
     <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />  }>
-      <CustomSlide isShowing={isShowing} status={slideStatus} title={slideMessage} />
+      <CustomSlide placement='top'  isShowing={isShowing} status={slideStatus} title={slideMessage} />
       {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
     </ScrollView>
   );

@@ -38,6 +38,8 @@ export default function Main() {
 
           if(currantUser != null)
           {
+            console.log('setCurrentUser(currantUser);');
+            console.log(currantUser.accidents);
             setCurrentUser(currantUser);
             setAuthenticated(true);
           }

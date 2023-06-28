@@ -5,7 +5,7 @@ import { ListItem,Avatar, Icon} from '@rneui/themed';
 import { MainContext } from '../context/ContextProvider';
 import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import {Accident, Theme} from '../utils/interfaces/interfaces';
 
 const Inbox: FC = () =>{
@@ -63,12 +63,13 @@ const Inbox: FC = () =>{
      //create a function to handle the press of a message
      const handlePress = (item: Accident, index:number) => {
       //todo check if the message is a note or a report
-      handleDelete(index,item._id)
+      handleDelete(index, item._id);
       navigation.navigate({
-        name: item.type ==='note'? 'NoteView': 'ReportView',
-        params: {item},
+        name: item.type === 'note' ? 'NoteView' : 'ReportView',
+        params: { item },
         merge: true,
       });
+      
       //the timeout is so the animation won't show for a brief second if the list is empty before moving to view the message.
       setTimeout(() => {
         deleteMessageFromState(index)

@@ -6,5 +6,7 @@ module.exports = {
     
     // Rule 6: Disallow the use of console.log
     'no-console': 'error',
+    selector: 'ImportDeclaration',
+        message: "Don't use 'import' as a reserved keyword.",
   }
 };

@@ -71,10 +71,10 @@ export interface NoteToSend {
 export interface SignUpFormValues {
     email: string;
     password: string;
-    repeatPassword: string;
+    repeatPassword?: string;
     phoneNumber: string;
     carNumber: string;
-    fullName: string;
+    name: string;
   }
 
 // only the information of the user to be updated not including the notes and reports arrays.
