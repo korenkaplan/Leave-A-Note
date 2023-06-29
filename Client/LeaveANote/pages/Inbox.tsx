@@ -35,7 +35,7 @@ const Inbox: FC = () =>{
               </ListItem.Content>
               <ListItem.Chevron
               size={35}
-              color={buttonMain.background}
+              color={buttonMain.text}
               />
             </ListItem>
           </TouchableOpacity>
@@ -53,7 +53,7 @@ const Inbox: FC = () =>{
               </ListItem.Content>
               <ListItem.Chevron
               size={35}
-              color={buttonMain.background}
+              color={buttonMain.text}
               />
             </ListItem>
           </TouchableOpacity>

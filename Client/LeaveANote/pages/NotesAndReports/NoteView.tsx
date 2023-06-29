@@ -7,6 +7,8 @@ import { ThemeContext } from '../../context/ThemeContext';
 import ThemedView from '../../Components/uiComponents/ThemedView';
 import CustomButton from '../../Components/uiComponents/CustomButton';
 import { MessageProps } from '../../utils/interfaces/interfaces';
+import { StyleButton,IText } from '../../utils/interfaces/interfaces';
+import DividerWithText from '../../Components/uiComponents/DividerWithText';
 
 const NoteView: React.FC<MessageProps> = ( {route}) => {
   //const message = navigation.getParam('message','no message');
@@ -14,12 +16,15 @@ const NoteView: React.FC<MessageProps> = ( {route}) => {
   
   const {item } = route.params;
   const {hittingDriver, date, imageSource} = item;
-  const {theme} = useContext(ThemeContext);
+  const {theme,buttonTheme} = useContext(ThemeContext);
+    const {buttonAlt, buttonMain} = buttonTheme;
   const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background)
+  const styles = createStyles(primary,secondary,text,background,buttonAlt, buttonMain)
 
 const noteDetails = (
   <View  >
+      <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Driver Information'}/>
+
     <ListItem  containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
       <Icon name="calendar" type="ionicon" color={text.primary}  />
       <ListItem.Content>
@@ -70,6 +75,8 @@ const moveToSmsDialog = () => {
         <View  style={styles.detailsContainer}>
        {noteDetails}
         </View>
+      <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Make Contact'}/>
+
         <View style={[styles.btnContainer,styles.ListItem,styles.textPrimaryBorder]}>
         <ListItem containerStyle={[styles.ListItem,styles.phoneRow,]}> 
       <Icon name="phone-portrait" type="ionicon" color={text.primary}  />
@@ -78,10 +85,10 @@ const moveToSmsDialog = () => {
       </ListItem.Content>
     </ListItem >
           <Button style={[styles.callBtn]}  onPress={moveToPhoneDialog}>
-            <Icon name="call" type="ionicon" color={text.primary} />
+            <Icon name="call" type="ionicon" color={buttonMain.text} />
           </Button>
           <Button style={[styles.textBtn]} onPress={moveToSmsDialog}>
-            <Icon name="sms" type="font-awesome-5" color={text.primary} />
+            <Icon name="sms" type="font-awesome-5" color={buttonAlt.text} />
           </Button>
         </View>
     </View>
@@ -90,14 +97,14 @@ const moveToSmsDialog = () => {
 
 export default NoteView;
 
-const createStyles = (primary: string,secondary: string,text: {primary: string,secondary: string },background: string) => 
+const createStyles = (primary: string,secondary: string,text: IText,background: string,buttonAlt: StyleButton, buttonMain: StyleButton) => 
  StyleSheet.create({
   Title:{
     color:text.primary,
   },
 
   detailsContainer:{
-backgroundColor:secondary, 
+backgroundColor:primary, 
 paddingTop:20, 
   },
   textPrimaryBorder:{
@@ -118,7 +125,7 @@ paddingTop:20,
     height:50,
     marginRight:10,
     width:55,
-    backgroundColor:primary,
+    backgroundColor:buttonMain.background,
     borderWidth: 1, 
     borderColor: text.primary,
 
@@ -127,7 +134,7 @@ paddingTop:20,
     height:50,
     marginRight:10,
     width:75,
-    backgroundColor:secondary,
+    backgroundColor:buttonAlt.background,
     borderWidth: 1, 
     borderColor: text.primary,
   },
@@ -153,7 +160,7 @@ paddingTop:20,
   },
   MainContainer: {
     flex: 1,
-    backgroundColor:secondary,
+    backgroundColor:primary,
   },
   container: {
   flex: 1,
@@ -161,8 +168,8 @@ paddingTop:20,
   },
   image:{
     aspectRatio: 1,
-    borderWidth:10,
-    borderColor:text.primary,
+    borderWidth:7,
+    borderColor:primary,
     width: 200,
      height: 200,
      borderRadius:20,

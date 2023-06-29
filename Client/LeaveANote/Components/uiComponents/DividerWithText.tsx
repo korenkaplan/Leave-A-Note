@@ -3,21 +3,23 @@ import React, { FC, useContext} from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Divider, Text } from '@rneui/base';
 import { ThemeContext } from '../../context/ThemeContext';
-import { Text as IText } from '../../utils/interfaces/interfaces';
+import { IText } from '../../utils/interfaces/interfaces';
 interface DividerWithTextProps {
   title: string;
+  fontColor?:string;
+  height?:number;
 }
 
-const DividerWithText: FC<DividerWithTextProps> = ({ title }) => {
+const DividerWithText: FC<DividerWithTextProps> = ({ title,fontColor,height }) => {
   const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
 	
   return (
     <View style={styles.container}>
-      <Divider style={styles.divider} />
-      <Text style={styles.text}>{title}</Text>
-      <Divider style={styles.divider} />
+      <Divider style={[styles.divider,{backgroundColor:fontColor,height}]} />
+      <Text style={[styles.text,{color: fontColor}]}>{title}</Text>
+      <Divider style={[styles.divider,{backgroundColor: fontColor,height}]} />
     </View>
   );
 };

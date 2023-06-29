@@ -4,13 +4,15 @@ import { Image, ListItem,Icon,Divider } from '@rneui/themed';
 import { Button } from 'native-base';
 import {MessageProps } from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
-
+import { StyleButton,IText } from '../../utils/interfaces/interfaces';
+import DividerWithText from '../../Components/uiComponents/DividerWithText';
 const ReportView: React.FC<MessageProps> = ({route}) => {
   const {item} = route.params;
     const {hittingDriver, date, imageSource,isAnonymous,isIdentify, reporter} = item;
-    const {theme} = useContext(ThemeContext);
+    const {theme,buttonTheme} = useContext(ThemeContext);
+    const {buttonAlt, buttonMain} = buttonTheme;
   const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background)
+  const styles = createStyles(primary,secondary,text,background,buttonAlt, buttonMain)
       //return the image
       const image = (
         <Image
@@ -35,21 +37,23 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
       //return in case that the damaging driver is not in the system
       const unknownDamagingReport = (
         <View style={styles.detailsContainer}>
+      <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Driver Information'}/>
+
          <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="calendar" type="ionicon" color={text.primary} />
+      <Icon name="calendar" type="ionicon" color={primary} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>{date}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="person-outline" type="ionicon" color={text.primary} />
+      <Icon name="person-outline" type="ionicon" color={primary} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>Unknown Driver</ListItem.Title>
         <ListItem.Subtitle style={styles.Subtitle}>Damaging Driver</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="car-outline" type="ionicon" color={text.primary} />
+      <Icon name="car-outline" type="ionicon" color={primary} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
       </ListItem.Content>
@@ -60,6 +64,8 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
       //return in case that the damaging driver is in the system
       const knownDamagingReport = (
         <View style={styles.detailsContainer}>
+      <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Driver Information'}/>
+
          <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
       <Icon name="calendar" type="ionicon" color={text.primary} />
       <ListItem.Content>
@@ -79,6 +85,7 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
         <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
+    <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Make Contact'}/>
     <View style={[styles.btnContainer,styles.ListItem,styles.textPrimaryBorder]}>
           <ListItem  containerStyle={[styles.ListItem,styles.phoneRow,]}> 
         <Icon name="person" type="ionicon" color={text.primary} />
@@ -87,10 +94,10 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
         </ListItem.Content>
       </ListItem>
             <Button style={styles.callBtn} onPress={()=>{moveToPhoneDialog(hittingDriver.phoneNumber)}}>
-              <Icon name="call" type="ionicon" color={text.primary} />
+              <Icon name="call" type="ionicon" color={buttonMain.text} />
             </Button>
             <Button style={styles.textBtn} onPress={()=>{moveToSmsDialog(hittingDriver.phoneNumber,hittingDriver.name)}}>
-              <Icon name="sms" type="font-awesome-5" color={text.primary} />
+              <Icon name="sms" type="font-awesome-5" color={buttonAlt.text} />
             </Button>
           </View>
     
@@ -126,7 +133,7 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
               <Icon name="call" type="ionicon" color="white" />
             </Button>
             <Button style={styles.textBtn} onPress={()=>{moveToSmsDialog(reporter.phoneNumber,reporter.name)}}>
-              <Icon name="sms" type="font-awesome-5" color="white" />
+              <Icon name="sms" type="font-awesome-5" color={buttonAlt.text} />
             </Button>
           </View>
             );     
@@ -148,20 +155,20 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
   );
 };
 
-const createStyles = (primary,secondary,text,background) => 
+const createStyles = (primary: string,secondary: string,text: IText,background: string,buttonAlt: StyleButton, buttonMain: StyleButton) => 
  StyleSheet.create({
   Title:{
     color:text.primary,
   }, 
   detailsContainer:{
-    backgroundColor:secondary, 
+    backgroundColor:primary, 
     paddingTop:20, 
       },
       callBtn:{
         height:50,
         marginRight:10,
         width:55,
-        backgroundColor:primary,
+        backgroundColor:buttonMain.background,
         borderWidth: 1, 
         borderColor: text.primary,
     
@@ -177,7 +184,7 @@ const createStyles = (primary,secondary,text,background) =>
       height:50,
       marginRight:10,
       width:75,
-      backgroundColor:secondary,
+      backgroundColor:buttonAlt.background,
       borderWidth: 1, 
       borderColor: text.primary,
     },
@@ -211,7 +218,7 @@ const createStyles = (primary,secondary,text,background) =>
     },
     MainContainer: {
       flex: 1,
-    backgroundColor:secondary,
+    backgroundColor:primary,
     },
     container: {
     flex: 1,
@@ -219,8 +226,8 @@ const createStyles = (primary,secondary,text,background) =>
     },
     image:{
       aspectRatio: 1,
-      borderWidth:10,
-      borderColor:text.primary,
+      borderWidth:6,
+      borderColor:primary,
       width: 200,
        height: 200,
        borderRadius:20,

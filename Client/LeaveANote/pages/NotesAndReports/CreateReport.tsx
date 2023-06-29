@@ -7,8 +7,10 @@ import { MainContext } from '../../context/ContextProvider';
 import { Chip, CheckBox } from '@rneui/themed';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { ReportToSend, Text as TextColor } from '../../utils/interfaces/interfaces';
+import { ReportToSend, IText,StyleButton} from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
+import DividerWithText from '../../Components/uiComponents/DividerWithText';
+
 interface Params {
   image: string;
 }
@@ -28,9 +30,10 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'); // the image source starts with en empty iamge
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false); // holds the boolean value if the keyboard is open or not
   const enum Size { AvatarBig = 250, AvatarSmall = 150, AvatarAccessoryBig = 60, AvatarAccessorySmall = 40 };// enum for sizes of the avatar when the keyboard is open / closed
-  const { theme } = useContext(ThemeContext);
-  const { primary, secondary, text, background } = theme.colors
-  const styles = createStyles(primary, secondary, text, background)
+  const {theme,buttonTheme} = useContext(ThemeContext);
+  const {buttonMain,buttonAlt}= buttonTheme;
+  const {primary,secondary,text,background} = theme.colors
+  const styles = createStyles(primary,secondary,text,background,buttonMain,buttonAlt)
   // create the schema for the values object of formik
   type Values = {
     damagedCarNumber: string,
@@ -145,7 +148,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
             size={keyboardOpen ? Size.AvatarAccessorySmall : Size.AvatarAccessoryBig}
             name="camera"
             onPress={openCamera}
-            color={text.primary}
+            color={buttonMain.text}
             style={styles.avatarAccessory}
           />
 
@@ -189,7 +192,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                 uncheckedIcon="circle-o"
                 checked={isChecked}
                 onPress={toggleCheckbox}
-                containerStyle={{ backgroundColor: background }}
+                containerStyle={{ backgroundColor: primary }}
                 titleProps={{ style: { color: text.primary, marginLeft: 10, } }} // Specify the desired color for the title text
               />
 
@@ -218,7 +221,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   );
 };
 
-const createStyles = (primary: string, secondary: string, text: TextColor, background: string) =>
+const createStyles = (primary: string, secondary: string, text: IText, background: string,buttonMain:StyleButton,buttonAlt: StyleButton) =>
   StyleSheet.create({
     error: {
       color: 'red',
@@ -246,6 +249,8 @@ const createStyles = (primary: string, secondary: string, text: TextColor, backg
     },
     bottomContainer: {
       flex: 1,
+      backgroundColor:primary,
+      paddingTop: 10
     },
 
     divider: {

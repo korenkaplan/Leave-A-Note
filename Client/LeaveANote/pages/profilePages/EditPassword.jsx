@@ -47,7 +47,7 @@ export default function EditPassword() {
   }
   return (
     <View style={styles.container}>
-      <CustomSlide placement='left' isShowing={isShowing} status={slideStatus} title={slideMessage} />
+      <CustomSlide placement='top' isShowing={isShowing} status={slideStatus} title={slideMessage} />
       <ScrollView style={styles.scroll}>
       <Formik
       initialValues={{ currentPassword: '', newPassword: '', repeatPassword: '' }}

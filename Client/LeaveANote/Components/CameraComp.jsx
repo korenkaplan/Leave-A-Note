@@ -78,8 +78,8 @@ export default function CameraComp({ navigation, route }) {
         <View style={styles.imageContainer}>
         <Image style={styles.image} source={{uri:imageData}} alt='image here'/>
         <View style={styles.buttonContainer}>
-        <CustomButton containerStyle={{width:150}} title={'Use Photo'} onPress={moveBackToPreviousScreen}/>
-        <CustomButton containerStyle={{width:150}} title={'Retake Photo'} onPress={()=> setTakePhotoClicked(false)}/>
+        <CustomButton type='main' containerStyle={{width:150}} title={'Use Photo'} onPress={moveBackToPreviousScreen}/>
+        <CustomButton type='alt' containerStyle={{width:150}} title={'Retake Photo'} onPress={()=> setTakePhotoClicked(false)}/>
         </View>
       </View>
       );

@@ -93,7 +93,8 @@ const AccidentsHistory: FC = () => {
           </ListItem.Content>
           <ListItem.Chevron
               size={35}
-              color={buttonMain.background}
+              color={buttonMain.text}
+
               />
         </ListItem.Swipeable>
       );
@@ -138,7 +139,7 @@ const AccidentsHistory: FC = () => {
           </ListItem.Content>
           <ListItem.Chevron
               size={35}
-              color={buttonMain.background}
+              color={buttonMain.text}
               />
         </ListItem.Swipeable>
       );

@@ -5,8 +5,9 @@ import {RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainContext } from '../../context/ContextProvider';
 import { Chip } from '@rneui/themed';
-import { NoteToSend, Text} from '../../utils/interfaces/interfaces';
+import { NoteToSend, IText,StyleButton} from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
+import DividerWithText from '../../Components/uiComponents/DividerWithText';
 interface Params {
   carNumber: string;
   image: string;
@@ -20,9 +21,10 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const { carNumInput,submitNote, uploadPhotoToStorage} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
-  const {theme} = useContext(ThemeContext);
+  const {theme,buttonTheme} = useContext(ThemeContext);
+  const {buttonMain,buttonAlt}= buttonTheme;
   const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background)
+  const styles = createStyles(primary,secondary,text,background,buttonMain,buttonAlt)
 
   useEffect(() => {
     if (image) {
@@ -98,8 +100,9 @@ const handleSubmit = async ():Promise<void> =>{
   
 </Avatar>
       </View>
-      <Divider style={styles.divider}/>
       <View style={styles.bottomContainer}>
+      <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Take a picture and send the note'}/>
+
       <View >
       <Chip
   title={`Car Number ${carNumInput}`}
@@ -107,9 +110,9 @@ const handleSubmit = async ():Promise<void> =>{
     name: 'car',
     type: 'font-awesome',
     size: 20,
-    color: text.primary,
+    color: buttonAlt.text,
   }}
-  color={secondary}
+  color={buttonAlt.background}
   containerStyle={styles.chip}
   titleStyle={styles.chipTitle}
 />
@@ -118,12 +121,11 @@ const handleSubmit = async ():Promise<void> =>{
           disabled={disableSendBtn}
           disabledStyle={styles.disableBtn}
   title={disableSendBtn?'Add Photo' : 'Send Report'}
-  color={'primary'}
   icon={{
     name: 'paper-plane',
     type: 'font-awesome',
     size: 20,
-    color: 'white',
+    color: buttonMain.background,
   }}
   onPress={handleSubmit}
   type="outline"
@@ -136,20 +138,29 @@ const handleSubmit = async ():Promise<void> =>{
   );
 };
 
-const createStyles = (primary: string, secondary: string, text: Text, background: string) =>  StyleSheet.create({
+const createStyles = (primary: string, secondary: string, text: IText, background: string,buttonMain:StyleButton,buttonAlt:StyleButton) =>  StyleSheet.create({
   disableBtn:{
     backgroundColor:'lightgray',
+    borderColor: text.primary,
+
+
   },
   sendBtn: {
-    backgroundColor: primary,
+    backgroundColor: buttonMain.text,
     alignSelf: 'center',
     minWidth: '50%',
+    borderColor: text.primary,
+    borderWidth: 2,
+
+
   },
   sendBtnTitle: {
-    color: text.primary,
+    color: buttonMain.background,
   },
   bottomContainer:{
     flex:1,
+    backgroundColor:primary,
+    
   },
   chip: {
     margin: 30,
@@ -159,7 +170,7 @@ const createStyles = (primary: string, secondary: string, text: Text, background
   },
   
   chipTitle: {
-    color: text.primary,
+    color: buttonAlt.text,
   },
   divider: {
     height: 5,
