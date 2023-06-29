@@ -6,9 +6,8 @@ import Main from './Main';
 import MainContextProvider from './context/ContextProvider';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import ThemeContextProvider from './context/ThemeContext';
+I18nManager.allowRTL(false);
 export default function App() {
-
-
   return (
     <MainContextProvider>
       <NativeBaseProvider>
