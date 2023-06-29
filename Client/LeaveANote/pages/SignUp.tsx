@@ -8,7 +8,7 @@ import { emailSchema, passwordSchema, phoneNumberSchema,carNumberSchema,nameSche
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 import CustomInput from '../Components/uiComponents/CustomInput';
 import CustomButton from '../Components/uiComponents/CustomButton';
-import { Text as IText, SignUpFormValues} from '../utils/interfaces/interfaces';
+import { IText, SignUpFormValues} from '../utils/interfaces/interfaces';
 import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import { Divider } from '@rneui/themed';
@@ -126,9 +126,9 @@ const styles = createStyles(primary,secondary,text,background)
                 errorMessage={errors.phoneNumber} inputContainerStyle={undefined} inputStyle={undefined}            />
                 <View style={styles.buttonContainer}>
       <CustomButton
-                  buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
+      type='main'
                   onPress={handleSubmit}
-                  title={'Register'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
+                  title={'Register'}     />
     </View>
           </>
         )}
@@ -136,9 +136,9 @@ const styles = createStyles(primary,secondary,text,background)
       <DividerWithText title="Already Have An Account ?"/>
       <View style={styles.buttonContainer}>
       <CustomButton
-            buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
+           type='alt'
             onPress={() => navigation.navigate({ name: 'Login', params: {} })}
-            title={'Login'} titleStyle={undefined} containerStyle={undefined} disabled={undefined}      />
+            title={'Login'}  />
     </View>
       </ScrollView>
     </ThemedView>

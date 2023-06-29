@@ -8,7 +8,7 @@ import { MainContext } from '../context/ContextProvider';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 import { emailSchema, passwordSchema } from '../utils/validation/validationSchemas';
 import { ThemeContext } from '../context/ThemeContext';
-import { Text as IText } from '../utils/interfaces/interfaces';
+import { IText, StyleButton } from '../utils/interfaces/interfaces';
 import CustomButton from '../Components/uiComponents/CustomButton';
 import CustomInput from '../Components/uiComponents/CustomInput';
 import CustomSlide from '../Components/uiComponents/CustomSlide';
@@ -96,9 +96,9 @@ const Login: FC<Props> = ({ navigation }) => {
             />
             <View style={styles.buttonContainer}>
               <CustomButton
-                buttonStyle={[{ backgroundColor: primary }, styles.primaryBorder1]}
+                type={'main'}
                 onPress={handleSubmit}
-                title={'Login'} titleStyle={undefined} containerStyle={undefined} disabled={undefined} />
+                title={'Login'}  />
             </View>
 
           </>
@@ -107,9 +107,9 @@ const Login: FC<Props> = ({ navigation }) => {
       <DividerWithText title="Don't have an account?" />
       <View style={styles.buttonContainer}>
         <CustomButton
-          buttonStyle={[{ backgroundColor: secondary }, styles.primaryBorder1]}
-          onPress={() => navigation.navigate('SignUp')}
-          title={'Register'} titleStyle={undefined} containerStyle={undefined} disabled={undefined} />
+          type='alt'
+          onPress={() => navigation.navigate({name:'SignUp', params:{}})}
+          title={'Register'}/>
       </View>
 
     </View>

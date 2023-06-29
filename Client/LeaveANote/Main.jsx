@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { MainContext } from './context/ContextProvider';
-import { useColorScheme } from 'react-native';
+import { useColorScheme , StatusBar, View} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import NotAuthenticatedStack from './navigatorAuth/NotAuthenticatedStack';
 import BottomTabBar from './navigatorAuth/BottomTabs';
@@ -12,7 +12,7 @@ import jwt_decode from "jwt-decode";
 import { Token } from './utils/interfaces/interfaces';
 export default function Main() {
   const { authenticated, setAuthenticated, setCurrentUser,getUserById, setToken} = useContext(MainContext);
-  const {theme,setTheme,lightTheme,darkTheme} = useContext(ThemeContext);
+  const {theme,setTheme,lightTheme,darkTheme,buttonTheme} = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true); // Add isLoading state
   const colorScheme = useColorScheme();
   useEffect(() => {
@@ -59,6 +59,8 @@ export default function Main() {
 
   return (
     <NavigationContainer>
+      <StatusBar  animated={true} backgroundColor={colorScheme !== 'dark'? darkTheme.colors.primary: lightTheme.colors.primary} />
+      <View style={{borderBottomColor:'white',borderBottomWidth:1}}/>
       {authenticated ? <BottomTabBar /> : <NotAuthenticatedStack />}
     </NavigationContainer>
   );

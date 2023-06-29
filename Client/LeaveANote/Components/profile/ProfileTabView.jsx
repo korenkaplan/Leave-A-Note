@@ -8,9 +8,11 @@ import { ThemeContext } from '../../context/ThemeContext';
 
 export default function ProfileTabView() {
   const [index, setIndex] = useState(0);
-  const { theme, toggleTheme } = useContext(ThemeContext);
-  const { primary, secondary, text, background } = theme.colors;
-  const styles = createStyles(primary, secondary, text, background);
+  const {theme, buttonTheme} = useContext(ThemeContext);
+  const {primary,secondary,text,background} = theme.colors
+  const {buttonMain, buttonAlt} = buttonTheme;
+  const styles = createStyles(primary,secondary,text,background, buttonMain, buttonAlt)
+
 
   return (
     <View style={styles.container}>
@@ -82,7 +84,7 @@ export default function ProfileTabView() {
 }
 
 
-const createStyles = (primary, secondary, text, background) =>
+const createStyles = (primary, secondary, text, background, buttonMain, buttonAlt) =>
   StyleSheet.create({
     container: {
       flex: 1,

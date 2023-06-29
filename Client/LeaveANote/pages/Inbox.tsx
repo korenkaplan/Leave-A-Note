@@ -6,13 +6,14 @@ import { MainContext } from '../context/ContextProvider';
 import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import {Accident, Theme} from '../utils/interfaces/interfaces';
+import {Accident, StyleButton, Theme} from '../utils/interfaces/interfaces';
 
 const Inbox: FC = () =>{
   const navigation = useNavigation();
-  const {theme} = useContext(ThemeContext);
+  const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background)
+  const {buttonMain, buttonAlt} = buttonTheme;
+  const styles = createStyles(primary,secondary,text,background, buttonMain, buttonAlt)
 
   //a temporary state containing the list of items,
   const {currentUser, setCurrentUser, getUserById,deleteFromUnreadMessages} = useContext(MainContext);
@@ -27,12 +28,15 @@ const Inbox: FC = () =>{
         return (
           <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message._id} >
             <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
-              <Icon containerStyle={[styles.iconNote,styles.textPrimaryBorder]} name='document-outline' type='ionicon' color={text.primary} />
+              <Icon containerStyle={[styles.iconNote,styles.textPrimaryBorder]} name='document-outline' type='ionicon' color={buttonMain.text} />
               <ListItem.Content>
                 <ListItem.Title style={styles.Title}>{message.hittingDriver.name}</ListItem.Title>
                 <ListItem.Subtitle style={styles.Subtitle}>{message.date}</ListItem.Subtitle>
               </ListItem.Content>
-              <ListItem.Chevron />
+              <ListItem.Chevron
+              size={35}
+              color={buttonMain.background}
+              />
             </ListItem>
           </TouchableOpacity>
         );
@@ -42,12 +46,15 @@ const Inbox: FC = () =>{
         return (
           <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message._id} >
             <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
-              <Icon containerStyle={[styles.iconReport,styles.textPrimaryBorder]} name='eye-outline' type='ionicon' color={text.primary} />
+              <Icon containerStyle={[styles.iconReport,styles.textPrimaryBorder]} name='eye-outline' type='ionicon' color={buttonAlt.text} />
               <ListItem.Content>
                 <ListItem.Title style={styles.Title}>{message.isIdentify ? message.hittingDriver.name : message.hittingDriver.carNumber}</ListItem.Title>
                 <ListItem.Subtitle style={styles.Subtitle}>{message.date}</ListItem.Subtitle>
               </ListItem.Content>
-              <ListItem.Chevron />
+              <ListItem.Chevron
+              size={35}
+              color={buttonMain.background}
+              />
             </ListItem>
           </TouchableOpacity>
         );
@@ -114,7 +121,7 @@ const Inbox: FC = () =>{
   );
 }
 
-const createStyles = (primary: string,secondary: string,text: {primary: string,secondary: string},background:string) => 
+const createStyles = (primary: string,secondary: string,text: {primary: string,secondary: string},background:string, buttonMain:StyleButton, buttonAlt:StyleButton) => 
   StyleSheet.create({
   container:{
     flex: 1,
@@ -128,7 +135,7 @@ const createStyles = (primary: string,secondary: string,text: {primary: string,s
     borderWidth:1,
     borderRadius:50,
     padding:10,
-    backgroundColor:primary,
+    backgroundColor:buttonMain.background,
 
   },
   iconReport:{
@@ -136,7 +143,7 @@ const createStyles = (primary: string,secondary: string,text: {primary: string,s
     borderWidth:1,
     borderRadius:50,
     padding:10,
-    backgroundColor:secondary,
+    backgroundColor:buttonAlt.background,
   },
   Title: {
     color: text.primary,
