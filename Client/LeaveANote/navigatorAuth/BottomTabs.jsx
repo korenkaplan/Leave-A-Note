@@ -46,7 +46,7 @@ export default function BottomTabs() {
 
     return (
       <Tab.Navigator
-        initialRouteName="Profile"
+        initialRouteName="Home"
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,
@@ -73,7 +73,7 @@ export default function BottomTabs() {
             return {
               tabBarIcon: ({ color, size, focused }) => (
                 <View style={[styles.tabIconWrapper, focused && styles.activeTabIcon]}>
-                  <Ionicons name="mail" color={color} size={size} />
+                 <Ionicons name="mail" color={color} size={size} />
                   {unreadMessagesCount > 0 && (
                     <Badge
                     value={unreadMessagesCount.toString()}
@@ -100,6 +100,11 @@ export default function BottomTabs() {
   return (
     <Stack.Navigator initialRouteName="Tabs" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Tabs" component={TabNavigator} />
+      <Stack.Screen name="ReportView" component={ReportView} />
+      <Stack.Screen name="NoteView" component={NoteView} />
+      <Stack.Screen name="CreateReport" component={CreateReport} />
+      <Stack.Screen name="CreateNote" component={CreateNote} />
+      <Stack.Screen name="CameraComp" component={CameraComp} />
       {/* Rest of the code */}
     </Stack.Navigator>
   );
@@ -107,6 +112,12 @@ export default function BottomTabs() {
 
 const createStyles = (primary, secondary, text, background,buttonMain, buttonAlt) =>
   StyleSheet.create({
+    iconContainer: {
+      borderWidth: 1,
+      borderColor: 'black',
+      borderRadius: 8,
+      padding: 4,
+    },
     header: {
       backgroundColor: primary,
     },
@@ -123,15 +134,16 @@ const createStyles = (primary, secondary, text, background,buttonMain, buttonAlt
     },
     activeTabIcon: {
       backgroundColor: buttonMain.text,
-      elevation:20,
-      margin: 12, // Customize the background color for the active tab
-      borderRadius: 20, // Customize the border radius of the background shape
-      shadowColor: '#ffffff',
+      elevation: 20,
+      margin: 12,
+      borderRadius: 20,
+      shadowColor: '#FFFFFF', // White shadow color
       shadowOffset: { width: 0, height: 0 },
-      shadowOpacity:1,
+      shadowOpacity: 1,
       shadowRadius: 10,
-      color:buttonMain.background
+      color: buttonMain.text,
     },
+    
     badgeContainer: {
       position: 'absolute',
       top: -4,

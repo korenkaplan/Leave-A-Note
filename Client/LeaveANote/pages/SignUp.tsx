@@ -87,15 +87,15 @@ const styles = createStyles(primary,secondary,text,background)
                 value={values.email}
                 onChangeText={handleChange('email')}
                 leftIcon={{ type: 'ionicon', name: 'mail-outline', color: text.primary }}
-                errorMessage={errors.email} inputContainerStyle={undefined} inputStyle={undefined}              
-            />
+                errorMessage={errors.email} />
+           
         
                   <CustomInput
                 placeholder="Enter your full name"
                 value={values.name}
                 onChangeText={handleChange('fullName')}
                 leftIcon={{ type: 'ionicon', name: 'person-outline', color: text.primary }}
-                errorMessage={errors.name} inputContainerStyle={undefined} inputStyle={undefined}            />
+                errorMessage={errors.name}/>
             <CustomInput
                 placeholder="Enter your password"
                 secureTextEntry={hidePassword}
@@ -103,7 +103,7 @@ const styles = createStyles(primary,secondary,text,background)
                 onChangeText={handleChange('password')}
                 leftIcon={{ type: 'ionicon', name: 'lock-closed-outline', color: text.primary }}
                 rightIcon={{ type: 'ionicon', color: text.primary, name: hidePassword ? 'eye-off-outline' : 'eye-outline', onPress: () => setHidePassword(!hidePassword) }}
-                errorMessage={errors.password} inputContainerStyle={undefined} inputStyle={undefined}            />
+                errorMessage={errors.password}/>
                <CustomInput
                 placeholder="Repeat your password"
                 secureTextEntry={hideRepPassword}
@@ -111,19 +111,19 @@ const styles = createStyles(primary,secondary,text,background)
                 onChangeText={handleChange('repeatPassword')}
                 leftIcon={{ type: 'ionicon', color: text.primary, name: 'lock-closed-outline' }}
                 rightIcon={{ type: 'ionicon', color: text.primary, name: hideRepPassword ? 'eye-off-outline' : 'eye-outline', onPress: () => setHideRepPassword(!hideRepPassword) }}
-                errorMessage={errors.repeatPassword} inputContainerStyle={undefined} inputStyle={undefined}            />
+                errorMessage={errors.repeatPassword}/>
              <CustomInput
                 placeholder="Enter your car number"
                 value={values.carNumber}
                 onChangeText={handleChange('carNumber')}
                 leftIcon={{ type: 'ionicon', color: text.primary, name: 'car-outline' }}
-                errorMessage={errors.carNumber} inputContainerStyle={undefined} inputStyle={undefined}            />
+                errorMessage={errors.carNumber}/>
             <CustomInput
                 placeholder="Enter your phone number"
                 value={values.phoneNumber}
                 onChangeText={handleChange('phoneNumber')}
                 leftIcon={{ type: 'ionicon', color: text.primary, name: 'phone-portrait-outline' }}
-                errorMessage={errors.phoneNumber} inputContainerStyle={undefined} inputStyle={undefined}            />
+                errorMessage={errors.phoneNumber}/>
                 <View style={styles.buttonContainer}>
       <CustomButton
       type='main'

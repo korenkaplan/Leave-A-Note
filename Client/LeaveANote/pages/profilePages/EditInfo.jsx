@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, Text, StyleSheet, Alert,ScrollView} from 'react-native';
 import React, {useState, useContext, useEffect} from 'react';
 import {Input} from '@rneui/themed';
 import {MainContext} from '../../context/ContextProvider';
@@ -47,6 +47,7 @@ const showSlide = () =>{
   return (
     <ThemedView>
       <CustomSlide placement='left'  isShowing={isShowing} status={slideStatus} title={slideMessage} />
+      <ScrollView style={styles.scroll}>
       <Formik
         initialValues={{
           name: currentUser.name,
@@ -119,11 +120,11 @@ const showSlide = () =>{
               keyboardType="email-address"
             />
             {errors.phoneNumber && (
-              <Text style={styles.error}>{errors.phoneNumber}</Text>
+              <Text style={styles.error}>{errors.email}</Text>
             )}
             <View style={styles.bottomContainer}>
               <CustomButton
-                buttonStyle={styles.submitBtn}
+               type='main'
                 onPress={handleSubmit}
                 title={'Submit'}
               />
@@ -131,11 +132,23 @@ const showSlide = () =>{
           </View>
         )}
       </Formik>
+</ScrollView>
+   
     </ThemedView>
   );
 }
 const createStyles = (primary, secondary, text, background) =>
   StyleSheet.create({
+    error: {
+      marginTop: -20,
+      marginBottom: 5,
+      color: 'red',
+      fontSize: 13,
+    },
+    scroll:{
+      flexGrow: 1,
+      padding: 10,
+    },
     container: {
       width: '100%',
       height: '100%',
@@ -156,9 +169,6 @@ const createStyles = (primary, secondary, text, background) =>
       borderColor: text.primary,
       borderWidth: 1,
       borderRadius: 10,
-    },
-    error: {
-      color: 'red',
     },
     input: {
       color: text.primary,

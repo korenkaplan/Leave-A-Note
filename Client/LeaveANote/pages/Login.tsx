@@ -73,7 +73,7 @@ const Login: FC<Props> = ({ navigation }) => {
               value={values.email}
               onChangeText={handleChange('email')}
               leftIcon={{ type: 'ionicon', name: 'mail-outline', color: text.primary, }}
-              errorMessage={errors.email} inputContainerStyle={undefined} inputStyle={undefined} />
+              errorMessage={errors.email} />
             <CustomInput
               placeholder="Enter your password"
               secureTextEntry={hidePassword}
@@ -86,7 +86,7 @@ const Login: FC<Props> = ({ navigation }) => {
                 color: text.primary,
                 onPress: () => setHidePassword(!hidePassword),
               }}
-              errorMessage={errors.password} inputContainerStyle={undefined} inputStyle={undefined} />
+              errorMessage={errors.password}/>
             <CheckBox
               title="Remember Me"
               checked={rememberMe}

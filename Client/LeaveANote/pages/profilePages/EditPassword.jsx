@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,Alert} from 'react-native'
+import { View, Text,StyleSheet,Alert,ScrollView} from 'react-native'
 import React,{useState, useContext} from 'react'
 import { Input, Icon,Button } from '@rneui/themed';
 import { Formik } from 'formik';
@@ -48,7 +48,8 @@ export default function EditPassword() {
   return (
     <View style={styles.container}>
       <CustomSlide placement='left' isShowing={isShowing} status={slideStatus} title={slideMessage} />
-       <Formik
+      <ScrollView style={styles.scroll}>
+      <Formik
       initialValues={{ currentPassword: '', newPassword: '', repeatPassword: '' }}
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}
@@ -94,23 +95,32 @@ export default function EditPassword() {
           {errors.repeatPassword && <Text style={styles.error} >{errors.repeatPassword}</Text>}
 
           <View style={styles.bottomContainer}>
-             <CustomButton buttonStyle={styles.submitBtn}  onPress={handleSubmit} title={'Submit'} />
+             <CustomButton type='main' onPress={handleSubmit} title={'Submit'} />
              </View>
 
         </View>
       )}
     </Formik>
+      </ScrollView>
+  
     </View>
   )
 }
 const createStyles = (primary,secondary,text,background) =>  StyleSheet.create({
+  scroll:{
+    flexGrow: 1,
+    padding: 10,
+  },
   container:{
     width: '100%',
     height: '100%',
     padding:20,
   },
   error:{
-    color:'red'
+    marginTop: -20,
+    marginBottom: 5,
+    color: 'red',
+    fontSize: 13,
   },
     inputContainer:{
     borderWidth: 1,
