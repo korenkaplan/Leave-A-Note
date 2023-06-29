@@ -25,6 +25,20 @@ export interface Theme {
   },
 
 }
+export interface IButtonTheme{
+  buttonMain:{
+    background: string; 
+    text: string; 
+  },
+  buttonAlt:{
+    background: string; 
+    text: string; 
+  },
+}
+export interface StyleButton{
+  background: string; 
+  text: string; 
+}
 export interface MessageProps {
   // Define your component props here
   route:
@@ -35,7 +49,7 @@ export interface MessageProps {
        };
  };
 };
-export interface Text {
+export interface IText {
   primary: string;
   secondary: string;
 }

@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode} from 'react';
-import {Theme} from '../utils/interfaces/interfaces'
+import {Theme,IButtonTheme} from '../utils/interfaces/interfaces'
 import { useSafeArea } from 'native-base';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -9,6 +9,7 @@ interface ThemeContextType {
     setTheme: React.Dispatch<React.SetStateAction<Theme>>;
     lightTheme: Theme;
     darkTheme: Theme;
+    buttonTheme:IButtonTheme
 
 }
 type ColorScheme = 'dark' | 'light';
@@ -18,7 +19,7 @@ function ThemeContextProvider({ children }: { children: ReactNode; }) {
     // Define the initial light mode theme
       const lightTheme: Theme = {
         colors: {
-          primary: '#8b9dc3',
+          primary: '#702963',
           secondary: '#e4e5f1',
           text: {
             primary: '#000000',
@@ -33,17 +34,26 @@ function ThemeContextProvider({ children }: { children: ReactNode; }) {
           // Add more font styles as needed
         },
       };
-      
+      const buttonTheme:IButtonTheme = {
+        buttonMain:{
+          background: '#702963',
+          text: '#ffffff'
+        },
+        buttonAlt:{
+          background: '#51414F',
+          text: '#ffffff'
+        },
+      }
       // Define the dark mode theme
       const darkTheme: Theme = {
         colors: {
-          primary: 'purple',
+          primary: '#702963',
           secondary: '#424549',
           text: {
             primary: '#ffffff',
             secondary: '#cccccc',
           },
-          background: '#222222',
+          background: '#343434',
           // Add more colors as needed
         },
         fonts: {
@@ -82,6 +92,7 @@ const getColorSchemePreference = async () => {
     setTheme,
     lightTheme,
     darkTheme,
+    buttonTheme,
   };
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

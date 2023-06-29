@@ -1,7 +1,7 @@
-import {StyleSheet, View} from 'react-native';
-import React, {useContext} from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
+import { StyleSheet, View } from 'react-native';
+import React, { useContext } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Homepage from '../pages/Homepage';
 import Inbox from '../pages/Inbox';
 import Profile from '../pages/Profile';
@@ -11,60 +11,71 @@ import ReportView from '../pages/NotesAndReports/ReportView';
 import CreateReport from '../pages/NotesAndReports/CreateReport';
 import CreateNote from '../pages/NotesAndReports/CreateNote';
 import CameraComp from '../Components/CameraComp';
-import {Badge} from '@rneui/base';
-import {MainContext} from '../context/ContextProvider';
+import { Badge } from '@rneui/base';
+import { MainContext } from '../context/ContextProvider';
 import AccidentsHistory from '../pages/profilePages/AccidentsHistory';
 import { ThemeContext } from '../context/ThemeContext';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 export default function BottomTabs() {
-  const {currentUser} = useContext(MainContext);
-  const {theme} = useContext(ThemeContext);
-  const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background)
+  const { currentUser } = useContext(MainContext);
+  const { theme, buttonTheme } = useContext(ThemeContext);
+  const {buttonMain, buttonAlt} = buttonTheme
+  const { primary, secondary, text, background} = theme.colors;
+  const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt);
 
   function TabNavigator() {
+    const getTabBarIcon = (routeName, focused, color, size) => {
+      let iconName;
+      if (routeName === 'Home') {
+        iconName = 'home';
+      } else if (routeName === 'Inbox') {
+        iconName = 'mail';
+      } else if (routeName === 'Profile') {
+        iconName = 'person';
+      }
+
+      return (
+        <View style={[styles.tabIconWrapper, focused && styles.activeTabIcon]}>
+          <Ionicons name={iconName} color={color} size={size} />
+        </View>
+      );
+    };
+
     return (
-<Tab.Navigator
-  initialRouteName="Home"
-  screenOptions={{
-    headerShown: false,
-    tabBarShowLabel: true,
-    tabBarStyle: {
-      backgroundColor: secondary,
-    },
-    tabBarActiveTintColor: primary,
-    tabBarInactiveTintColor: text.secondary,
-  }}
->
-        <Tab.Screen
-          name="Home"
-          component={Homepage}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Ionicons name="home-outline" color={color} size={size} />
-            ),
-            // ,headerLeft:()=><Ionicons name="exit" color={color} size={size}/>
-          }}
-        />
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: primary,
+            height:60,
+            
+          },
+          tabBarActiveTintColor: buttonMain.background,
+          tabBarInactiveTintColor: buttonMain.text,
+          tabBarIcon: ({ color, size, focused }) =>
+            getTabBarIcon(route.name, focused, color, size),
+        })}
+      >
+        <Tab.Screen name="Home" component={Homepage} />
         <Tab.Screen
           name="Inbox"
           component={Inbox}
-          options={({color, size}) => {
+          options={() => {
             const unreadMessagesCount = currentUser.unreadMessages.length;
             return {
-              tabBarIcon: ({color, size}) => (
-                <View style={{position: 'relative'}}>
+              tabBarIcon: ({ color, size, focused }) => (
+                <View style={[styles.tabIconWrapper, focused && styles.activeTabIcon]}>
                   <Ionicons name="mail-outline" color={color} size={size} />
                   {unreadMessagesCount > 0 && (
                     <Badge
                       value={unreadMessagesCount.toString()}
                       status="error"
-                      containerStyle={{
-                        position: 'absolute',
-                        top: -4,
-                        right: -11,
-                      }}
+                      containerStyle={styles.badgeContainer}
                     />
                   )}
                 </View>
@@ -77,84 +88,50 @@ export default function BottomTabs() {
             };
           }}
         />
-
-        <Tab.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Ionicons name="person-outline" color={color} size={size} />
-            ),
-          }}
-        />
+        <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
     );
   }
-  return (
-    <Stack.Navigator
-      initialRouteName="Tabs"
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Tabs" component={TabNavigator} />
 
-      <Stack.Screen
-        name="NoteView"
-        component={NoteView}
-        options={{
-          title: 'Note',
-          headerShown: true,
-          headerStyle: styles.header,
-          headerTitleStyle: styles.title,
-          headerTintColor: 'white',
-        }}
-      />
-      <Stack.Screen
-        name="ReportView"
-        component={ReportView}
-        options={{
-          title: 'Report',
-          headerShown: true,
-          headerStyle: styles.header,
-          headerTitleStyle: styles.title,
-          headerTintColor: 'white',
-        }}
-      />
-      <Stack.Screen
-        name="CreateReport"
-        component={CreateReport}
-        options={{
-          title: 'New Report',
-          headerShown: true,
-          headerStyle: styles.header,
-          headerTitleStyle: styles.title,
-          headerTintColor: 'white',
-        }}
-      />
-      <Stack.Screen
-        name="CreateNote"
-        component={CreateNote}
-        options={{
-          title: 'New Note',
-          headerShown: true,
-          headerStyle: styles.header,
-          headerTitleStyle: styles.title,
-          headerTintColor: 'white',
-        }}
-      />
-      <Stack.Screen name="CameraComp" component={CameraComp} />
-      <Stack.Screen name="AccidentsHistory" component={AccidentsHistory} />
+  return (
+    <Stack.Navigator initialRouteName="Tabs" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Tabs" component={TabNavigator} />
+      {/* Rest of the code */}
     </Stack.Navigator>
   );
-
 }
-const createStyles = (primary,secondary,text,background) =>
-StyleSheet.create({
-  header: {
-    backgroundColor: primary,
-  },
-  title: {
-    color: text.primary,
-  },
-  backIcon: {
-    headerTintColor: 'white',
-  },
-});
+
+const createStyles = (primary, secondary, text, background,buttonMain, buttonAlt) =>
+  StyleSheet.create({
+    header: {
+      backgroundColor: primary,
+    },
+    title: {
+      color: buttonMain.text,
+    },
+    tabIconWrapper: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 5,
+      margin: 12,
+      
+    },
+    activeTabIcon: {
+      backgroundColor: buttonMain.text,
+      elevation:20,
+      margin: 12, // Customize the background color for the active tab
+      borderRadius: 20, // Customize the border radius of the background shape
+      shadowColor: '#ffffff',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity:1,
+      shadowRadius: 10,
+      color:buttonMain.background
+    },
+    badgeContainer: {
+      position: 'absolute',
+      top: -4,
+      right: -11,
+    },
+  });
+

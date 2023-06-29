@@ -9,8 +9,9 @@ import ThemedView from '../Components/uiComponents/ThemedView'
 import CustomButton from '../Components/uiComponents/CustomButton';
 
 export default function Homepage({navigation}) {
-  const {theme} = useContext(ThemeContext);
+  const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
+  const {buttonMain, buttonAlt} = buttonTheme;
   const styles = createStyles(primary,secondary,text,background)
   const widthPercent = 100;
   const heightPercent = 30;
@@ -34,8 +35,8 @@ export default function Homepage({navigation}) {
   const iconProps = {
     name: iconName,
     marginRight: 10,
-    color: text.primary,
-    backgroundColor: isNumLengthValid ? primary : 'transparent',
+    color: buttonMain.text,
+    backgroundColor: isNumLengthValid ? buttonMain.background : buttonAlt.background,
     borderWidth:1,
     borderColor:text.primary,
     borderRadius: 50,
@@ -52,7 +53,7 @@ export default function Homepage({navigation}) {
   const loadSpinner = () => {
     return (
       <View
-        style={{borderRadius: 50, backgroundColor: primary, padding: 2}}>
+        style={{borderRadius: 50, backgroundColor: buttonMain.background, padding: 2}}>
         <ActivityIndicator size="small" color="white" />
       </View>
     );
@@ -127,9 +128,9 @@ export default function Homepage({navigation}) {
   reverse
   name='log-out-outline'
   type='ionicon'
-  color={primary}
+  color={buttonAlt.background}
   onPress={logOutAlert}
-  iconStyle={{ color: text.primary }} // Specify the color of the icon
+  iconStyle={{ color: buttonMain.text }} // Specify the color of the icon
   containerStyle={[{ marginLeft: 20 },styles.primaryBorder1]}
 />
 
@@ -147,8 +148,8 @@ export default function Homepage({navigation}) {
           keyboardType="numeric"
         />
       </View>
-      <CustomButton buttonStyle={[styles.primaryBorder1]} disabled={!isNumberValid} onPress={moveToNotePage} title={'Leave a Note'} />
-      <CustomButton buttonStyle={[{backgroundColor: secondary},styles.primaryBorder1]}  onPress={moveToReportPage} title={'Report'} />
+      <CustomButton type='main' disabled={!isNumberValid} onPress={moveToNotePage} title={'Leave a Note'} />
+      <CustomButton type='alt' onPress={moveToReportPage} title={'Report'} />
     </View>
     </ThemedView>
 
