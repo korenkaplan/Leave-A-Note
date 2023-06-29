@@ -53,6 +53,9 @@ export default function BottomTabs() {
           tabBarStyle: {
             backgroundColor: primary,
             height:60,
+            borderTopWidth:2,
+            borderTopLeftRadius:5,
+            borderTopRightRadius:5,
             
           },
           tabBarActiveTintColor: buttonMain.background,
@@ -70,13 +73,14 @@ export default function BottomTabs() {
             return {
               tabBarIcon: ({ color, size, focused }) => (
                 <View style={[styles.tabIconWrapper, focused && styles.activeTabIcon]}>
-                  <Ionicons name="mail-outline" color={color} size={size} />
+                  <Ionicons name="mail" color={color} size={size} />
                   {unreadMessagesCount > 0 && (
                     <Badge
-                      value={unreadMessagesCount.toString()}
-                      status="error"
-                      containerStyle={styles.badgeContainer}
-                    />
+                    value={unreadMessagesCount.toString()}
+                    containerStyle={styles.badgeContainer}
+                    badgeStyle={styles.badge} // Add this line to apply custom styles to the badge
+                  />
+                  
                   )}
                 </View>
               ),
@@ -132,6 +136,12 @@ const createStyles = (primary, secondary, text, background,buttonMain, buttonAlt
       position: 'absolute',
       top: -4,
       right: -11,
+      borderWidth:1.5,
+      borderRadius: 20,
+      borderColor:buttonMain.text
+    },
+    badge: {
+      backgroundColor: buttonAlt.background, // Change the background color of the badge
     },
   });
 
