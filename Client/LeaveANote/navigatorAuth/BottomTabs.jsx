@@ -46,7 +46,7 @@ export default function BottomTabs() {
 
     return (
       <Tab.Navigator
-        initialRouteName="Inbox"
+        initialRouteName="Profile"
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,

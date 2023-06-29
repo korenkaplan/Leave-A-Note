@@ -34,7 +34,7 @@ export default function ProfileTabView() {
           icon={{
             name: 'timer-outline',
             type: 'ionicon',
-            color: text.primary,
+            color: buttonMain.text,
             style: [styles.tabIcon, index === 0 && styles.activeTabIcon], // Apply activeTabIcon style when the tab is active
           }}
         />
@@ -46,7 +46,7 @@ export default function ProfileTabView() {
           icon={{
             name: 'person-outline',
             type: 'ionicon',
-            color: text.primary,
+            color: buttonMain.text,
             style: [styles.tabIcon, index === 1 && styles.activeTabIcon], // Apply activeTabIcon style when the tab is active
           }}
         />
@@ -58,7 +58,7 @@ export default function ProfileTabView() {
           icon={{
             name: 'lock-closed-outline',
             type: 'ionicon',
-            color: text.primary,
+            color: buttonMain.text,
             style: [styles.tabIcon, index === 2 && styles.activeTabIcon], // Apply activeTabIcon style when the tab is active
           }}
         />
@@ -100,14 +100,14 @@ const createStyles = (primary, secondary, text, background, buttonMain, buttonAl
       backgroundColor: primary,
     },
     tabLabel: {
-      color: text.primary,
+      color: buttonMain.text,
       fontSize: 12,
     },
     activeTabLabel: {
       backgroundColor: 'red', // Set the color of the active tab label to secondary
     },
     tabIcon: {
-      color: text.primary,
+      color: buttonMain.text,
     },
     activeTabIcon: {
       color: secondary, // Set the color of the active tab icon to secondary

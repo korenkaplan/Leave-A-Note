@@ -6,7 +6,7 @@ import { MainContext } from '../../context/ContextProvider';
 import {Accident, Theme} from '../../utils/interfaces/interfaces';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../context/ThemeContext';
-import { Text } from '../../utils/interfaces/interfaces';
+import { IText, StyleButton } from '../../utils/interfaces/interfaces';
 import CustomSlide from '../../Components/uiComponents/CustomSlide';
 
 const AccidentsHistory: FC = ()=> {
@@ -18,9 +18,10 @@ const AccidentsHistory: FC = ()=> {
   const [slideMessage, setSlideMessage] = useState('');
   const [slideStatus, setSlideStatus] = useState('error');
   const [accidents, setAccidents] = useState<Accident[]>(currentUser? currentUser.accidents: []);
-  const {theme} = useContext(ThemeContext);
+  const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background)
+  const {buttonMain, buttonAlt} = buttonTheme;
+  const styles = createStyles(primary,secondary,text,background, buttonMain, buttonAlt)
   const handleRefresh = async () => {
    //call getUserById() that will get the user from the database and set the current user.
    //TODO: handle the refresh event   
@@ -72,7 +73,7 @@ const AccidentsHistory: FC = ()=> {
               title="Info"
               color={primary}
               onPress={() => handleInfoPress(accident)}
-              icon={{name: 'info', color: text.primary}}
+              icon={{name: 'info', color: buttonMain.text}}
               buttonStyle={styles.hiddenButton}
             />
           )}
@@ -87,7 +88,7 @@ const AccidentsHistory: FC = ()=> {
             <Icon style={[styles.iconNote,styles.textPrimaryBorder]}
               name = 'document-outline'
               type = 'ionicon'
-              color= {text.primary}
+              color= {buttonMain.text}
               />
           <ListItem.Content>
             <ListItem.Title  style={styles.Title}>{accident.hittingDriver.name}</ListItem.Title>
@@ -106,8 +107,8 @@ const AccidentsHistory: FC = ()=> {
             <Button
               title="Info"
               onPress={() => handleInfoPress(accident)}
-              color={primary}
-              icon={{name: 'info', color:text.primary}}
+              color={buttonMain.background}
+              icon={{name: 'info', color:buttonMain.text}}
               buttonStyle={styles.hiddenButton}
 
             />
@@ -125,7 +126,7 @@ const AccidentsHistory: FC = ()=> {
   containerStyle={[styles.iconReport,styles.textPrimaryBorder]}
   name="eye-outline"
   type="ionicon"
-  color={text.primary}
+  color={buttonMain.text}
 />
           <ListItem.Content>
             <ListItem.Title style={styles.Title}>
@@ -147,15 +148,15 @@ const AccidentsHistory: FC = ()=> {
     </ScrollView>
   );
 };
-const createStyles = (primary:string,secondary:string,text:Text,background:string) => 
+const createStyles = (primary:string,secondary:string,text:IText,background:string,buttonMain:StyleButton, buttonAlt:StyleButton) => 
 StyleSheet.create({
   deleteButton:{
-     backgroundColor: 'red',
+     backgroundColor: '#8B0000',
      
   },
   hiddenButton:{
     borderRadius:20,
-    height:'96%'
+    height:'97%',
   },
 
   textPrimaryBorder:{
@@ -172,7 +173,7 @@ StyleSheet.create({
     borderWidth:1,
     borderRadius:50,
     padding:10,
-    backgroundColor:primary,
+    backgroundColor:buttonMain.background,
 
   },
   iconReport:{
@@ -180,7 +181,7 @@ StyleSheet.create({
     borderWidth:1,
     borderRadius:50,
     padding:10,
-    backgroundColor:secondary,
+    backgroundColor:buttonAlt.background,
   },
   Title: {
     color: text.primary,
