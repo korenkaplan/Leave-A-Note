@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, Alert,ScrollView} from 'react-native';
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useRef} from 'react';
 import {Input} from '@rneui/themed';
 import {MainContext} from '../../context/ContextProvider';
 import {Formik} from 'formik';
@@ -13,14 +13,14 @@ import {
 import ThemedView from '../../Components/uiComponents/ThemedView';
 import {ThemeContext} from '../../context/ThemeContext';
 import CustomButton from '../../Components/uiComponents/CustomButton';
-import CustomSlide from '../../Components/uiComponents/CustomSlide';
 import Toast from 'react-native-toast-message';
-
+import DropdownAlert from 'react-native-dropdownalert';
 export default function EditInfo() {
+  let dropDownAlertRef = useRef();
   const {theme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
   const styles = createStyles(primary, secondary, text, background);
-  const {updateUserInformation,showToast} =useContext(MainContext);
+  const {updateUserInformation} =useContext(MainContext);
   const validationSchema = Yup.object().shape({
     name: nameSchema,
     carNumber: carNumberSchema,
@@ -29,15 +29,24 @@ export default function EditInfo() {
   });
   const {currentUser} = useContext(MainContext);
   const handleFormSubmit = async (values, { resetForm }) => {
-    console.log(values);
     const [isUpdated, message] = await updateUserInformation(values);
     const [messageToast,statusToast,headerToast] = isUpdated? [`${message}`,'success','Updated Successfully 👋']:[message,'error','Update failed'];
+    dropDownAlertRef.alertWithType(statusToast, headerToast, messageToast);
+    //showToast(messageToast,statusToast,headerToast);
+    console.log(values);
+
     // setSlideMessage(message);
     // setSlideStatus(isUpdated ? 'success' : 'error');
     // showSlide()
-    showToast(messageToast,statusToast,headerToast);
   };
-
+  const showToast =  (message , status,header) => {
+    console.log('showToast  ');
+    Toast.show({
+     type: status,
+     text1:  header,
+     text2: message,
+   });
+ }
   return (
     <ThemedView>
       <ScrollView style={styles.scroll}>
@@ -126,7 +135,13 @@ export default function EditInfo() {
         )}
       </Formik>
 </ScrollView>
-   <Toast/>
+   <DropdownAlert
+        ref={(ref) => {
+          if (ref) {
+            dropDownAlertRef = ref;
+          }
+        }}
+      />
     </ThemedView>
   );
 }

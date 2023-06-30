@@ -16,7 +16,7 @@ const Inbox: FC = () =>{
   const styles = createStyles(primary,secondary,text,background, buttonMain, buttonAlt)
 
   //a temporary state containing the list of items,
-  const {currentUser, setCurrentUser, getUserById,deleteFromUnreadMessages} = useContext(MainContext);
+  const {currentUser, setCurrentUser, getUserById,deleteFromUnreadMessages,refreshCurrantUser} = useContext(MainContext);
   //TODO get messages from the server 
   const [messages, setMessages] = useState(currentUser? currentUser.unreadMessages: []);
   const [refreshing, setRefreshing] = useState(false);
@@ -62,10 +62,10 @@ const Inbox: FC = () =>{
     });
     
     const handleRefresh = async () => {
-     //call getUserById() that will get the user from the database and set the current user.
-   setTimeout(() => {
-    setRefreshing(false);
-   }, 3000); // Adjust the delay time as needed
+      setRefreshing(true);
+     await refreshCurrantUser();
+     setRefreshing(false);
+
   };
      //create a function to handle the press of a message
      const handlePress = (item: Accident, index:number) => {
@@ -111,7 +111,15 @@ const Inbox: FC = () =>{
           </ScrollView>
         );
       } else {
-        return <EmptyAnimationInbox />;
+        return(
+          <ScrollView style={styles.scroll}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }>
+          <EmptyAnimationInbox />
+          </ScrollView>
+
+        ) 
       }
     };
        return (

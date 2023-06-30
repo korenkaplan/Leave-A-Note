@@ -16,6 +16,22 @@ export default function ProfileTabView() {
 
   return (
     <View style={styles.container}>
+            <TabView
+        value={index}
+        onChange={setIndex}
+        animationType="spring"
+        disableSwipe={true}
+      >
+        <TabView.Item style={styles.tabView}>
+          <AccidentsHistory />
+        </TabView.Item>
+        <TabView.Item style={styles.tabView}>
+          <EditInfo />
+        </TabView.Item>
+        <TabView.Item style={styles.tabView}>
+          <EditPassword />
+        </TabView.Item>
+      </TabView>
       <Tab
         value={index}
         onChange={(e) => setIndex(e)}
@@ -63,22 +79,7 @@ export default function ProfileTabView() {
           }}
         />
       </Tab>
-      <TabView
-        value={index}
-        onChange={setIndex}
-        animationType="spring"
-        disableSwipe={true}
-      >
-        <TabView.Item style={styles.tabView}>
-          <AccidentsHistory />
-        </TabView.Item>
-        <TabView.Item style={styles.tabView}>
-          <EditInfo />
-        </TabView.Item>
-        <TabView.Item style={styles.tabView}>
-          <EditPassword />
-        </TabView.Item>
-      </TabView>
+
     </View>
   );
 }

@@ -35,6 +35,7 @@ interface MainContextType {
   getUserById: (id: string, token: string) => Promise<User | null>; // get a user by Id and set CurrantUser state.
   deleteFromUnreadMessages: (messageId: string) => Promise<boolean>;
   autoLoginNewUser:(newToken: string) => Promise<void>;
+  refreshCurrantUser:() => Promise<void>;
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -396,16 +397,26 @@ try {
   return false
 }
   };
-  const showToast = (message:string , status:string,header: string) => {
-    Toast.show({
+  const showToast =  (message:string , status:string,header: string) => {
+     Toast.show({
       type: status,
       text1:  header,
       text2: message,
       topOffset:4
     });
   }
+  const refreshCurrantUser = async (): Promise<void> => {
+    if(!currentUser)return
+    const refreshedUser =  await getUserById(currentUser._id,token)
+    if(refreshedUser)
+    setCurrentUser(refreshedUser);
+    setTimeout(() => {
+      //The page will refresh before the time ends when currant user is set this is the maximum time
+    }, 10000);
 
+  };
   const value: MainContextType = {
+    refreshCurrantUser,
     showToast,
     authenticated,
     setAuthenticated,

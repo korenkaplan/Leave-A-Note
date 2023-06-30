@@ -32,6 +32,7 @@
     "react-native": "0.71.8",
     "react-native-config": "^1.5.1",
     "react-native-dotenv": "^3.4.8",
+    "react-native-dropdownalert": "^4.5.1",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.10.2",
     "react-native-linear-gradient": "^2.6.2",

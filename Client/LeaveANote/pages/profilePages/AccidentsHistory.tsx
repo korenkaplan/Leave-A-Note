@@ -1,4 +1,4 @@
-import React, { useState, useContext, FC } from 'react';
+import React, { useState, useContext, FC, useEffect,useRef} from 'react';
 import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 import { ListItem, Avatar, Button, Icon } from '@rneui/themed';
 import EmptyListAnimation from '../../Components/accidentsHistory/EmptyListAnimation';
@@ -7,29 +7,25 @@ import { Accident, Theme } from '../../utils/interfaces/interfaces';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../context/ThemeContext';
 import { IText, StyleButton } from '../../utils/interfaces/interfaces';
-import CustomSlide from '../../Components/uiComponents/CustomSlide';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
+import DropdownAlert from 'react-native-dropdownalert';
 
 const AccidentsHistory: FC = () => {
   const navigation = useNavigation();
-  const { getUserById, currentUser, setCurrentUser, deleteAccident,showToast } = useContext(MainContext);
+  const { getUserById, currentUser, setCurrentUser, deleteAccident, refreshCurrantUser } = useContext(MainContext);
   //const [reports, setReports] = useState(currentUser.reports);
   const [refreshing, setRefreshing] = useState(false);
-  const [isShowing, setIsShowing] = useState(false);
-  const [slideMessage, setSlideMessage] = useState('');
-  const [slideStatus, setSlideStatus] = useState('error');
   const [accidents, setAccidents] = useState<Accident[]>(currentUser ? currentUser.accidents : []);
   const { theme, buttonTheme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
   const { buttonMain, buttonAlt } = buttonTheme;
+  let dropDownAlertRef = useRef();
   const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt)
   const handleRefresh = async () => {
-    //call getUserById() that will get the user from the database and set the current user.
-    //TODO: handle the refresh event   
-    setTimeout(() => {
-
+      setRefreshing(true);
+      await refreshCurrantUser();
       setRefreshing(false);
-    }, 3000); // Adjust the delay time as needed
+
   };
   const handleInfoPress = (item: Accident) => {
       navigation.navigate({name:item.type === 'note'?'NoteView':'ReportView' ,params: { item }});
@@ -38,14 +34,22 @@ const AccidentsHistory: FC = () => {
   const handleDelete = async (index: number, id: string) => {
     const [isDeleted, message] = await deleteAccident(id);
     const [messageToast,statusToast,headerToast] = isDeleted? [message,'success','Deleted Successfully 👋']:[message,'error','Failed to delete'];
-    showToast(messageToast,statusToast,headerToast);
+    dropDownAlertRef.alertWithType(statusToast, headerToast, messageToast);
     setTimeout(() => {
-      if (isDeleted)
+      if (isDeleted) 
       deleteMessageFromState(index);
     }, 2000)
    
+   
   }
-
+const showToast =  (message:string , status:string,header: string) => {
+  console.log('showToast  ');
+   Toast.show({
+    type: status,
+    text1:  header,
+    text2: message,
+  });
+}
   const deleteMessageFromState = (index: number) => {
     let updatedMessages = [...accidents];
     updatedMessages.splice(index, 1);
@@ -141,12 +145,21 @@ const AccidentsHistory: FC = () => {
       );
     }
   });
+
+  
   return (
     <View style={{flex: 1}}>
     <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
       {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
     </ScrollView>
-    <Toast/>
+    <DropdownAlert
+        ref={(ref) => {
+          if (ref) {
+            dropDownAlertRef = ref;
+          }
+        }}
+      />
+
     </View>
 
   );

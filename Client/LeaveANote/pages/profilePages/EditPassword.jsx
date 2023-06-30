@@ -1,5 +1,5 @@
 import { View, Text,StyleSheet,Alert,ScrollView} from 'react-native'
-import React,{useState, useContext} from 'react'
+import React,{useState, useContext,useRef} from 'react'
 import { Input, Icon,Button } from '@rneui/themed';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -7,9 +7,10 @@ import {passwordSchema,} from '../../utils/validation/validationSchemas'
 import { MainContext } from '../../context/ContextProvider';
 import { ThemeContext } from '../../context/ThemeContext';
 import CustomButton from '../../Components/uiComponents/CustomButton';
-import CustomSlide from '../../Components/uiComponents/CustomSlide';
+import DropdownAlert from 'react-native-dropdownalert';
 import Toast from 'react-native-toast-message';
 export default function EditPassword() {
+  let dropDownAlertRef = useRef();
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true)
   const [newPasswordSecure, setNewPasswordSecure] = useState(true)
   const [repeatPasswordSecure, setRepeatPasswordSecure] = useState(true)
@@ -34,7 +35,8 @@ export default function EditPassword() {
   const handleFormSubmit = async (values, { resetForm, setFieldError }) => {
   const [isUpdated, message] = await updateUserPassword(values.currentPassword, values.newPassword)
   const [messageToast,statusToast,headerToast] = isUpdated? [`${message}`,'success','Updated Successfully 👋']:[message,'error','Update failed'];
-  showToast(messageToast,statusToast,headerToast);
+  dropDownAlertRef.alertWithType(statusToast, headerToast, messageToast);
+
   }
   return (
     <View style={styles.container}>
@@ -92,7 +94,14 @@ export default function EditPassword() {
       )}
     </Formik>
       </ScrollView>
-      <Toast/>
+      <DropdownAlert
+        ref={(ref) => {
+          if (ref) {
+            dropDownAlertRef = ref;
+          }
+        }}
+      />
+
     </View>
   )
 }
