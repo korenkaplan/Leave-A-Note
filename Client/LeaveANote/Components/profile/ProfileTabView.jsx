@@ -38,15 +38,19 @@ export default function ProfileTabView() {
         style={styles.tabMenu}
         initialValue={1}
         indicatorStyle={{
-          backgroundColor: text.primary,
+          backgroundColor: buttonMain.text,
           height: 4,
+          borderRadius:50,
+          width:'10%',
+          marginLeft:'8%',
+          marginBottom: 5,
+          elevation:10
         }}
       >
         <Tab.Item
           style={styles.tabItem}
-          title="Accidents History"
-          titleStyle={styles.tabLabel}
-          activeTitleStyle={styles.activeTabLabel} // Apply activeTabLabel style when the tab is active
+          // titleStyle={styles.tabLabel}
+          // activeTitleStyle={styles.activeTabLabel} // Apply activeTabLabel style when the tab is active
           icon={{
             name: 'timer-outline',
             type: 'ionicon',
@@ -56,8 +60,8 @@ export default function ProfileTabView() {
         />
         <Tab.Item
           style={styles.tabItem}
-          title="Edit information"
-          titleStyle={styles.tabLabel}
+          // title="Edit information"
+          // titleStyle={styles.tabLabel}
           activeTitleStyle={styles.activeTabLabel} // Apply activeTabLabel style when the tab is active
           icon={{
             name: 'person-outline',
@@ -68,8 +72,8 @@ export default function ProfileTabView() {
         />
         <Tab.Item
           style={styles.tabItem}
-          title="Edit Password"
-          titleStyle={styles.tabLabel}
+          // title="Edit Password"
+          // titleStyle={styles.tabLabel}
           activeTitleStyle={styles.activeTabLabel} // Apply activeTabLabel style when the tab is active
           icon={{
             name: 'lock-closed-outline',
@@ -79,7 +83,6 @@ export default function ProfileTabView() {
           }}
         />
       </Tab>
-
     </View>
   );
 }
@@ -99,13 +102,19 @@ const createStyles = (primary, secondary, text, background, buttonMain, buttonAl
     },
     tabMenu: {
       backgroundColor: primary,
+      borderRadius: 50, // Apply border radius to create a pill shape
+      borderColor:text.primary,
+      borderWidth:1.5,
+      margin:5,
+      elevation:10,
+      height:52,
+      marginBottom:15,
+      width:'60%',
+      alignSelf: 'center',
     },
     tabLabel: {
       color: buttonMain.text,
       fontSize: 12,
-    },
-    activeTabLabel: {
-      backgroundColor: 'red', // Set the color of the active tab label to secondary
     },
     tabIcon: {
       color: buttonMain.text,
@@ -113,6 +122,7 @@ const createStyles = (primary, secondary, text, background, buttonMain, buttonAl
     activeTabIcon: {
       color: secondary, // Set the color of the active tab icon to secondary
     },
+    
   });
 
 

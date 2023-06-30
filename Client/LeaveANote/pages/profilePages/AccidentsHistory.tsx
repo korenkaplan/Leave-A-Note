@@ -9,6 +9,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { IText, StyleButton } from '../../utils/interfaces/interfaces';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import DropdownAlert from 'react-native-dropdownalert';
+import DividerWithText from '../../Components/uiComponents/DividerWithText';
 
 const AccidentsHistory: FC = () => {
   const navigation = useNavigation();
@@ -149,6 +150,7 @@ const showToast =  (message:string , status:string,header: string) => {
   
   return (
     <View style={{flex: 1}}>
+      <DividerWithText title='Your Accidents History'  fontSize={20} />
     <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
       {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
     </ScrollView>

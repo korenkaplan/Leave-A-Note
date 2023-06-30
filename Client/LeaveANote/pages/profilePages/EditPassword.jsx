@@ -9,6 +9,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import CustomButton from '../../Components/uiComponents/CustomButton';
 import DropdownAlert from 'react-native-dropdownalert';
 import Toast from 'react-native-toast-message';
+import DividerWithText from '../../Components/uiComponents/DividerWithText';
 export default function EditPassword() {
   let dropDownAlertRef = useRef();
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true)
@@ -40,6 +41,7 @@ export default function EditPassword() {
   }
   return (
     <View style={styles.container}>
+      <DividerWithText fontSize={20} title='Edit Your Password'/>
       <ScrollView style={styles.scroll}>
       <Formik
       initialValues={{ currentPassword: '', newPassword: '', repeatPassword: '' }}
@@ -113,7 +115,6 @@ const createStyles = (primary,secondary,text,background) =>  StyleSheet.create({
   container:{
     width: '100%',
     height: '100%',
-    padding:20,
   },
   error:{
     marginTop: -20,

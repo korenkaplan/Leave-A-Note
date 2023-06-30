@@ -15,6 +15,7 @@ import {ThemeContext} from '../../context/ThemeContext';
 import CustomButton from '../../Components/uiComponents/CustomButton';
 import Toast from 'react-native-toast-message';
 import DropdownAlert from 'react-native-dropdownalert';
+import DividerWithText from '../../Components/uiComponents/DividerWithText';
 export default function EditInfo() {
   let dropDownAlertRef = useRef();
   const {theme} = useContext(ThemeContext);
@@ -49,6 +50,7 @@ export default function EditInfo() {
  }
   return (
     <ThemedView>
+      <DividerWithText  fontSize={20} title='Edit Personal Information'/>
       <ScrollView style={styles.scroll}>
       <Formik
         initialValues={{

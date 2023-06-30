@@ -49,11 +49,11 @@ const styles = createStyles(primary,secondary,text,background)
 
   return (
     <ThemedView style={styles.container}>
+      <DividerWithText weight='bold' fontSize={20} title="Sign Up And Lets Begin "/>
       <ScrollView style={styles.scroll}>
-      <DividerWithText title="Sign Up And Lets Begin "/>
 
       <Formik
-        initialValues={{ email: 'l@gmail.com', password: '123456',repeatPassword:'123456',phoneNumber:'0533401111',carNumber:'8333111',name:'koren kaplan' }}
+        initialValues={{ email: '', password: '',repeatPassword:'',phoneNumber:'',carNumber:'',name:'' }}
         validationSchema={validationSchema}
         onSubmit={handleFormSubmit}
       >

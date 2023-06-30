@@ -7,6 +7,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import {Accident, StyleButton, Theme} from '../utils/interfaces/interfaces';
+import DividerWithText from '../Components/uiComponents/DividerWithText';
 
 const Inbox: FC = () =>{
   const navigation = useNavigation();
@@ -124,6 +125,7 @@ const Inbox: FC = () =>{
     };
        return (
     <ThemedView style={styles.container}>
+      <DividerWithText title='Inbox' fontSize={25} height={20} weight='bold'/>
       {renderContent()}
     </ThemedView>
   );

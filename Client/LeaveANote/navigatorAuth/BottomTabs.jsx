@@ -84,11 +84,6 @@ export default function BottomTabs() {
                   )}
                 </View>
               ),
-              title: 'Inbox',
-              headerShown: true,
-              headerStyle: styles.header,
-              headerTitleStyle: styles.title,
-              headerTintColor: 'white',
             };
           }}
         />

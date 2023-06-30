@@ -22,7 +22,7 @@ function ThemeContextProvider({ children }: { children: ReactNode; }) {
           primary: '#702963',
           secondary: '#e4e5f1',
           text: {
-            primary: '#000000',
+            primary: '#702963',
             secondary: '#333333',
           },
           background: '#fafafa',
