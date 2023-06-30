@@ -1,5 +1,5 @@
 import React, { useState, useContext, FC } from 'react';
-import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 import { ListItem, Avatar, Button, Icon } from '@rneui/themed';
 import EmptyListAnimation from '../../Components/accidentsHistory/EmptyListAnimation';
 import { MainContext } from '../../context/ContextProvider';
@@ -8,10 +8,11 @@ import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../context/ThemeContext';
 import { IText, StyleButton } from '../../utils/interfaces/interfaces';
 import CustomSlide from '../../Components/uiComponents/CustomSlide';
+import { Toast } from 'react-native-toast-message/lib/src/Toast';
 
 const AccidentsHistory: FC = () => {
   const navigation = useNavigation();
-  const { getUserById, currentUser, setCurrentUser, deleteAccident } = useContext(MainContext);
+  const { getUserById, currentUser, setCurrentUser, deleteAccident,showToast } = useContext(MainContext);
   //const [reports, setReports] = useState(currentUser.reports);
   const [refreshing, setRefreshing] = useState(false);
   const [isShowing, setIsShowing] = useState(false);
@@ -36,20 +37,15 @@ const AccidentsHistory: FC = () => {
   };
   const handleDelete = async (index: number, id: string) => {
     const [isDeleted, message] = await deleteAccident(id);
-    setSlideMessage(message);
-    setSlideStatus(isDeleted ? 'success' : 'error');
-    if (isDeleted)
-      deleteMessageFromState(index);
-    showSlide();
-  }
-  const showSlide = () => {
+    const [messageToast,statusToast,headerToast] = isDeleted? [message,'success','Deleted Successfully 👋']:[message,'error','Failed to delete'];
+    showToast(messageToast,statusToast,headerToast);
     setTimeout(() => {
-      setIsShowing(true)
-      setTimeout(() => {
-        setIsShowing(false)
-      }, 2500)
-    }, 1000);
+      if (isDeleted)
+      deleteMessageFromState(index);
+    }, 2000)
+   
   }
+
   const deleteMessageFromState = (index: number) => {
     let updatedMessages = [...accidents];
     updatedMessages.splice(index, 1);
@@ -146,10 +142,13 @@ const AccidentsHistory: FC = () => {
     }
   });
   return (
+    <View style={{flex: 1}}>
     <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
-      <CustomSlide placement='top' isShowing={isShowing} status={slideStatus} title={slideMessage} />
       {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
     </ScrollView>
+    <Toast/>
+    </View>
+
   );
 };
 const createStyles = (primary: string, secondary: string, text: IText, background: string, buttonMain: StyleButton, buttonAlt: StyleButton) =>

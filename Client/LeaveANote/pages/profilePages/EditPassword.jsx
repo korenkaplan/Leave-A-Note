@@ -8,6 +8,7 @@ import { MainContext } from '../../context/ContextProvider';
 import { ThemeContext } from '../../context/ThemeContext';
 import CustomButton from '../../Components/uiComponents/CustomButton';
 import CustomSlide from '../../Components/uiComponents/CustomSlide';
+import Toast from 'react-native-toast-message';
 export default function EditPassword() {
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true)
   const [newPasswordSecure, setNewPasswordSecure] = useState(true)
@@ -16,7 +17,7 @@ export default function EditPassword() {
   const [isShowing, setIsShowing] = useState(false)
   const [slideMessage, setSlideMessage] = useState('');
   const [slideStatus, setSlideStatus] = useState('error');;
-  const {updateUserPassword} = useContext(MainContext);
+  const {updateUserPassword, showToast} = useContext(MainContext);
   const {theme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
@@ -31,23 +32,12 @@ export default function EditPassword() {
   Handle the submit check if the password matches the current password in the database
  */
   const handleFormSubmit = async (values, { resetForm, setFieldError }) => {
-
   const [isUpdated, message] = await updateUserPassword(values.currentPassword, values.newPassword)
-  setSlideMessage(message);
-  setSlideStatus(isUpdated ? 'success' : 'error');    
-  showSlide()
-  };
-  const showSlide = () =>{
-    setTimeout(() => {
-      setIsShowing(true)
-      setTimeout(() => {
-        setIsShowing(false)
-      }, 2500)
-    }, 500);
+  const [messageToast,statusToast,headerToast] = isUpdated? [`${message}`,'success','Updated Successfully 👋']:[message,'error','Update failed'];
+  showToast(messageToast,statusToast,headerToast);
   }
   return (
     <View style={styles.container}>
-      <CustomSlide placement='top' isShowing={isShowing} status={slideStatus} title={slideMessage} />
       <ScrollView style={styles.scroll}>
       <Formik
       initialValues={{ currentPassword: '', newPassword: '', repeatPassword: '' }}
@@ -102,7 +92,7 @@ export default function EditPassword() {
       )}
     </Formik>
       </ScrollView>
-  
+      <Toast/>
     </View>
   )
 }

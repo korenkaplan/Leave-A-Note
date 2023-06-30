@@ -14,14 +14,13 @@ import ThemedView from '../../Components/uiComponents/ThemedView';
 import {ThemeContext} from '../../context/ThemeContext';
 import CustomButton from '../../Components/uiComponents/CustomButton';
 import CustomSlide from '../../Components/uiComponents/CustomSlide';
+import Toast from 'react-native-toast-message';
+
 export default function EditInfo() {
   const {theme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
   const styles = createStyles(primary, secondary, text, background);
-  const {updateUserInformation} =useContext(MainContext);
-  const [isShowing, setIsShowing] = useState(false);
-  const [slideMessage, setSlideMessage] = useState('');
-  const [slideStatus, setSlideStatus] = useState('error');
+  const {updateUserInformation,showToast} =useContext(MainContext);
   const validationSchema = Yup.object().shape({
     name: nameSchema,
     carNumber: carNumberSchema,
@@ -32,21 +31,15 @@ export default function EditInfo() {
   const handleFormSubmit = async (values, { resetForm }) => {
     console.log(values);
     const [isUpdated, message] = await updateUserInformation(values);
-    setSlideMessage(message);
-    setSlideStatus(isUpdated ? 'success' : 'error');
-    showSlide()
+    const [messageToast,statusToast,headerToast] = isUpdated? [`${message}`,'success','Updated Successfully 👋']:[message,'error','Update failed'];
+    // setSlideMessage(message);
+    // setSlideStatus(isUpdated ? 'success' : 'error');
+    // showSlide()
+    showToast(messageToast,statusToast,headerToast);
   };
-const showSlide = () =>{
-  setTimeout(() => {
-    setIsShowing(true)
-    setTimeout(() => {
-      setIsShowing(false)
-    }, 2500)
-  }, 500);
-}
+
   return (
     <ThemedView>
-      <CustomSlide placement='top'  isShowing={isShowing} status={slideStatus} title={slideMessage} />
       <ScrollView style={styles.scroll}>
       <Formik
         initialValues={{
@@ -133,7 +126,7 @@ const showSlide = () =>{
         )}
       </Formik>
 </ScrollView>
-   
+   <Toast/>
     </ThemedView>
   );
 }

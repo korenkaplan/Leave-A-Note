@@ -7,7 +7,6 @@ import {Input, Icon, Chip,Button, Switch  } from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView'
 import CustomButton from '../Components/uiComponents/CustomButton';
-
 export default function Homepage({navigation}) {
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
@@ -27,7 +26,7 @@ export default function Homepage({navigation}) {
   const [isLoading, setIsLoading] = useState(false);
   const colorScheme = useColorScheme();
   const isNumLengthValid = searchValue.length > 6 && searchValue.length < 9;
- 
+
 
   /**
   Contains the props of the right icon of the input element
@@ -42,11 +41,11 @@ export default function Homepage({navigation}) {
     borderRadius: 50,
     padding: 3,
     // disabled: !isNumLengthValid,
-    onPress: () =>
+    onPress: () =>{
       isNumLengthValid
         ? handleSearchPress()
-        : setError('Car number must be 7 or 8 digits long'),
-  };
+        : setError('Car number must be 7 or 8 digits long')
+      }};
   /**
   This function creates a loading spinner.
  */

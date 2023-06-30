@@ -224,7 +224,10 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
 const createStyles = (primary: string, secondary: string, text: IText, background: string,buttonMain:StyleButton,buttonAlt: StyleButton) =>
   StyleSheet.create({
     error: {
+      marginTop: -20,
+      marginBottom: 5,
       color: 'red',
+      fontSize: 13,
     },
     inputContainer: {
       borderWidth: 1,

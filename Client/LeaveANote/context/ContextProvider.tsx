@@ -6,6 +6,7 @@ import { storage } from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
 import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse } from '../utils/interfaces/interfaces';
+import Toast from 'react-native-toast-message';
 interface MainContextType {
   currentUser: User | undefined;
   showError: boolean;
@@ -20,6 +21,7 @@ interface MainContextType {
   setDamagedUserId: React.Dispatch<React.SetStateAction<string>>;
   token: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
+  showToast:(message:string , status:string,header: string)=> void;
   submitNote: (note: NoteToSend) => Promise<boolean>;
   submitReport: (report: ReportToSend) => Promise<boolean>;
   searchCarNumber: (carNumber: string) => Promise<boolean>;
@@ -394,8 +396,17 @@ try {
   return false
 }
   };
+  const showToast = (message:string , status:string,header: string) => {
+    Toast.show({
+      type: status,
+      text1:  header,
+      text2: message,
+      topOffset:4
+    });
+  }
 
   const value: MainContextType = {
+    showToast,
     authenticated,
     setAuthenticated,
     rememberMe,

@@ -14,7 +14,7 @@ import ThemedView from '../Components/uiComponents/ThemedView';
 import { Divider } from '@rneui/themed';
 import CustomSlide from '../Components/uiComponents/CustomSlide';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Toast from 'react-native-toast-message';
 interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
@@ -31,47 +31,24 @@ const SignUp: FC<Props> = ({ navigation }) => {
 
 const [hidePassword, setHidePassword] = useState(true);
 const [hideRepPassword, setHideRepPassword] = useState(true);
-const [isShowing, setIsShowing] = useState(false)
-const [slideMessage, setSlideMessage] = useState('');
-const [slideStatus, setSlideStatus] = useState('error');;
-const {signupAttempt,autoLoginNewUser} = useContext(MainContext);
+const {signupAttempt,autoLoginNewUser,showToast} = useContext(MainContext);
 const {theme} = useContext(ThemeContext);
 const {primary,secondary,text,background} = theme.colors
 const styles = createStyles(primary,secondary,text,background)
   const handleFormSubmit = async (values: SignUpFormValues,{setFieldError}: any) => {
     const [isRegistered,message,token] = await signupAttempt(values);
-    setSlideMessage(isRegistered ? `${message} moving to homepage` : message);
-    setSlideStatus(isRegistered ? 'success' : 'error'); 
-    
-    showSlide(token)
-
-  };
-  const showSlide = (token = '') =>{
+    const [messageToast,statusToast,headerToast] = isRegistered? [`${message} moving to homepage`,'success','Sign-Up Successfully 👋']:[message,'error','Sign-Up failed'];
+    showToast(messageToast,statusToast,headerToast);
+    if(!isRegistered || !token) return
     setTimeout(() => {
-      setIsShowing(true)
-      setTimeout(() => {
-        setIsShowing(false);
-        if(token.length > 0) // if the token length is more then 0 , it means that it came from the server 
-        autoLoginNewUser(token)
-      }, 2500)
-    }, 500);
-  }
-  const createAlert = () =>
-  Alert.alert(
-    'Registered Successfully',
-    'Your account has been created, now sign in to get started',
-    [
-      {
-        text: 'Move to sign in',
-        onPress: () => navigation.navigate({ name: 'Login', params: {} }),
-      },
-    ]
-  );
+      autoLoginNewUser(token)
+    }, 3000)
+   
+  };
 
 
   return (
     <ThemedView style={styles.container}>
-      <CustomSlide placement='top'  isShowing={isShowing} status={slideStatus} title={slideMessage} />
       <ScrollView style={styles.scroll}>
       <DividerWithText title="Sign Up And Lets Begin "/>
 
@@ -141,6 +118,7 @@ const styles = createStyles(primary,secondary,text,background)
             title={'Login'}  />
     </View>
       </ScrollView>
+      <Toast/>
     </ThemedView>
   );
 };

@@ -11,7 +11,8 @@ import { ThemeContext } from '../context/ThemeContext';
 import { IText, StyleButton } from '../utils/interfaces/interfaces';
 import CustomButton from '../Components/uiComponents/CustomButton';
 import CustomInput from '../Components/uiComponents/CustomInput';
-import CustomSlide from '../Components/uiComponents/CustomSlide';
+import Toast from 'react-native-toast-message';
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -26,35 +27,29 @@ const validationSchema = Yup.object().shape({
   password: passwordSchema,
 });
 
+
 const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
-  const { loginAttempt, setAuthenticated,showError } = useContext(MainContext);
-  const [isShowing, setIsShowing] = useState(false)
+  const { loginAttempt, setAuthenticated,showToast } = useContext(MainContext);
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
   const styles = createStyles(primary, secondary, text, background);
-
+  const messageToast='Sorry... wrong email or password';
+  const statusToast='error';
+  const headerToast='Login Failed';
   const handleFormSubmit = async (values: LoginFormValues) => {
     // Handle login form submission
     const result = await loginAttempt(values.email, values.password, rememberMe);
     if (result === false) {
-      showSlide();
+      showToast(messageToast,statusToast,headerToast);
       return;
     }
     setAuthenticated(true);
   };
-  const showSlide = () =>{
-    setTimeout(() => {
-      setIsShowing(true)
-      setTimeout(() => {
-        setIsShowing(false)
-      }, 2500)
-    }, 500);
-  }
+
   return (
     <View style={styles.container}>
-      <CustomSlide placement='top' isShowing={isShowing} status='error' title="Sorry... Wrong Email or Password" />
       <Text style={styles.heading} h1>
         Hello, Welcome
       </Text>
@@ -111,7 +106,7 @@ const Login: FC<Props> = ({ navigation }) => {
           onPress={() => navigation.navigate({name:'SignUp', params:{}})}
           title={'Register'}/>
       </View>
-
+      <Toast/>
     </View>
   );
 };

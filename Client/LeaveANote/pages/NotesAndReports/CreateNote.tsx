@@ -102,7 +102,6 @@ const handleSubmit = async ():Promise<void> =>{
       </View>
       <View style={styles.bottomContainer}>
       <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Take a picture and send the note'}/>
-
       <View >
       <Chip
   title={`Car Number ${carNumInput}`}
@@ -125,7 +124,7 @@ const handleSubmit = async ():Promise<void> =>{
     name: 'paper-plane',
     type: 'font-awesome',
     size: 20,
-    color: buttonMain.background,
+    color:  buttonMain.background,
   }}
   onPress={handleSubmit}
   type="outline"
