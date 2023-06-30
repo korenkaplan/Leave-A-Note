@@ -12,6 +12,8 @@
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "^1.18.2",
+    "@react-native-firebase/app": "^18.1.0",
+    "@react-native-firebase/messaging": "^18.1.0",
     "@react-native-masked-view/masked-view": "^0.2.9",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
@@ -45,6 +47,7 @@
     "react-native-vision-camera": "^2.15.4",
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13",
+    "victory-native": "^36.6.11",
     "yup": "^1.2.0",
     "yup-password": "^0.2.2"
   },
