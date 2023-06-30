@@ -205,7 +205,7 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
       color: text.primary,
     },
     Subtitle: {
-      color: text.secondary,
+      color:  text.primary,
     },
     item: {
       backgroundColor: background,
