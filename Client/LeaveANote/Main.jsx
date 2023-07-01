@@ -10,7 +10,7 @@ import {ThemeContext} from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
 import jwt_decode from 'jwt-decode';
 import {Token} from './utils/interfaces/interfaces';
-import BarChart from './Components/kpi/LineChart';
+import BarChart from './Components/kpi/UsersCountLineGraph';
 export default function Main() {
   const {
     authenticated,

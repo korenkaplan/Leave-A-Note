@@ -36,28 +36,14 @@ const AccidentsHistory: FC = () => {
     const [isDeleted, message] = await deleteAccident(id);
     const [messageToast,statusToast,headerToast] = isDeleted? [message,'success','Deleted Successfully 👋']:[message,'error','Failed to delete'];
     dropDownAlertRef.alertWithType(statusToast, headerToast, messageToast);
-    setTimeout(() => {
-      if (isDeleted) 
-      deleteMessageFromState(index);
-    }, 2000)
-   
-   
+    if (isDeleted) 
+    deleteMessageFromState(index);
   }
-const showToast =  (message:string , status:string,header: string) => {
-  console.log('showToast  ');
-   Toast.show({
-    type: status,
-    text1:  header,
-    text2: message,
-  });
-}
+
   const deleteMessageFromState = (index: number) => {
     let updatedMessages = [...accidents];
     updatedMessages.splice(index, 1);
-    setCurrentUser((prev) => ({
-      ...prev!,
-      accidents: updatedMessages,
-    }));
+    setAccidents(updatedMessages);
   };
   const accidentsList = accidents.map((accident, index) => {
     if (accident.type === 'note') {
