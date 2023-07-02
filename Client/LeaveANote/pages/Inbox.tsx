@@ -36,7 +36,7 @@ const Inbox: FC = () =>{
               </ListItem.Content>
               <ListItem.Chevron
               size={35}
-              color={buttonMain.text}
+              color={text.primary}
               />
             </ListItem>
           </TouchableOpacity>

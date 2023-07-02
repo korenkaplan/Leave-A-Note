@@ -39,7 +39,7 @@ export default function BottomTabs() {
         iconName = 'mail';
       } 
       else if (routeName === 'Stats') {
-        iconName = 'stats-chart-outline';
+        iconName = 'stats-chart';
       }
 
       return (
@@ -48,9 +48,7 @@ export default function BottomTabs() {
         </View>
       );
     };
-    const adminTab =(
-      <Tab.Screen name="Stats" component={KpiStats} />
-    )
+  
     return (
       <Tab.Navigator
         initialRouteName="Home"
