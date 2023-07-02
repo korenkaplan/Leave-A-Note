@@ -16,11 +16,7 @@ import {Input, Icon, Chip, Button, Switch} from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomButton from '../Components/uiComponents/CustomButton';
-import LineChart from '../Components/kpi/UsersCountLineGraph';
-import UnmatchedAndNote from '../Components/kpi/UnmatchedAndNote';
-import DividerWithText from '../Components/uiComponents/DividerWithText';
-import DownloadAndRegistered from '../Components/kpi/DownloadAndRegistered';
-import NotesAndReportsPieChart from '../Components/kpi/NotesAndReportsPieChart';
+import KpiStats from '../Components/kpi/KpiStats';
 export default function Homepage({navigation}) {
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
@@ -184,10 +180,7 @@ export default function Homepage({navigation}) {
   );
   const adminView = (
     <View style={{flex: 1}}>
-      <DividerWithText title="2022 Admin Stats" fontSize={30} />
-      <NotesAndReportsPieChart/>
-      <DownloadAndRegistered/>
-      <UnmatchedAndNote />
+      <KpiStats/>
     </View>
   );
   return (

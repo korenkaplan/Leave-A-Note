@@ -6,17 +6,18 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { StyleButton,IText } from '../../utils/interfaces/interfaces';
 
 interface Props {
-  name: string;
+  title: string;
 }
 
-const DownloadAndRegistered: React.FC<Props> = ({ name }) => {
+const DownloadAndRegistered: React.FC<Props> = ({ title }) => {
  
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
   const {buttonMain, buttonAlt} = buttonTheme;
   const styles = createStyles(primary, secondary, text, background,buttonMain, buttonAlt);
-  let title = 'Registered Users vs Store Downloads';
-  let downloadsLineColor = secondary;
+  const purpleShades = ['#5D3FD3','#702963','#483248']
+
+  let downloadsLineColor = purpleShades[0];
   let circleColor = 'orange'
 
   const downloads = [

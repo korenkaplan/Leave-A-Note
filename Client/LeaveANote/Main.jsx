@@ -9,8 +9,6 @@ import {Text} from 'react-native-svg';
 import {ThemeContext} from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
 import jwt_decode from 'jwt-decode';
-import {Token} from './utils/interfaces/interfaces';
-import BarChart from './Components/kpi/UsersCountLineGraph';
 export default function Main() {
   const {
     authenticated,
@@ -41,8 +39,6 @@ export default function Main() {
           const currantUser = await getUserById(decoded.id, token);
 
           if (currantUser != null) {
-            console.log('setCurrentUser(currantUser);');
-            console.log(currantUser.accidents);
             setCurrentUser(currantUser);
             setAuthenticated(true);
           }

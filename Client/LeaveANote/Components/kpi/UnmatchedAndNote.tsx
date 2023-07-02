@@ -5,14 +5,17 @@ import DividerWithText from '../uiComponents/DividerWithText';
 import { ThemeContext } from '../../context/ThemeContext';
 import { StyleButton,IText } from '../../utils/interfaces/interfaces';
 interface Props {
-  name: string;
+  title: string;
 }
 
-const BarChart: React.FC<Props> = ({ name }) => {
+const UnMatchedReportsAndNote: React.FC<Props> = ({ title }) => {
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
   const {buttonMain, buttonAlt} = buttonTheme;
   const styles = createStyles(primary, secondary, text, background,buttonMain, buttonAlt);
+  const purpleShades = ['#5D3FD3','#702963','#483248']
+  const primaryColor = primary;
+  const secondaryColor = purpleShades[0]
   // Generate dynamic data with increasing notes and decreasing unmatched reports
   const notesShownData = [
     { month: 'Jan-Feb',  notesShown: 5 },
@@ -34,7 +37,7 @@ const BarChart: React.FC<Props> = ({ name }) => {
   const screenWidth = Dimensions.get('window').width;
   return (
     <View style={styles.container}>
-      <DividerWithText title='Unmatched vs Matched Reports (Avg per 50)'  fontSize={15} />
+      <DividerWithText title={title}  fontSize={15} />
       <View style={styles.container}>
       <VictoryChart width={screenWidth} theme={VictoryTheme.grayscale}>
         <VictoryAxis tickValues={xLabels} style={{   axis: {
@@ -43,34 +46,23 @@ const BarChart: React.FC<Props> = ({ name }) => {
         <VictoryAxis dependentAxis style={{   axis: {
       stroke: text.primary, // Axis line color
     },tickLabels: {  fill:  text.primary,} }} />
-        <VictoryGroup offset={17} colorScale={[primary, secondary]}>
+        <VictoryGroup offset={17} colorScale={[primaryColor, secondaryColor]}>
           <VictoryBar data={notesShownData.map(({ month, notesShown }) => ({ x: month, y: notesShown }))} 
-           animate={{ duration: 1000 }} // Customize the animation duration (in milliseconds)
-           style={{
-            data: {
-              stroke: secondary, // Border color for the bars
-              strokeWidth:1, // Border width for the bars
-            },
-          }}
+           animate={{ duration: 1000 }} 
+     
           />
           <VictoryBar data={unmatchedReportsData.map(({ month, unmatchedReports }) => ({ x: month, y: unmatchedReports }))} 
-           style={{
-            data: {
-              stroke: primary, // Border color for the bars
-              strokeWidth: 1, // Border width for the bars
-            },
-          }}
-          animate={{ duration: 2000 }} // Customize the animation duration (in milliseconds)
+          animate={{ duration: 1000 }} 
           />
         </VictoryGroup>
       </VictoryChart>
       <View style={styles.labelContainer}>
         <View style={styles.label}>
-          <View style={[styles.labelColor, { backgroundColor: primary,borderColor:secondary  }]} />
+          <View style={[styles.labelColor, { backgroundColor: primaryColor}]} />
           <Text style={styles.labelText}>Matched Reports</Text>
         </View>
         <View style={styles.label}>
-          <View style={[styles.labelColor, { backgroundColor:secondary,borderColor:primary  }]} />
+          <View style={[styles.labelColor, { backgroundColor:secondaryColor}]} />
           <Text style={styles.labelText}>Unmatched Reports</Text>
         </View>
       </View>
@@ -87,6 +79,7 @@ StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: background,
+    marginBottom:20
   },
   labelContainer: {
     flexDirection: 'row',
@@ -103,7 +96,6 @@ StyleSheet.create({
     width: 15,
     height: 15,
     marginRight: 5,
-    borderWidth:1 ,
   },
   labelText: {
     fontSize: 12,
@@ -111,4 +103,4 @@ StyleSheet.create({
   },
 });
 
-export default BarChart;
+export default UnMatchedReportsAndNote;
