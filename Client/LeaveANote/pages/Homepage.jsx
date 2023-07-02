@@ -12,7 +12,7 @@ import React, {useState, useContext, useEffect, useRef} from 'react';
 import {MainContext} from '../context/ContextProvider';
 import {Heading} from 'native-base';
 import Logo from '../assets/note-taking.svg';
-import {Input, Icon, Chip, Button, Switch} from '@rneui/themed';
+import {Input, Icon,} from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomButton from '../Components/uiComponents/CustomButton';
@@ -142,9 +142,12 @@ export default function Homepage({navigation}) {
         buttonStyle: {backgroundColor: 'orange'}, // Custom style for the buttons
       },
     );
-  const userView = (
-    <View style={{flex: 1}}>
-      <Icon
+
+
+  return (
+    <ThemedView style={styles.MainContainer}>
+      <ScrollView>
+     <Icon
         reverse
         name="log-out-outline"
         type="ionicon"
@@ -153,7 +156,6 @@ export default function Homepage({navigation}) {
         iconStyle={{color: buttonMain.text}} // Specify the color of the icon
         containerStyle={[{marginLeft: 20}, styles.primaryBorder1]}
       />
-
       <View style={styles.container}>
         <Logo width={width} height={height} />
         <Heading style={{color: text.primary}}>Leave A Note</Heading>
@@ -176,17 +178,6 @@ export default function Homepage({navigation}) {
         />
         <CustomButton type="alt" onPress={moveToReportPage} title={'Report'} />
       </View>
-    </View>
-  );
-  const adminView = (
-    <View style={{flex: 1}}>
-      <KpiStats/>
-    </View>
-  );
-  return (
-    <ThemedView style={styles.MainContainer}>
-      <ScrollView>
-        {currentUser.role !== 'user' ? userView : adminView}
       </ScrollView>
     </ThemedView>
   );

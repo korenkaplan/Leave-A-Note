@@ -5,7 +5,7 @@ import { ListItem,Avatar, Icon} from '@rneui/themed';
 import { MainContext } from '../context/ContextProvider';
 import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {Accident, StyleButton, Theme} from '../utils/interfaces/interfaces';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 

@@ -5,7 +5,7 @@ import LottieView from 'lottie-react-native';
 import animationData from '../assets/lottie.Animation/loadingb.json';
 import { Text } from '@rneui/base';
 import { ThemeContext } from '../context/ThemeContext';
-import { Text as IText } from '../utils/interfaces/interfaces';
+import { IText } from '../utils/interfaces/interfaces';
 interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
@@ -22,7 +22,7 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
         duration:2000,
         useNativeDriver: true,
       }).start();
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearTimeout(splashTimeout);

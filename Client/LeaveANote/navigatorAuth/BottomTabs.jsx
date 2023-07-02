@@ -13,9 +13,9 @@ import CreateNote from '../pages/NotesAndReports/CreateNote';
 import CameraComp from '../Components/CameraComp';
 import { Badge } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
-import AccidentsHistory from '../pages/profilePages/AccidentsHistory';
 import { ThemeContext } from '../context/ThemeContext';
-
+import KpiStats from '../Components/kpi/KpiStats';
+import Main from '../Main'
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -31,10 +31,15 @@ export default function BottomTabs() {
       let iconName;
       if (routeName === 'Home') {
         iconName = 'home';
-      } else if (routeName === 'Inbox') {
-        iconName = 'mail';
-      } else if (routeName === 'Profile') {
+      }
+      else if (routeName === 'Profile') {
         iconName = 'person';
+      }
+      else if (routeName === 'Inbox') {
+        iconName = 'mail';
+      } 
+      else if (routeName === 'Stats') {
+        iconName = 'stats-chart-outline';
       }
 
       return (
@@ -43,7 +48,9 @@ export default function BottomTabs() {
         </View>
       );
     };
-
+    const adminTab =(
+      <Tab.Screen name="Stats" component={KpiStats} />
+    )
     return (
       <Tab.Navigator
         initialRouteName="Home"
@@ -88,6 +95,10 @@ export default function BottomTabs() {
           }}
         />
         <Tab.Screen name="Profile" component={Profile} />
+        {currentUser.role === 'admin' && (
+        <Tab.Screen name="Stats" component={KpiStats} />
+      )}
+
       </Tab.Navigator>
     );
   }
@@ -100,7 +111,8 @@ export default function BottomTabs() {
       <Stack.Screen name="CreateReport" component={CreateReport} />
       <Stack.Screen name="CreateNote" component={CreateNote} />
       <Stack.Screen name="CameraComp" component={CameraComp} />
-      {/* Rest of the code */}
+      <Stack.Screen name="Main" component={Main} />
+      
     </Stack.Navigator>
   );
 }

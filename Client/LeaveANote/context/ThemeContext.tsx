@@ -25,7 +25,7 @@ function ThemeContextProvider({ children }: { children: ReactNode; }) {
             primary: '#702963',
             secondary: '#333333',
           },
-          background: '#fafafa',
+          background: '#FCF5E5',
           // Add more colors as needed
         },
         fonts: {

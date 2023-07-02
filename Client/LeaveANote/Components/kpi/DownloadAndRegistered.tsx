@@ -87,14 +87,12 @@ const DownloadAndRegistered: React.FC<Props> = ({ title }) => {
 />
 
         <VictoryLine  data={downloads} x="month" y="users"
-          animate={{ duration: 1000 }}
           style={{
             data:{stroke:downloadsLineColor,strokeWidth:4}
           }}
         />
         
         <VictoryLine  data={registeredUsers} x="month" y="users"
-          animate={{ duration: 1000 }}
           style={{
             data:{stroke:primary,strokeWidth:4}
             
@@ -145,6 +143,7 @@ StyleSheet.create({
     width: 15,
     height: 15,
     marginRight: 5,
+    borderRadius:50,
   },
   labelText: {
     fontSize: 12,

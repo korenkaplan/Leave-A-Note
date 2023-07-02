@@ -1,19 +1,22 @@
-import React, { useState,useContext } from 'react';
-import { View, Text, Dimensions, Button,StyleSheet, TextInput } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, Dimensions, Button, StyleSheet, TextInput } from 'react-native';
 import { VictoryPie, VictoryChart, VictoryTheme } from 'victory-native';
 import ModalSelector from 'react-native-modal-selector'
 import DividerWithText from '../uiComponents/DividerWithText';
 import { ThemeContext } from '../../context/ThemeContext';
+import { IText, StyleButton } from '../../utils/interfaces/interfaces';
+import { MainContext } from '../../context/ContextProvider';
 import Main from '../../Main';
 interface Props {
   title: string;
 }
 const NotesAndReportsPieChart: React.FC<Props> = ({ title }) => {
-    const {theme, buttonTheme} = useContext(ThemeContext);
-    const {primary, secondary, text, background} = theme.colors;
-    const {buttonMain, buttonAlt} = buttonTheme;
-    const styles = createStyles(primary, secondary, text, background,buttonMain, buttonAlt);
-  const purpleShades = ['#5D3FD3','#702963','#483248']
+  const { theme, buttonTheme } = useContext(ThemeContext);
+  const {currentUser} = useContext(MainContext);
+  const { primary, secondary, text, background } = theme.colors;
+  const { buttonMain, buttonAlt } = buttonTheme;
+  const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt);
+  const purpleShades = ['#5D3FD3', '#702963', '#483248']
   const screenWidth = Dimensions.get('window').width;
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // Default to the current month
   const monthlyData = [
@@ -92,7 +95,7 @@ const NotesAndReportsPieChart: React.FC<Props> = ({ title }) => {
     { key: 10, label: 'November' },
     { key: 11, label: 'December' },
   ];
-  
+
 
   const calculateStats = (data: { category: string; count: number }[]) => {
     const total = data.reduce((sum, item) => sum + item.count, 0);
@@ -109,39 +112,50 @@ const NotesAndReportsPieChart: React.FC<Props> = ({ title }) => {
   };
 
   return (
-    <View>
-        <DividerWithText title={title}/>
-        <ModalSelector
-                    data={monthNames}
-                    initValue="Select something yummy!"
-                    supportedOrientations={['landscape']}
-                    accessible={true}
-                    scrollViewAccessibilityLabel={'Scrollable options'}
-                    cancelButtonAccessibilityLabel={'Cancel Button'}
-                    onChange={(option)=>handleMonthChange(option.key)}>
+    <View >
+      <DividerWithText title={title}/>
+      <ModalSelector
+        data={monthNames}
+        initValue="Select something yummy!"
+        supportedOrientations={['landscape']}
+        accessible={true}
+        scrollViewAccessibilityLabel={'Scrollable options'}
+        cancelButtonAccessibilityLabel={'Cancel Button'}
+        onChange={(option) => handleMonthChange(option.key)}>
 
-                    <TextInput
-                        style={{color:buttonMain.text,borderWidth:1, borderColor:'#ccc',backgroundColor:buttonMain.background,textAlign:'center', padding:10,  width:'50%',alignSelf:'center', height:40}}
-                        editable={false}
-                        value={'Select Month: ' + monthNames[selectedMonth].label} />
+        <TextInput
+          style={styles.selectBtn}
+          editable={false}
+          value={'Select Month: ' + monthNames[selectedMonth].label} />
 
-                </ModalSelector>
- <VictoryPie
- width={screenWidth}
-  data={monthlyStats[selectedMonth]}
-  colorScale={purpleShades}
-  labelRadius={({ innerRadius }) => innerRadius + 15}
-  innerRadius={50}
-  labels={({ datum }) => `${datum.x}\n${datum.y}%`}
-  style={{ labels: { fill: 'white', fontSize: 15, fontWeight: 'bold' } }}
-/>
-
+      </ModalSelector>
+      <VictoryPie
+        width={screenWidth}
+        data={monthlyStats[selectedMonth]}
+        colorScale={purpleShades}
+        labelRadius={({ innerRadius }) => innerRadius ? Number(innerRadius) + 15 : 15}
+        innerRadius={50}
+        labels={({ datum }) => `${datum.x}\n${datum.y}%`}
+        style={{ labels: { fill: 'white', fontSize: 15, fontWeight: 'bold' } }}
+      />
 
     </View>
+
+
   );
-};const createStyles = (primary:string, secondary:string, text: IText, background: string,buttonMain: StyleButton, buttonAlt: StyleButton) =>
-StyleSheet.create({
- 
-});
+}; const createStyles = (primary: string, secondary: string, text: IText, background: string, buttonMain: StyleButton, buttonAlt: StyleButton) =>
+  StyleSheet.create({
+    selectBtn: {
+      color: buttonMain.text, borderWidth: 1,
+      borderColor: '#ccc',
+      backgroundColor: buttonMain.background,
+      textAlign: 'center',
+      padding: 10,
+      width: '50%',
+      alignSelf: 'center',
+      height: 40,
+      borderRadius: 20,
+    }
+  });
 
 export default NotesAndReportsPieChart;
