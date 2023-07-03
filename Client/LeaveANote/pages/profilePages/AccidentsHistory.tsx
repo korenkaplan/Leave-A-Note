@@ -10,7 +10,6 @@ import { IText, StyleButton } from '../../utils/interfaces/interfaces';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import DropdownAlert from 'react-native-dropdownalert';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
-
 const AccidentsHistory: FC = () => {
   const navigation = useNavigation();
   const { getUserById, currentUser, setCurrentUser, deleteAccident, refreshCurrantUser } = useContext(MainContext);
@@ -45,6 +44,12 @@ const AccidentsHistory: FC = () => {
     updatedMessages.splice(index, 1);
     setAccidents(updatedMessages);
   };
+  const formatTimestamp =(timestamp: Date): string => {
+    const date = new Date(timestamp);
+    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit',hour12:false });
+    const formattedDate = date.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return `${formattedTime} ${formattedDate}`;
+  }
   const accidentsList = accidents.map((accident, index) => {
     if (accident.type === 'note') {
       return (
@@ -126,7 +131,8 @@ const AccidentsHistory: FC = () => {
           </ListItem.Content>
           <ListItem.Chevron
               size={35}
-              color={buttonMain.text}
+              color={text.primary}
+
               />
         </ListItem.Swipeable>
       );

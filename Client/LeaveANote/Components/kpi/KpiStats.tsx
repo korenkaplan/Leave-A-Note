@@ -7,7 +7,7 @@ import { Divider,Icon,Button } from '@rneui/themed';
 import { ThemeContext } from '../../context/ThemeContext';
 import { IText, StyleButton } from '../../utils/interfaces/interfaces'
 import { useNavigation } from '@react-navigation/native';
-
+import RegisteredUsers from './RegisteredUsers'
 const KpiStats: FC = () => {
   const navigation = useNavigation();
  const {theme, buttonTheme} = useContext(ThemeContext);
@@ -22,7 +22,7 @@ const KpiStats: FC = () => {
     <View style={{flex: 1, backgroundColor:background}}>
 
       <ScrollView style={{backgroundColor:background}}>
-      <DownloadAndRegistered title='Registered Users vs Store Downloads'/>
+      <RegisteredUsers title='Registered Users 2023'/>
       <Divider style={styles.divider}/>
       <NotesAndReportsPieChart title='Distribution of Reports by Month'/>
       <Divider style={styles.divider}/>

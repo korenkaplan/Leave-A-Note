@@ -51,7 +51,7 @@ export default function BottomTabs() {
   
     return (
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="Stats"
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,
@@ -109,8 +109,6 @@ export default function BottomTabs() {
       <Stack.Screen name="CreateReport" component={CreateReport} />
       <Stack.Screen name="CreateNote" component={CreateNote} />
       <Stack.Screen name="CameraComp" component={CameraComp} />
-      <Stack.Screen name="Main" component={Main} />
-      
     </Stack.Navigator>
   );
 }

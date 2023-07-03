@@ -106,7 +106,8 @@ export interface Accident {
     carNumber: string;
     phoneNumber?: string;
   };
-  date: string;
+  createdAt: Date;
+  date:string;
   imageSource: string;
   type: 'report' | 'note';
   isAnonymous?: boolean;

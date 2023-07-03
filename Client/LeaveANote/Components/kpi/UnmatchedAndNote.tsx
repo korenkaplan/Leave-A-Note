@@ -48,11 +48,9 @@ const UnMatchedReportsAndNote: React.FC<Props> = ({ title }) => {
     },tickLabels: {  fill:  text.primary,} }} />
         <VictoryGroup offset={17} colorScale={[primaryColor, secondaryColor]}>
           <VictoryBar data={notesShownData.map(({ month, notesShown }) => ({ x: month, y: notesShown }))} 
-           animate={{ duration: 1000 }} 
      
           />
           <VictoryBar data={unmatchedReportsData.map(({ month, unmatchedReports }) => ({ x: month, y: unmatchedReports }))} 
-          animate={{ duration: 1000 }} 
           />
         </VictoryGroup>
       </VictoryChart>
@@ -95,6 +93,7 @@ StyleSheet.create({
   labelColor: {
     width: 15,
     height: 15,
+    borderRadius:50,
     marginRight: 5,
   },
   labelText: {

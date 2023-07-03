@@ -24,6 +24,7 @@
     "@rneui/themed": "^4.0.0-rc.7",
     "axios": "^1.4.0",
     "cloudinary-react-native": "^0.0.2",
+    "date-and-time": "^3.0.2",
     "firebase": "^9.22.2",
     "formik": "^2.4.1",
     "jwt-decode": "^3.1.2",

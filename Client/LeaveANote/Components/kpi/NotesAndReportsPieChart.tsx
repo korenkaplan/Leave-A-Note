@@ -23,7 +23,7 @@ const NotesAndReportsPieChart: React.FC<Props> = ({ title }) => {
     [
       { category: 'Notes', count: 30 },
       { category: 'Reports', count: 40 },
-      { category: 'Unmatched \n Reports', count: 30 },
+      { category: 'Unmatched\nReports', count: 30 },
     ],
     [
       { category: 'Notes', count: 35 },
@@ -68,12 +68,12 @@ const NotesAndReportsPieChart: React.FC<Props> = ({ title }) => {
     [
       { category: 'Notes', count: 75 },
       { category: 'Reports', count: 85 },
-      { category: 'Unmatched \n Reports', count: 75 },
+      { category: 'Unmatched\nReports', count: 75 },
     ],
     [
       { category: 'Notes', count: 80 },
       { category: 'Reports', count: 90 },
-      { category: 'Unmatched \n Reports', count: 80 },
+      { category: 'Unmatched\nReports', count: 80 },
     ],
     [
       { category: 'Notes', count: 85 },
