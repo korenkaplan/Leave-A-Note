@@ -101,7 +101,7 @@ const handleSubmit = async ():Promise<void> =>{
 </Avatar>
       </View>
       <View style={styles.bottomContainer}>
-      <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Take a picture and send the note'}/>
+      <DividerWithText height={2} fontSize={20}  title ={disableSendBtn?'Take a  📸 and send the note':'great now hit the send button'}/>
       <View >
       <Chip
   title={`Car Number ${carNumInput}`}
@@ -109,9 +109,9 @@ const handleSubmit = async ():Promise<void> =>{
     name: 'car',
     type: 'font-awesome',
     size: 20,
-    color: buttonAlt.text,
+    color: text.primary,
   }}
-  color={buttonAlt.background}
+  color={background}
   containerStyle={styles.chip}
   titleStyle={styles.chipTitle}
 />
@@ -124,7 +124,7 @@ const handleSubmit = async ():Promise<void> =>{
     name: 'paper-plane',
     type: 'font-awesome',
     size: 20,
-    color:  buttonMain.background,
+    color: disableSendBtn? 'gray':buttonMain.text,
   }}
   onPress={handleSubmit}
   type="outline"
@@ -145,20 +145,20 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
 
   },
   sendBtn: {
-    backgroundColor: buttonMain.text,
+    backgroundColor: buttonMain.background,
     alignSelf: 'center',
     minWidth: '50%',
-    borderColor: text.primary,
-    borderWidth: 2,
+    // borderColor: text.primary,
+    // borderWidth: 2,
 
 
   },
   sendBtnTitle: {
-    color: buttonMain.background,
+    color: buttonMain.text,
   },
   bottomContainer:{
     flex:1,
-    backgroundColor:primary,
+    backgroundColor:background,
     
   },
   chip: {
@@ -169,7 +169,7 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
   },
   
   chipTitle: {
-    color: buttonAlt.text,
+    color: text.primary,
   },
   divider: {
     height: 5,

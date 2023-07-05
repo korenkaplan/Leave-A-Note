@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
 import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports } from '../utils/interfaces/interfaces';
 import Toast from 'react-native-toast-message';
+
 interface MainContextType {
   currentUser: User | undefined;
   showError: boolean;

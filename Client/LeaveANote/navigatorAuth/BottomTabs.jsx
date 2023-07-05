@@ -15,6 +15,7 @@ import { Badge } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import { ThemeContext } from '../context/ThemeContext';
 import KpiStats from '../Components/kpi/KpiStats';
+import CustomModal from '../Components/kpi/CustomModal';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +50,7 @@ export default function BottomTabs() {
     };
     return (
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="Stats"
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,
@@ -107,6 +108,7 @@ export default function BottomTabs() {
       <Stack.Screen name="CreateReport" component={CreateReport} />
       <Stack.Screen name="CreateNote" component={CreateNote} />
       <Stack.Screen name="CameraComp" component={CameraComp} />
+      <Stack.Screen name="CustomModal" component={CustomModal} />
     </Stack.Navigator>
   );
 }

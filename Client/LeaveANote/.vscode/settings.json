@@ -5,6 +5,7 @@
         "ionicon",
         "rneui",
         "signup",
-        "Swipeable"
+        "Swipeable",
+        "swiper"
     ]
 }

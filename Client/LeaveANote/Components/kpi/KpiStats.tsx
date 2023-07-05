@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,Dimensions,ScrollView} from 'react-native'
+import { View, Text, StyleSheet,Dimensions,ScrollView,FlatList} from 'react-native'
 import React,{FC,useContext}  from 'react'
 import NotesAndReportsPieChart from './NotesAndReportsPieChart'
 import UnMatchedReportsAndNote from './UnMatchedAndNote'
@@ -8,6 +8,8 @@ import { ThemeContext } from '../../context/ThemeContext';
 import { IText, StyleButton } from '../../utils/interfaces/interfaces'
 import { useNavigation } from '@react-navigation/native';
 import RegisteredUsers from './RegisteredUsers'
+import CustomModal from './CustomModal'
+import { IModalButton } from '../../utils/interfaces/interfaces'
 const KpiStats: FC = () => {
   const navigation = useNavigation();
  const {theme, buttonTheme} = useContext(ThemeContext);
@@ -15,18 +17,29 @@ const KpiStats: FC = () => {
   const {buttonMain, buttonAlt} = buttonTheme;
   const styles = createStyles(primary, secondary, text, background,buttonMain, buttonAlt);
   const purpleShades = ['#5D3FD3','#702963','#483248']
-
+const buttons:IModalButton[] = []
+const cancelBtn:IModalButton = {
+title:'Cancel',
+navigateTo:'CreateNote'
+}
+const homeBtn:IModalButton = {
+  title:'Go Home',
+  navigateTo:'Home'
+  }
+buttons.push(cancelBtn,homeBtn)
   return (
-    <View style={{flex: 1, backgroundColor:background}}>
-
-      <ScrollView style={{backgroundColor:background}}>
-      <RegisteredUsers title='registered users'/>
-      <Divider style={styles.divider}/>
-      <NotesAndReportsPieChart title='distribution of reports and notes'/>
-      <Divider style={styles.divider}/>
-      {/* <UnMatchedReportsAndNote title='Unmatched vs Matched Reports'/> */}
-      </ScrollView>
+    <View style={{flex: 1, backgroundColor:background,justifyContent:'center',alignItems:'center'}}>
+      <CustomModal title='Note Delivered Successfully' buttons={buttons} body='Note delivered to 8333368'/>
     </View>
+  //    <View style={{flex: 1, backgroundColor:background}}>
+
+  //    <ScrollView style={{backgroundColor:background}}>
+  //    <RegisteredUsers title='registered users'/>
+  //    <Divider style={styles.divider}/>
+  //    <NotesAndReportsPieChart title='distribution of reports and notes'/>
+  //    <Divider style={styles.divider}/>
+  //    </ScrollView>
+  //  </View>
   )
 }
 const createStyles = (primary:string, secondary:string, text: IText, background: string,buttonMain: StyleButton, buttonAlt: StyleButton) =>

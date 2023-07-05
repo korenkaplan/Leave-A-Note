@@ -3,7 +3,10 @@ export interface RegisteredUsersPerMonthAmount {
   users: number,
   label?: string,
   }
-
+export interface IModalButton {
+  title: string,
+  navigateTo?: string
+}
 export interface DistributionOfReports{
   category: 'Notes'|'Reports'|'Unmatched \n Reports';
   count: number;
