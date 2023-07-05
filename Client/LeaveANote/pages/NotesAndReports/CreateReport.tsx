@@ -171,6 +171,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                 keyboardType="numeric"
                 inputContainerStyle={styles.inputContainer}
                 inputStyle={styles.input}
+                placeholderTextColor={text.primary}
 
               />
               {errors.damagedCarNumber && <Text style={styles.error}>{errors.damagedCarNumber}</Text>}
@@ -183,16 +184,19 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                 keyboardType="numeric"
                 inputContainerStyle={styles.inputContainer}
                 inputStyle={styles.input}
-
+                placeholderTextColor={text.primary}
               />
               {errors.hittingCarNumber && <Text style={styles.error}>{errors.hittingCarNumber}</Text>}
               <CheckBox
-                title="Remain Anonymous"
+                title="Check to remain Anonymous"
+                checkedTitle='The report will be sent anonymously'
+                uncheckedColor={text.primary}
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
                 checked={isChecked}
+                checkedColor={text.primary}
                 onPress={toggleCheckbox}
-                containerStyle={{ backgroundColor: primary }}
+                containerStyle={{ backgroundColor: background }}
                 titleProps={{ style: { color: text.primary, marginLeft: 10, } }} // Specify the desired color for the title text
               />
 
@@ -201,7 +205,6 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                 disabled={disableSendBtn}
                 disabledStyle={styles.disableBtn}
                 title={disableSendBtn ? 'Add Photo' : 'Send Report'}
-                color={'primary'}
                 icon={{
                   name: 'paper-plane',
                   type: 'font-awesome',
@@ -243,16 +246,16 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
       backgroundColor: 'lightgray',
     },
     sendBtn: {
-      backgroundColor: primary,
+      backgroundColor:  buttonMain.background,
       alignSelf: 'center',
       minWidth: '50%',
     },
     sendBtnTitle: {
-      color: text.primary,
+      color: buttonMain.text,
     },
     bottomContainer: {
       flex: 1,
-      backgroundColor:primary,
+      backgroundColor:background,
       paddingTop: 10
     },
 

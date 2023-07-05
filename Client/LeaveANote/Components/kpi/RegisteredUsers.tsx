@@ -1,36 +1,26 @@
 import React,{useContext, useEffect, useState} from 'react';
 import { View, Text, StyleSheet,Dimensions  } from 'react-native';
-import {Circle, VictoryGroup,VictoryLine,VictoryLabel, VictoryBar, VictoryChart, VictoryTheme, VictoryAxis, VictoryAnimation,VictoryLegend  } from 'victory-native';
+import {VictoryLine,VictoryChart, VictoryTheme, VictoryAxis} from 'victory-native';
 import DividerWithText from '../uiComponents/DividerWithText';
 import { ThemeContext } from '../../context/ThemeContext';
-import { StyleButton,IText, RegisteredUsersPerMonthAmount } from '../../utils/interfaces/interfaces';
+import { IText, RegisteredUsersPerMonthAmount } from '../../utils/interfaces/interfaces';
 import { MainContext } from '../../context/ContextProvider';
+import _ from 'lodash';
+
 interface Props {
   title: string;
 }
 
 const RegisteredUsers: React.FC<Props> = ({ title }) => {
-  const {theme, buttonTheme} = useContext(ThemeContext);
+  const {theme} = useContext(ThemeContext);
   const {registeredUsersData} = useContext(MainContext);
   const [graphData, setGraphData] = useState<RegisteredUsersPerMonthAmount[]>([])
-  const [axisYMax, setAxisYMax] = useState(0)
   const [currantYear, setCurrantYear] = useState('')
-  const {primary, secondary, text, background} = theme.colors;
-  const {buttonMain, buttonAlt} = buttonTheme;
-  const styles = createStyles(primary, secondary, text, background,buttonMain, buttonAlt);
+  const {primary,text, background} = theme.colors;
+  const styles = createStyles(text, background);
   
-  let circleColor = 'orange'
-  const registeredUsers = [
-    { month: 'Jan', users: 0 },
-    { month: 'Feb', users: 7000},
-    { month: 'Mer', users: 9000 },
-    { month: 'Apr', users: 11000 },
-    { month: 'May', users: 12000, label: 'Register Form Update'},
-    { month: 'Jun', users: 20000 },
-    { month: 'Jul', users: 25000 },
-    { month: 'Aug', users: 30000 },
-  ];
-  const maxUsers = Math.max(...registeredUsers.map(({ users }) => users));
+
+  const maxUsers = Math.max(...graphData.map(({ users }) => users),1);
   // Filter data to include every second month
   const screenWidth = Dimensions.get('window').width;
 
@@ -39,18 +29,14 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
     setCurrantYear(currantYear)
     const initData = async () => {
     const [status,data] = await registeredUsersData(currantYear);
-    console.log(status);
-    console.log(data);
     setGraphData(data)
-    const maxUsers = Math.max(...data.map(({ users }) => users));
-    setAxisYMax(maxUsers)
     };
     initData();
   }, [])
   
   return (
     <View style={styles.container}>
-      <DividerWithText title={`${title} ${currantYear}`} fontSize={15} />
+      <DividerWithText title={`${_.startCase(title)} ${currantYear}`} fontSize={15} />
       <VictoryChart width={screenWidth} theme={VictoryTheme.grayscale}
        padding={{ left: 65, right: 40, top: 20, bottom: 40 }} // Adjust the padding values
       >
@@ -90,7 +76,7 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
     },
   }}
   dependentAxis
-  domain={[0,axisYMax*1.5]}
+  domain={[0,Math.floor(maxUsers* 1.5)]}
 />
 
 
@@ -100,9 +86,6 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
             data:{stroke:primary,strokeWidth:4}
             
           }}
-          labelComponent={
-            <Circle  cx={1} cy={2} r={5} style={{}} fill={circleColor}/>
-          }
         
         />
   
@@ -110,14 +93,14 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
 
       <View style={styles.labelContainer}>
         <View style={styles.label}>
-          <View style={[styles.labelColor, { backgroundColor:primary,borderColor:secondary  }]} />
+          <View style={[styles.labelColor, { backgroundColor:primary  }]} />
           <Text style={styles.labelText}>Registered Users {currantYear}</Text>
         </View>
       </View>
     </View>
   );
 };
-const createStyles = (primary:string, secondary:string, text: IText, background: string,buttonMain: StyleButton, buttonAlt: StyleButton) =>
+const createStyles = ( text: IText, background: string) =>
 StyleSheet.create({
   container: {
     flex: 1,
@@ -141,6 +124,8 @@ StyleSheet.create({
     height: 15,
     marginRight: 5,
     borderRadius:50,
+    borderColor:text.primary,
+    borderWidth:1,
   },
   labelText: {
     fontSize: 12,

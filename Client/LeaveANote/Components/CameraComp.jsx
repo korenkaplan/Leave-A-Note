@@ -1,26 +1,30 @@
-import { View, Text,StyleSheet,ActivityIndicator,TouchableOpacity  } from 'react-native'
+import { View, Text,StyleSheet,ActivityIndicator,TouchableOpacity,  } from 'react-native'
 import React,{useRef,useState,useEffect,useContext} from 'react'
-import { Camera, useCameraDevices,CameraPermissionStatus } from 'react-native-vision-camera'
-import { Button, Icon, Image } from '@rneui/base';
-import { Text as IText } from '../utils/interfaces/interfaces';
+import { Camera, useCameraDevices,CameraPermissionStatus} from 'react-native-vision-camera'
+import { Button, Icon, Image,Slider,Badge } from '@rneui/base';
+import { IText,StyleButton } from '../utils/interfaces/interfaces';
 import { ThemeContext } from '../context/ThemeContext';
 import CustomButton from './uiComponents/CustomButton';
 export default function CameraComp({ navigation, route }) {
   const {previous} = route.params;
   const [cameraPermission, setCameraPermission] = useState("not-determined");
   const [imageData, setImageData] = useState('')
+  const [torchStatus, setTorchStatus] = useState('off');
+  const [isTorch, setIsTorch] = useState(false);
+  const [flipCamera, setFlipCamera] = useState(true)
   const [takePhotoClicked, setTakePhotoClicked] = useState(false)
-  const {theme} = useContext(ThemeContext);
+  const [zoomValue, setZoomValue] = useState(1.0);
+  const {theme,buttonTheme} = useContext(ThemeContext);
   const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background)
+  const {buttonMain,buttonAlt}= buttonTheme;
+  const styles = createStyles(primary,secondary,text,background,buttonMain,buttonAlt)
   const devices = useCameraDevices()
-  const device = devices.back
+  const deviceFront = devices.front
+  const deviceBack = devices.back
   const camera = useRef(null);
   useEffect(() => {
     const requestPermissions = async () => {
-      console.log("Requesting camera permission");
       const permission = await Camera.requestCameraPermission();
-      console.log("Permission given: ", permission);
 
       if (permission !== "authorized") {
           setError("Not allowed to access camera");
@@ -35,43 +39,35 @@ export default function CameraComp({ navigation, route }) {
     }, [])
 
  
-  if(device == null) return <ActivityIndicator/>;
+  if(!(deviceFront && deviceBack)) return <ActivityIndicator/>;
 
   const takePicture = async()=>{
     if(camera != null){
-      const snapshot = await camera.current.takePhoto()
-      const imagePath = 'file://' + snapshot.path;
-      setImageData(imagePath);
-      setTakePhotoClicked(true);
+      if(isTorch)
+      setTorchStatus('on')
+      setTimeout(async() => {
+        const snapshot = await camera.current.takePhoto()
+        const imagePath = 'file://' + snapshot.path;
+        setImageData(imagePath);
+        setTorchStatus('off')
+        setTakePhotoClicked(true);
+      }, 300);
     }
     
   }
 
-  const cameraView = (
-    <View style={{flex:1, justifyContent:'center'}}>
-    <Camera
-    ref={camera}
-  style={StyleSheet.absoluteFill}
-  device={device}
-  isActive={true}
-  photo={true}
-/>
-   <TouchableOpacity onPress={takePicture} style={styles.button} />
-</View>
-  )
 
-  const imageView=(
-    <View style={{flex:1, justifyContent:'center'}}>
-      <Image style={styles.image} source={imageData}/>
-    </View>
-  )
   const moveBackToPreviousScreen=()=>{
-    navigation.navigate({
-      name:previous,
-      params:{image:imageData}
-    });
+    setTimeout(() => {
+      navigation.navigate({
+        name:previous,
+        params:{image:imageData}
+      });
+    }, 400);
+ 
   }
   const renderScreen = ()=>{
+    
     if(takePhotoClicked)
     {
       return (
@@ -84,28 +80,98 @@ export default function CameraComp({ navigation, route }) {
       </View>
       );
     }
+
     else{
       return(
-        <View style={{flex:1, justifyContent:'center',backgroundColor:'black', alignItems:'center'}}>
-        <Camera
+        <View style={{flex:1, backgroundColor:'black', alignItems:'center'}}>
+          <View style={{height:'80%', width:'100%'}}>
+          <Camera
         ref={camera}
+        torch={torchStatus}
       style={styles.camera}
-      device={device}
+      device={flipCamera? deviceBack: deviceFront}
       isActive={true}
       photo={true}
+      zoom={zoomValue}
+      focusable={true}
     />
-       <TouchableOpacity onPress={takePicture} style={styles.button} />
+          </View>
+        <View style={{backgroundColor:primary,borderTopColor:buttonMain.text,borderTopWidth:2, height:'20%' ,width:'100%'}}>
+        <Slider
+      
+            style={styles.slider}
+            value={zoomValue}
+            onValueChange={setZoomValue}
+            maximumValue={5}
+            minimumValue={1}
+            step={0.5}
+            allowTouchTrack
+            thumbStyle={{backgroundColor: 'transparent',  }}
+            thumbProps={{
+              children: (
+                <Badge textStyle={{color:buttonMain.background}} badgeStyle={{backgroundColor:buttonMain.text,position:'relative',top:5,width:30,height:30,borderRadius:50}} value={zoomValue}  />
+                
+              ),
+            }}
+            />
+            <View style={{flexDirection:'row',justifyContent:'space-around',alignItems:'center'}}>
+              <TouchableOpacity onPress={toggleFlipCamera} style={styles.sideButton}>
+              <Icon onPress={toggleFlipCamera} name={'camera-reverse-sharp'} type='ionicon' color={buttonMain.background} size={35}  />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={takePicture} style={styles.button} />
+            <TouchableOpacity onPress={toggleTorch} style={styles.sideButton}>
+              <Icon name={isTorch? 'flash-on': 'flash-off'} color={buttonMain.background} size={35}  />
+            </TouchableOpacity>
+            </View>
+            
+        </View>
+   
     </View>
       );
     }
   }
+  const toggleFlipCamera = async () => {
+    try {
+      setFlipCamera(!flipCamera);
+    } catch (error) {
+      console.log('Failed to toggle camera:', error);
+    }
+  };
+  const toggleTorch = async () => {
+    try {
+      setIsTorch(!isTorch);
+    } catch (error) {
+      console.log('Failed to toggle flashlight:', error);
+    }
+  };
+  
   return (
     <>
     {renderScreen()}
     </>
   )
 }
-const createStyles = (primary,secondary,text,background) =>  StyleSheet.create({
+const createStyles = (primary,secondary,text,background,buttonMain,buttonAlt) =>  StyleSheet.create({
+  thumbZoom:{
+    backgroundColor:'red',
+    textAlign:'center',
+    fontSize:15,
+    borderRadius:50
+  },
+  slider:{
+    padding: 10,
+    zIndex: 1,
+    borderRadius:50,
+    width:'50%',
+    alignSelf:'center',
+  },
+
+  sideButton: {
+    backgroundColor:buttonMain.text,
+    borderRadius:50,
+    padding:5
+  },
+
   buttonContainer: {
     position: 'absolute',
     bottom: 50,
@@ -129,8 +195,6 @@ const createStyles = (primary,secondary,text,background) =>  StyleSheet.create({
     backgroundColor:'transparent',
     borderColor:'white',
     borderWidth:5,
-    position: 'absolute',
-    bottom:50,
     alignSelf: 'center',
   },
   image:{

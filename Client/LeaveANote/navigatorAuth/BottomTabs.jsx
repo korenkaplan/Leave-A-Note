@@ -15,7 +15,6 @@ import { Badge } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import { ThemeContext } from '../context/ThemeContext';
 import KpiStats from '../Components/kpi/KpiStats';
-import Main from '../Main'
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -50,7 +49,7 @@ export default function BottomTabs() {
     };
     return (
       <Tab.Navigator
-        initialRouteName="Stats"
+        initialRouteName="Home"
         screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,

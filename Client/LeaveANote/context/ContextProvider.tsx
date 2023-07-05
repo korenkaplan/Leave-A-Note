@@ -5,7 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
-import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse, RegisteredUsersPerMonthAmount } from '../utils/interfaces/interfaces';
+import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports } from '../utils/interfaces/interfaces';
 import Toast from 'react-native-toast-message';
 interface MainContextType {
   currentUser: User | undefined;
@@ -37,6 +37,7 @@ interface MainContextType {
   autoLoginNewUser:(newToken: string) => Promise<void>;
   refreshCurrantUser:() => Promise<void>;
   registeredUsersData:(year: string) => Promise<[boolean,RegisteredUsersPerMonthAmount[]] >;
+  reportsAndNotesDistributionData(): Promise<DistributionOfReports[]>
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -53,6 +54,20 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
     // You can also configure other Axios options here
   });
+const reportsAndNotesDistributionData = async():Promise<DistributionOfReports[]> => {
+try {
+    const requestBody ={
+      role:currentUser?.role
+    }
+    const response = await api.post(`stats/reportsDistribution`,requestBody,{headers: {Authorization: 'Bearer ' + token}})
+    const responseData:IHttpResponse<DistributionOfReports[]> = response.data
+    const {data}:IHttpResponse<DistributionOfReports[]> = responseData
+    return data? data : []
+} catch (error:any) {
+  console.error(error.message);
+  return []
+}
+};
 const registeredUsersData =async (year: string):Promise<[boolean,RegisteredUsersPerMonthAmount[]]> => {
 try {
     const requestBody ={
@@ -190,7 +205,7 @@ try {
 
       return responseData.success;
     } catch (error: any) {
-      console.log(error.message);
+      console.log(error.response.data.error);
       return false;
     }
   };
@@ -218,7 +233,7 @@ try {
 
       return responseData.success;
     } catch (error: any) {
-      console.error(error.response.data); // Log the error response data for further analysis
+      console.log(error.response.data.error); // Log the error response data for further analysis
       return false;
     }
   };
@@ -247,7 +262,7 @@ try {
 
       return responseData.success;
     } catch (error: any) {
-      console.error(error.response.data); // Log the error response data for further analysis
+      console.log(error.response.data.error); // Log the error response data for further analysis
       return false;
     }
   };
@@ -429,6 +444,7 @@ try {
 
   };
   const value: MainContextType = {
+    reportsAndNotesDistributionData,
     registeredUsersData,
     refreshCurrantUser,
     showToast,

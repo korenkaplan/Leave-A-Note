@@ -15,16 +15,14 @@ const KpiStats: FC = () => {
   const {buttonMain, buttonAlt} = buttonTheme;
   const styles = createStyles(primary, secondary, text, background,buttonMain, buttonAlt);
   const purpleShades = ['#5D3FD3','#702963','#483248']
-  const handlePressGoBack = () => {
-    navigation.navigate('Main')
-  };
+
   return (
     <View style={{flex: 1, backgroundColor:background}}>
 
       <ScrollView style={{backgroundColor:background}}>
-      <RegisteredUsers title='Registered Users'/>
+      <RegisteredUsers title='registered users'/>
       <Divider style={styles.divider}/>
-      <NotesAndReportsPieChart title='Distribution of Reports by Month'/>
+      <NotesAndReportsPieChart title='distribution of reports and notes'/>
       <Divider style={styles.divider}/>
       {/* <UnMatchedReportsAndNote title='Unmatched vs Matched Reports'/> */}
       </ScrollView>
