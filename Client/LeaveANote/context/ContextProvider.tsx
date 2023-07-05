@@ -5,7 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
-import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse } from '../utils/interfaces/interfaces';
+import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse, RegisteredUsersPerMonthAmount } from '../utils/interfaces/interfaces';
 import Toast from 'react-native-toast-message';
 interface MainContextType {
   currentUser: User | undefined;
@@ -36,6 +36,7 @@ interface MainContextType {
   deleteFromUnreadMessages: (messageId: string) => Promise<boolean>;
   autoLoginNewUser:(newToken: string) => Promise<void>;
   refreshCurrantUser:() => Promise<void>;
+  registeredUsersData:(year: string) => Promise<[boolean,RegisteredUsersPerMonthAmount[]] >;
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -52,8 +53,20 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
     // You can also configure other Axios options here
   });
-
-
+const registeredUsersData =async (year: string):Promise<[boolean,RegisteredUsersPerMonthAmount[]]> => {
+try {
+    const requestBody ={
+      year:year,
+      role:currentUser!.role
+    }
+  const response: AxiosResponse = await api.post(`/stats/registeredUsersData`,requestBody,{ headers:{ Authorization: 'Bearer ' + token, } });
+  const responseData: IHttpResponse<RegisteredUsersPerMonthAmount[]> = response.data;
+   return responseData.data? [true,responseData.data]: [false,[]];
+} catch (error: any) {
+  console.error(error.message);
+  return [false,[]]
+}
+}
   /**
  * Attempts to log in the user.
  * @param email The user's email.
@@ -416,6 +429,7 @@ try {
 
   };
   const value: MainContextType = {
+    registeredUsersData,
     refreshCurrantUser,
     showToast,
     authenticated,

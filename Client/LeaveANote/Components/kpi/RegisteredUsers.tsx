@@ -1,20 +1,24 @@
-import React,{useContext} from 'react';
+import React,{useContext, useEffect, useState} from 'react';
 import { View, Text, StyleSheet,Dimensions  } from 'react-native';
 import {Circle, VictoryGroup,VictoryLine,VictoryLabel, VictoryBar, VictoryChart, VictoryTheme, VictoryAxis, VictoryAnimation,VictoryLegend  } from 'victory-native';
 import DividerWithText from '../uiComponents/DividerWithText';
 import { ThemeContext } from '../../context/ThemeContext';
-import { StyleButton,IText } from '../../utils/interfaces/interfaces';
-
+import { StyleButton,IText, RegisteredUsersPerMonthAmount } from '../../utils/interfaces/interfaces';
+import { MainContext } from '../../context/ContextProvider';
 interface Props {
   title: string;
 }
 
 const RegisteredUsers: React.FC<Props> = ({ title }) => {
   const {theme, buttonTheme} = useContext(ThemeContext);
+  const {registeredUsersData} = useContext(MainContext);
+  const [graphData, setGraphData] = useState<RegisteredUsersPerMonthAmount[]>([])
+  const [axisYMax, setAxisYMax] = useState(0)
+  const [currantYear, setCurrantYear] = useState('')
   const {primary, secondary, text, background} = theme.colors;
   const {buttonMain, buttonAlt} = buttonTheme;
   const styles = createStyles(primary, secondary, text, background,buttonMain, buttonAlt);
-
+  
   let circleColor = 'orange'
   const registeredUsers = [
     { month: 'Jan', users: 0 },
@@ -30,13 +34,27 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
   // Filter data to include every second month
   const screenWidth = Dimensions.get('window').width;
 
+  useEffect(() => {
+    const currantYear = new Date().getFullYear().toString();
+    setCurrantYear(currantYear)
+    const initData = async () => {
+    const [status,data] = await registeredUsersData(currantYear);
+    console.log(status);
+    console.log(data);
+    setGraphData(data)
+    const maxUsers = Math.max(...data.map(({ users }) => users));
+    setAxisYMax(maxUsers)
+    };
+    initData();
+  }, [])
+  
   return (
     <View style={styles.container}>
-      <DividerWithText title={title} fontSize={15} />
+      <DividerWithText title={`${title} ${currantYear}`} fontSize={15} />
       <VictoryChart width={screenWidth} theme={VictoryTheme.grayscale}
        padding={{ left: 65, right: 40, top: 20, bottom: 40 }} // Adjust the padding values
       >
-          <VictoryLegend x={80} y={50}
+          {/* <VictoryLegend x={80} y={50}
   	title="Events"
     centerTitle
     orientation="vertical"
@@ -49,7 +67,7 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
     data={[
       { name: "Ui/Ux Update", symbol: { fill: circleColor, type: "circle" } },
     ]}
-  />
+  /> */}
       <VictoryAxis
   style={{
     axis: {
@@ -72,12 +90,12 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
     },
   }}
   dependentAxis
-  domain={[0, maxUsers+1000]}
+  domain={[0,axisYMax*1.5]}
 />
 
 
         
-        <VictoryLine  data={registeredUsers} x="month" y="users"
+        <VictoryLine  data={graphData} x="month" y="users"
           style={{
             data:{stroke:primary,strokeWidth:4}
             
@@ -93,7 +111,7 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
       <View style={styles.labelContainer}>
         <View style={styles.label}>
           <View style={[styles.labelColor, { backgroundColor:primary,borderColor:secondary  }]} />
-          <Text style={styles.labelText}>Registered Users</Text>
+          <Text style={styles.labelText}>Registered Users {currantYear}</Text>
         </View>
       </View>
     </View>

@@ -5,7 +5,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import NotAuthenticatedStack from './navigatorAuth/NotAuthenticatedStack';
 import BottomTabBar from './navigatorAuth/BottomTabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Text} from 'react-native-svg';
 import {ThemeContext} from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
 import jwt_decode from 'jwt-decode';

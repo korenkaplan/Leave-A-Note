@@ -48,7 +48,6 @@ export default function BottomTabs() {
         </View>
       );
     };
-  
     return (
       <Tab.Navigator
         initialRouteName="Stats"

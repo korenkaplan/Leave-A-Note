@@ -1,4 +1,13 @@
+export interface RegisteredUsersPerMonthAmount {
+  month: string,
+  users: number,
+  label?: string,
+  }
 
+export interface DistributionOfReports{
+  category: 'Notes'|'Reports'|'Unmatched \n Reports';
+  count: number;
+}
 export interface IHttpResponse<T> {
   success:boolean;
   data?:T;
@@ -60,6 +69,7 @@ export interface User {
     email: string;
     phoneNumber: string;
     carNumber: string;
+    role: string;
     unreadMessages: Accident[];
     accidents: Accident[];
   }

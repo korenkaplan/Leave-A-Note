@@ -22,11 +22,11 @@ const KpiStats: FC = () => {
     <View style={{flex: 1, backgroundColor:background}}>
 
       <ScrollView style={{backgroundColor:background}}>
-      <RegisteredUsers title='Registered Users 2023'/>
+      <RegisteredUsers title='Registered Users'/>
       <Divider style={styles.divider}/>
       <NotesAndReportsPieChart title='Distribution of Reports by Month'/>
       <Divider style={styles.divider}/>
-      <UnMatchedReportsAndNote title='Unmatched vs Matched Reports'/>
+      {/* <UnMatchedReportsAndNote title='Unmatched vs Matched Reports'/> */}
       </ScrollView>
     </View>
   )
