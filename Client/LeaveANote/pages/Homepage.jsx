@@ -12,7 +12,7 @@ import React, {useState, useContext, useEffect, useRef} from 'react';
 import {MainContext} from '../context/ContextProvider';
 import {Heading} from 'native-base';
 import Logo from '../assets/note-taking.svg';
-import {Input, Icon,} from '@rneui/themed';
+import {Input, Icon} from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomButton from '../Components/uiComponents/CustomButton';
@@ -143,41 +143,46 @@ export default function Homepage({navigation}) {
       },
     );
 
-
   return (
     <ThemedView style={styles.MainContainer}>
       <ScrollView>
-     <Icon
-        reverse
-        name="log-out-outline"
-        type="ionicon"
-        color={buttonAlt.background}
-        onPress={logOutAlert}
-        iconStyle={{color: buttonMain.text}} // Specify the color of the icon
-        containerStyle={[{marginLeft: 20}, styles.primaryBorder1]}
-      />
-      <View style={styles.container}>
-        <Logo width={width} height={height} />
-        <Heading style={{color: text.primary}}>Leave A Note</Heading>
-        <View style={styles.searchContainer}>
-          <Input
-            errorMessage={error}
-            placeholder="Enter Car Number"
-            rightIcon={isLoading ? loadSpinner : iconProps}
-            onChangeText={updateSearchValue}
-            value={searchValue}
-            inputStyle={{color: text.primary}}
-            keyboardType="numeric"
+        <Icon
+          reverse
+          name="log-out-outline"
+          type="ionicon"
+          color={buttonAlt.background}
+          onPress={logOutAlert}
+          iconStyle={{color: buttonMain.text}} // Specify the color of the icon
+          containerStyle={[{marginLeft: 20}, styles.primaryBorder1]}
+        />
+        <View style={styles.container}>
+          <Logo width={width} height={height} />
+          <Heading style={{color: text.primary}}>Leave A Note</Heading>
+          <View style={styles.searchContainer}>
+            <Input
+              errorMessage={error}
+              placeholder="Enter Car Number"
+              rightIcon={isLoading ? loadSpinner : iconProps}
+              onChangeText={updateSearchValue}
+              value={searchValue}
+              inputStyle={{color: text.primary}}
+              keyboardType="numeric"
+            />
+          </View>
+          <CustomButton
+            type="main"
+            disabled={!isNumberValid}
+            onPress={moveToNotePage}
+            title={'Leave a Note'}
+          />
+          <CustomButton
+            type="main"
+            titleStyle={{color: text.primary}}
+            buttonStyle={{backgroundColor: background}}
+            onPress={moveToReportPage}
+            title={'Report'}
           />
         </View>
-        <CustomButton
-          type="main"
-          disabled={!isNumberValid}
-          onPress={moveToNotePage}
-          title={'Leave a Note'}
-        />
-        <CustomButton type="alt" onPress={moveToReportPage} title={'Report'} />
-      </View>
       </ScrollView>
     </ThemedView>
   );
