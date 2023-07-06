@@ -39,7 +39,7 @@ initData()
 
   return (
     <View style={styles.mainContainer} >
-      <DividerWithText title={_.startCase(title)}/>
+      <DividerWithText fontSize={20} title={_.startCase(title)}/>
       <VictoryPie
         radius={({ datum }) => 50 + datum.y*2}
         width={screenWidth*0.9}

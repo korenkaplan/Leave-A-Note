@@ -54,7 +54,7 @@ export default function BottomTabs() {
     };
     return (
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="Stats"
         screenOptions={({route}) => ({
           headerShown: false,
           tabBarShowLabel: false,

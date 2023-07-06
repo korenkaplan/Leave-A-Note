@@ -26,7 +26,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignUp: FC<Props> = ({ navigation }) => {
-
   const [hidePassword, setHidePassword] = useState(true);
   const [hideRepPassword, setHideRepPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false)
@@ -37,7 +36,6 @@ const SignUp: FC<Props> = ({ navigation }) => {
   const handleFormSubmit = async (values: SignUpFormValues, { setFieldError }: any) => {
     setIsLoading(true)
     const [isRegistered, message, token] = await signupAttempt(values);
-
     const [messageToast, statusToast, headerToast] = isRegistered ? [`${message} moving to homepage`, 'success', 'Sign-Up Successfully 👋'] : [message, 'error', 'Sign-Up failed'];
     setIsLoading(false)
     showToast(messageToast, statusToast, headerToast);

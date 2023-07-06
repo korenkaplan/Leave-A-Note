@@ -5,7 +5,7 @@ import DividerWithText from '../uiComponents/DividerWithText';
 import { ThemeContext } from '../../context/ThemeContext';
 import { IText, RegisteredUsersPerMonthAmount } from '../../utils/interfaces/interfaces';
 import { MainContext } from '../../context/ContextProvider';
-import _ from 'lodash';
+import {startCase} from 'lodash';
 
 interface Props {
   title: string;
@@ -36,24 +36,11 @@ const RegisteredUsers: React.FC<Props> = ({ title }) => {
   
   return (
     <View style={styles.container}>
-      <DividerWithText title={`${_.startCase(title)} ${currantYear}`} fontSize={15} />
+      <DividerWithText title={`${startCase(title)} ${currantYear}`} fontSize={20} />
       <VictoryChart width={screenWidth} theme={VictoryTheme.grayscale}
        padding={{ left: 65, right: 40, top: 20, bottom: 40 }} // Adjust the padding values
       >
-          {/* <VictoryLegend x={80} y={50}
-  	title="Events"
-    centerTitle
-    orientation="vertical"
-    gutter={20}
-    style={{
-      border: { stroke: text.primary },
-      title: { fontSize: 20, fill: text.primary }, // Change the title color to red
-      labels: { fill: circleColor },
-    }}
-    data={[
-      { name: "Ui/Ux Update", symbol: { fill: circleColor, type: "circle" } },
-    ]}
-  /> */}
+      
       <VictoryAxis
   style={{
     axis: {
@@ -106,7 +93,6 @@ StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: background,
   },
   labelContainer: {
     flexDirection: 'row',

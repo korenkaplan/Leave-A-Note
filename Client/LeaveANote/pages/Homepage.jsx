@@ -1,14 +1,13 @@
 import {
   View,
   StyleSheet,
-  Animated,
   Dimensions,
   ActivityIndicator,
   Alert,
   useColorScheme,
   ScrollView,
 } from 'react-native';
-import React, {useState, useContext, useEffect, useRef} from 'react';
+import React, {useState, useContext} from 'react';
 import {MainContext} from '../context/ContextProvider';
 import {Heading} from 'native-base';
 import Logo from '../assets/note-taking.svg';
@@ -16,7 +15,6 @@ import {Input, Icon} from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomButton from '../Components/uiComponents/CustomButton';
-import CustomSpinner from '../Components/uiComponents/CustomSpinner';
 export default function Homepage({navigation}) {
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
