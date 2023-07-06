@@ -10,6 +10,7 @@ import { ThemeContext } from '../../context/ThemeContext';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 import SuccessModal from '../../Components/uiComponents/SuccessModal';
 import FailedModal from '../../Components/uiComponents/FailedModal';
+import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
 interface Params {
   carNumber: string;
   image: string;
@@ -25,6 +26,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
   const {theme,buttonTheme} = useContext(ThemeContext);
   const {buttonMain,buttonAlt}= buttonTheme;
+  const [isLoading, setIsLoading] = useState(false)
   const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
   const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
   const {primary,secondary,text,background} = theme.colors
@@ -44,23 +46,8 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     });
   };
 
-   const failureAlert = () =>{
-    const title = 'Note wasn\'t Sent Successfully';
-    const alertBody =  `Your Note wasn\'t deliverd to the owner of car number ${carNumInput}`;
- Alert.alert(title, alertBody, [
-    {
-    
-      text: 'Back Home',
-      onPress: () => navigation.navigate('Home'),
-      style: 'default',
-    },
-    {
-      text: 'Try Again',
-      style: 'cancel',
-    },
-   ]); }
 const handleSubmit = async ():Promise<void> =>{
-
+  setIsLoading(true)
    const imageRef: string = await uploadPhotoToStorage(imgSource);
   console.log(imageRef);
     
@@ -70,12 +57,14 @@ const handleSubmit = async ():Promise<void> =>{
     };
       // send to context function the image url
   const isSent = await submitNote(note);
+  setIsLoading(false)
   isSent ? setIsVisibleSuccessModal(true) : setIsVisibleFailedModal(true);
 
 };
 
   return (
     <View style={styles.MainContainer}>
+          
       <View  style={styles.topContainer}>
         <Avatar
   size={300}
@@ -127,6 +116,7 @@ const handleSubmit = async ():Promise<void> =>{
       </View>
       <SuccessModal body={`Your note was delivered to the owner of ${carNumInput} `} onSwipe={()=>navigation.navigate('Home')} isVisible={isVisibleSuccessModal}/>
       <FailedModal  body={`Oops its looks like we have a problem try again later...`} onSwipe={()=>navigation.navigate('Home')} footerTitle='swipe home' isVisible={isVisibleFailedModal}/>
+      <CustomSpinner title='creating note' isVisible={isLoading} />
     </View>
   );
 };

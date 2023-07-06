@@ -12,6 +12,8 @@ import { ThemeContext } from '../../context/ThemeContext';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 import SuccessModal from '../../Components/uiComponents/SuccessModal';
 import FailedModal from '../../Components/uiComponents/FailedModal';
+import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
+import { TouchableOpacity } from 'react-native';
 interface Params {
   image: string;
 }
@@ -25,13 +27,14 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
   const { image } = route.params;
   const { setCarNumInput, submitReport, uploadPhotoToStorage } = useContext(MainContext);
+  const [isLoading, setSetIsLoading] = useState(false)
   const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
   const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true); // toggle Submit btn if an image is taken.
   const [isChecked, setIsChecked] = useState<boolean>(false); // toggle the checkbox value
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'); // the image source starts with en empty iamge
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false); // holds the boolean value if the keyboard is open or not
-  const enum Size { AvatarBig = 250, AvatarSmall = 150, AvatarAccessoryBig = 60, AvatarAccessorySmall = 40 };// enum for sizes of the avatar when the keyboard is open / closed
+  enum Size { AvatarBig = 250, AvatarSmall = 150, AvatarAccessoryBig = 60, AvatarAccessorySmall = 40 };// enum for sizes of the avatar when the keyboard is open / closed
   const {theme,buttonTheme} = useContext(ThemeContext);
   const {buttonMain,buttonAlt}= buttonTheme;
   const {primary,secondary,text,background} = theme.colors
@@ -80,6 +83,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // handle the submit: cal function from context and show alert
   const handleFormSubmit = async (values: Values): Promise<void> => {
     try {
+       setSetIsLoading(true);
       const imageRef: string = await uploadPhotoToStorage(imgSource);
       let report: ReportToSend = {
         imageUrl: imageRef,
@@ -88,6 +92,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
         isAnonymous: isChecked,
       };
       const isSent = await submitReport(report);
+       setSetIsLoading(false);
       //show alert
       isSent? setIsVisibleSuccessModal(true): setIsVisibleFailedModal(true);
       //reset car number in context and clear fields
@@ -179,8 +184,9 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                 titleProps={{ style: { color: text.primary, marginLeft: 10, } }} // Specify the desired color for the title text
               />
 
-
-              <Chip
+       
+            <Chip
+            onPress={()=>handleSubmit()}
                 disabled={disableSendBtn}
                 disabledStyle={styles.disableBtn}
                 title={disableSendBtn ? 'Add Photo' : 'Send Report'}
@@ -190,7 +196,6 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                   size: 20,
                   color: 'white',
                 }}
-                onPress={()=>handleSubmit()}
                 type="outline"
                 containerStyle={styles.sendBtn}
                 titleStyle={styles.sendBtnTitle} // Add this line
@@ -199,6 +204,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
           )}
         </Formik>
       </View>
+      <CustomSpinner title='creating report' isVisible={isLoading} />
       <SuccessModal body={`Thank you your report was delivered`} onSwipe={navigateHome} isVisible={isVisibleSuccessModal}/>
       <FailedModal  body={`Oops its looks like we have a problem try again later...`} onSwipe={navigateHome} footerTitle='swipe home' isVisible={isVisibleFailedModal}/>
     </View>

@@ -2,7 +2,6 @@
 import { initializeApp } from "firebase/app";
 import {getStorage, ref} from 'firebase/storage';
 import config from './index';
-console.log(config);
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 const firebaseConfig = {

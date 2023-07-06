@@ -16,7 +16,7 @@ import {Input, Icon} from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomButton from '../Components/uiComponents/CustomButton';
-import KpiStats from '../Components/kpi/KpiStats';
+import CustomSpinner from '../Components/uiComponents/CustomSpinner';
 export default function Homepage({navigation}) {
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
@@ -108,7 +108,6 @@ export default function Homepage({navigation}) {
       setIsNumberValid(false);
     }
   };
-
   const moveToNotePage = () => {
     setCarNumInput(searchValue);
     navigation.navigate({
@@ -168,6 +167,7 @@ export default function Homepage({navigation}) {
               inputStyle={{color: text.primary}}
               keyboardType="numeric"
             />
+
           </View>
           <CustomButton
             type="main"
@@ -183,7 +183,9 @@ export default function Homepage({navigation}) {
             title={'Report'}
           />
         </View>
+
       </ScrollView>
+
     </ThemedView>
   );
 }

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, Input, Text, CheckBox } from '@rneui/base';
+import {Text, CheckBox } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 import { emailSchema, passwordSchema } from '../utils/validation/validationSchemas';
@@ -12,7 +12,7 @@ import { IText, StyleButton } from '../utils/interfaces/interfaces';
 import CustomButton from '../Components/uiComponents/CustomButton';
 import CustomInput from '../Components/uiComponents/CustomInput';
 import Toast from 'react-native-toast-message';
-
+import CustomSpinner from '../Components/uiComponents/CustomSpinner';
 interface LoginFormValues {
   email: string;
   password: string;
@@ -31,6 +31,8 @@ const validationSchema = Yup.object().shape({
 const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+
   const { loginAttempt, setAuthenticated,showToast } = useContext(MainContext);
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
@@ -40,7 +42,9 @@ const Login: FC<Props> = ({ navigation }) => {
   const headerToast='Login Failed';
   const handleFormSubmit = async (values: LoginFormValues) => {
     // Handle login form submission
+    setIsLoading(true)
     const result = await loginAttempt(values.email, values.password, rememberMe);
+    setIsLoading(false)
     if (result === false) {
       showToast(messageToast,statusToast,headerToast);
       return;
@@ -107,6 +111,8 @@ const Login: FC<Props> = ({ navigation }) => {
           title={'Register'}/>
       </View>
       <Toast/>
+      <CustomSpinner title='making sure its you...' isVisible={isLoading}/>
+
     </View>
   );
 };

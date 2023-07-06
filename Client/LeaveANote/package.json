@@ -41,6 +41,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.10.2",
     "react-native-linear-gradient": "^2.6.2",
+    "react-native-loading-spinner-overlay": "^3.0.1",
     "react-native-modal-selector": "^2.1.2",
     "react-native-modals": "^0.22.3",
     "react-native-safe-area-context": "^3.3.2",
