@@ -10,8 +10,8 @@ import animationData from '../../assets/lottie.Animation/BouncyFail.json';
 import LottieView from 'lottie-react-native';
 import DividerWithText from './DividerWithText';
 interface Props {
-  title: string;
-  body: string;
+  title?: string;
+  body?: string;
   footerTitle?: string;
   onSwipe(): void;
   isVisible: boolean
@@ -42,8 +42,8 @@ const FailedModal: React.FC<Props> = ({ title, footerTitle, body, onSwipe, isVis
             <LottieView style={styles.lottieStyle} speed={1} source={animationData} loop={false} autoPlay />
           </View  >
           <View style={styles.bodyView}>
-            <DividerWithText title={title} fontSize={20} />
-            <Text style={styles.bodyText}>{body}</Text>
+            <DividerWithText title={title? title: 'Failed'} fontSize={20} />
+            <Text style={styles.bodyText}>{body?body:''}</Text>
           </View>
         </ModalContent>
       </Modal>

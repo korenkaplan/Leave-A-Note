@@ -8,6 +8,8 @@ import { Chip } from '@rneui/themed';
 import { NoteToSend, IText,StyleButton} from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
+import SuccessModal from '../../Components/uiComponents/SuccessModal';
+import FailedModal from '../../Components/uiComponents/FailedModal';
 interface Params {
   carNumber: string;
   image: string;
@@ -23,6 +25,8 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
   const {theme,buttonTheme} = useContext(ThemeContext);
   const {buttonMain,buttonAlt}= buttonTheme;
+  const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
+  const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background,buttonMain,buttonAlt)
 
@@ -39,17 +43,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
       params:{'previous':'CreateNote'},
     });
   };
-  const successAlert = () =>{
-    const title = 'Note  Sent Successfully';
-    const alertBody = `Your Note was deliverd to the owner of car number ${carNumInput}`;
- Alert.alert(title, alertBody, [
-    {
-    
-      text: 'Back Home',
-      onPress: () => navigation.navigate('Home'),
-      style: 'default',
-    },
-   ]); } 
+
    const failureAlert = () =>{
     const title = 'Note wasn\'t Sent Successfully';
     const alertBody =  `Your Note wasn\'t deliverd to the owner of car number ${carNumInput}`;
@@ -76,9 +70,7 @@ const handleSubmit = async ():Promise<void> =>{
     };
       // send to context function the image url
   const isSent = await submitNote(note);
-  
-  //show dialog
-    isSent?  successAlert() : failureAlert();
+  isSent ? setIsVisibleSuccessModal(true) : setIsVisibleFailedModal(true);
 
 };
 
@@ -101,7 +93,7 @@ const handleSubmit = async ():Promise<void> =>{
 </Avatar>
       </View>
       <View style={styles.bottomContainer}>
-      <DividerWithText height={2} fontSize={20}  title ={disableSendBtn?'Take a  📸 and send the note':'great now hit the send button'}/>
+      <DividerWithText height={2} fontSize={20}  title ={disableSendBtn?'Take  📸 and send the note':'great now hit the send button'}/>
       <View >
       <Chip
   title={`Car Number ${carNumInput}`}
@@ -133,6 +125,8 @@ const handleSubmit = async ():Promise<void> =>{
 />
   </View>
       </View>
+      <SuccessModal body={`Your note was delivered to the owner of ${carNumInput} `} onSwipe={()=>navigation.navigate('Home')} isVisible={isVisibleSuccessModal}/>
+      <FailedModal  body={`Oops its looks like we have a problem try again later...`} onSwipe={()=>navigation.navigate('Home')} footerTitle='swipe home' isVisible={isVisibleFailedModal}/>
     </View>
   );
 };

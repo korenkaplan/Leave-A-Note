@@ -10,7 +10,8 @@ import * as Yup from 'yup';
 import { ReportToSend, IText,StyleButton} from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
-
+import SuccessModal from '../../Components/uiComponents/SuccessModal';
+import FailedModal from '../../Components/uiComponents/FailedModal';
 interface Params {
   image: string;
 }
@@ -24,7 +25,8 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
   const { image } = route.params;
   const { setCarNumInput, submitReport, uploadPhotoToStorage } = useContext(MainContext);
-  //states
+  const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
+  const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true); // toggle Submit btn if an image is taken.
   const [isChecked, setIsChecked] = useState<boolean>(false); // toggle the checkbox value
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'); // the image source starts with en empty iamge
@@ -74,33 +76,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       params: { 'previous': 'CreateReport' },
     });
   };
-  //create the alert for succesfully sending a report
-  const successAlert = (carNumInput: string) =>{
-    const title = 'Report  Sent Successfully';
-    const alertBody = `Your report was deliverd to the owner of car number ${carNumInput}`;
- Alert.alert(title, alertBody, [
-    {
-    
-      text: 'Back Home',
-      onPress: () => navigation.navigate('Home'),
-      style: 'default',
-    },
-   ]); } 
-   const failureAlert = (carNumInput: string) =>{
-    const title = 'Report wasn\'t Sent Successfully';
-    const alertBody =  `Your report wasn\'t deliverd to the owner of car number ${carNumInput}`;
- Alert.alert(title, alertBody, [
-    {
-    
-      text: 'Back Home',
-      onPress: () => navigation.navigate('Home'),
-      style: 'default',
-    },
-    {
-      text: 'Try Again',
-      style: 'cancel',
-    },
-   ]); }
+
   // handle the submit: cal function from context and show alert
   const handleFormSubmit = async (values: Values): Promise<void> => {
     try {
@@ -113,7 +89,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       };
       const isSent = await submitReport(report);
       //show alert
-      isSent? successAlert(values.damagedCarNumber): failureAlert(values.damagedCarNumber);
+      isSent? setIsVisibleSuccessModal(true): setIsVisibleFailedModal(true);
       //reset car number in context and clear fields
       setCarNumInput('');
     }
@@ -135,6 +111,9 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       'Both car numbers cannot be identical'
     ),
   });
+  const navigateHome = () =>{
+    navigation.navigate('Home')
+  }
   return (
     <View style={styles.MainContainer}>
       <View style={styles.topContainer}>
@@ -220,6 +199,8 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
           )}
         </Formik>
       </View>
+      <SuccessModal body={`Thank you your report was delivered`} onSwipe={navigateHome} isVisible={isVisibleSuccessModal}/>
+      <FailedModal  body={`Oops its looks like we have a problem try again later...`} onSwipe={navigateHome} footerTitle='swipe home' isVisible={isVisibleFailedModal}/>
     </View>
   );
 };
