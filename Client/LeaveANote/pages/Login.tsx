@@ -69,6 +69,7 @@ const Login: FC<Props> = ({ navigation }) => {
           <>
             <CustomInput
               placeholder="Enter your email"
+              placeholderTextColor={text.primary}
               value={values.email}
               onChangeText={handleChange('email')}
               leftIcon={{ type: 'ionicon', name: 'mail-outline', color: text.primary, }}
@@ -77,6 +78,7 @@ const Login: FC<Props> = ({ navigation }) => {
               placeholder="Enter your password"
               secureTextEntry={hidePassword}
               value={values.password}
+              placeholderTextColor={text.primary}
               onChangeText={handleChange('password')}
               leftIcon={{ type: 'ionicon', name: 'lock-closed-outline', color: text.primary }}
               rightIcon={{
@@ -89,6 +91,8 @@ const Login: FC<Props> = ({ navigation }) => {
             <CheckBox
               title="Remember Me"
               checked={rememberMe}
+              checkedColor={text.primary}
+              checkedTitle='Great we will remember you'
               onPress={() => setRememberMe(!rememberMe)}
               containerStyle={{ backgroundColor: background }}
               textStyle={{ color: text.primary, backgroundColor: 'transparent' }}

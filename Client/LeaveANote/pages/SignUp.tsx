@@ -1,4 +1,4 @@
-import React, { useState, FC, useContext } from 'react';
+import React, { useState, FC, useContext} from 'react';
 import { View, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -24,6 +24,7 @@ const validationSchema = Yup.object().shape({
   carNumber: carNumberSchema,
   name: nameSchema,
 });
+
 
 const SignUp: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);

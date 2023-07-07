@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 import RegisteredUsers from './RegisteredUsers'
 import { IModalButton } from '../../utils/interfaces/interfaces'
 import Swiper from 'react-native-swiper'
-import { Text } from '@rneui/base';
 const KpiStats: FC = () => {
   const { theme, buttonTheme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors;
@@ -29,12 +28,13 @@ const KpiStats: FC = () => {
     activeDotColor={buttonMain.background}
     activeDotStyle={styles.activeDotStyle}
     >
+     <View style={[styles.slide]}>
+      <NotesAndReportsPieChart title='distribution of reports and notes' />
+      </View>
       <View style={[styles.slide]}>
       <RegisteredUsers title='registered users' />
       </View>
-      <View style={[styles.slide]}>
-      <NotesAndReportsPieChart title='distribution of reports and notes' />
-      </View>
+
     </Swiper>
   )
 }

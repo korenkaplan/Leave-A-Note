@@ -15,6 +15,7 @@ import {Input, Icon} from '@rneui/themed';
 import {ThemeContext} from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomButton from '../Components/uiComponents/CustomButton';
+
 export default function Homepage({navigation}) {
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
@@ -139,7 +140,6 @@ export default function Homepage({navigation}) {
         buttonStyle: {backgroundColor: 'orange'}, // Custom style for the buttons
       },
     );
-
   return (
     <ThemedView style={styles.MainContainer}>
       <ScrollView>
@@ -165,7 +165,6 @@ export default function Homepage({navigation}) {
               inputStyle={{color: text.primary}}
               keyboardType="numeric"
             />
-
           </View>
           <CustomButton
             type="main"

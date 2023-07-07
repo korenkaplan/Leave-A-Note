@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "28940893178",
+    "project_id": "leave-a-note-b4218",
+    "storage_bucket": "leave-a-note-b4218.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:28940893178:android:9388abc22ac1629b2c0243",
+        "android_client_info": {
+          "package_name": "com.example.leaveanote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "28940893178-08pfg58800uspf6ocmpraqg6tecbujak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDobdZ1wEFmmPWYUMbvCrRodB0CraDsrZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "28940893178-08pfg58800uspf6ocmpraqg6tecbujak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

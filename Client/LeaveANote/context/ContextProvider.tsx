@@ -176,12 +176,10 @@ try {
       const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: 'Bearer ' + token, } });
       const responseData: IHttpResponse<User> = response.data;
       if (responseData.tokenError) { handleTokenError() }
-
-
       if (responseData.data === undefined) { return null; }
       return responseData.data;
     } catch (error: any) {
-      console.log(error.message);
+      console.log(error.response.data.error);
       return null;
     }
   };

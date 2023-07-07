@@ -7,9 +7,6 @@ import MainContextProvider from './context/ContextProvider';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import ThemeContextProvider from './context/ThemeContext';
 import { ModalPortal } from 'react-native-modals';
-
-
-
 I18nManager.allowRTL(false);
 export default function App() {
   LogBox.ignoreLogs(['Require cycle: node_modules/victory']);
@@ -19,7 +16,7 @@ export default function App() {
         <SafeAreaProvider>
           <ThemeContextProvider>
             <Main />
-      <ModalPortal />
+           <ModalPortal />
           </ThemeContextProvider>
         </SafeAreaProvider>
       </NativeBaseProvider>
