@@ -4,7 +4,6 @@ import { View, StyleSheet,useColorScheme } from 'react-native';
 import { Divider, Text } from '@rneui/base';
 import { ThemeContext } from '../../context/ThemeContext';
 import { IText } from '../../utils/interfaces/interfaces';
-import {startCase} from 'lodash';
 interface DividerWithTextProps {
   title: string;
   fontColor?:string;
@@ -18,10 +17,14 @@ const DividerWithText: FC<DividerWithTextProps> = ({ title,fontColor,height,font
   const {primary,secondary,text,background} = theme.colors
   const styles = createStyles(primary,secondary,text,background)
   const colorScheme = useColorScheme();
+  const customStartCase = (title:string) => {
+    return title.replace(/\b(?<!['])\w/g, (match) => match.toUpperCase());
+  };
+  
   return (
     <View style={styles.container}>
       <Divider style={[styles.divider,{backgroundColor:fontColor,width:height}]} />
-      <Text style={[styles.text,{color: fontColor? fontColor: colorScheme == 'dark'? text.primary : primary, fontSize,fontWeight:weight}]}>{startCase(title)}</Text>
+      <Text style={[styles.text,{color: fontColor? fontColor: colorScheme == 'dark'? text.primary : primary, fontSize,fontWeight:weight}]}>{customStartCase(title)}</Text>
       <Divider  style={[styles.divider,{backgroundColor: fontColor,width:height,}]} />
     </View>
   );

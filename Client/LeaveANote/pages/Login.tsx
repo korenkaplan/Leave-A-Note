@@ -1,5 +1,5 @@
 import React, { useState, FC, useContext } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -13,6 +13,7 @@ import CustomButton from '../Components/uiComponents/CustomButton';
 import CustomInput from '../Components/uiComponents/CustomInput';
 import Toast from 'react-native-toast-message';
 import CustomSpinner from '../Components/uiComponents/CustomSpinner';
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -54,10 +55,10 @@ const Login: FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading} h1>
-        Hello, Welcome
+        Leave A Note
       </Text>
-      <Text style={styles.subHeading} h4>
-        Log in to start using the app
+      <Text style={styles.subHeading}>
+        A Parking accident communication app
       </Text>
       <Formik
         initialValues={{ email: '', password: '' }}
@@ -106,13 +107,14 @@ const Login: FC<Props> = ({ navigation }) => {
           </>
         )}
       </Formik>
-      <DividerWithText title="Don't have an account?" />
+      <DividerWithText title="Don't have an account ?"/>
       <View style={styles.buttonContainer}>
         <CustomButton
           type='alt'
           onPress={() => navigation.navigate({name:'SignUp', params:{}})}
           title={'Register'}/>
       </View>
+
       <Toast/>
       <CustomSpinner title='making sure its you...' isVisible={isLoading}/>
 
@@ -125,6 +127,19 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
     flex: 1,
     padding: 20,
     backgroundColor: background,
+  },
+  footer:{
+    position:'absolute',
+    bottom:5,
+    alignSelf: 'center',
+    color:text.primary
+
+  },
+  footerContainer:{
+    position:'absolute',
+    bottom:5,
+    alignSelf: 'center',
+
   },
   buttonContainer: {
     justifyContent: 'center',
@@ -140,9 +155,12 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
     fontWeight: 'bold',
     marginBottom: 10,
     color: text.primary,
+    alignSelf:'center',
+
   },
   subHeading: {
-    fontSize: 18,
+    fontSize: 19,
+    alignSelf:'center',
     marginBottom: 20,
     color: text.secondary,
 

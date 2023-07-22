@@ -12,7 +12,6 @@ import DividerWithText from '../../Components/uiComponents/DividerWithText';
 const AccidentsHistory: FC = () => {
   const navigation = useNavigation();
   const { getUserById, currentUser, setCurrentUser, deleteAccident, refreshCurrantUser } = useContext(MainContext);
-  //const [reports, setReports] = useState(currentUser.reports);
   const [refreshing, setRefreshing] = useState(false);
   const [accidents, setAccidents] = useState<Accident[]>(currentUser ? currentUser.accidents : []);
   const { theme, buttonTheme } = useContext(ThemeContext);
@@ -43,12 +42,7 @@ const AccidentsHistory: FC = () => {
     updatedMessages.splice(index, 1);
     setAccidents(updatedMessages);
   };
-  const formatTimestamp = (timestamp: Date): string => {
-    const date = new Date(timestamp);
-    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    const formattedDate = date.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
-    return `${formattedTime} ${formattedDate}`;
-  }
+
   const accidentsList = accidents.map((accident, index) => {
     if (accident.type === 'note') {
       return (
