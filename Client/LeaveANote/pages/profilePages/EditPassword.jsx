@@ -1,6 +1,6 @@
-import {View, Text, StyleSheet, Alert, ScrollView} from 'react-native';
+import {View, Text, StyleSheet,ScrollView} from 'react-native';
 import React, {useState, useContext, useRef} from 'react';
-import {Input, Icon, Button} from '@rneui/themed';
+import {Input} from '@rneui/themed';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {passwordSchema} from '../../utils/validation/validationSchemas';
@@ -16,7 +16,7 @@ export default function EditPassword() {
   const [newPasswordSecure, setNewPasswordSecure] = useState(true);
   const [repeatPasswordSecure, setRepeatPasswordSecure] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const {updateUserPassword, showToast} = useContext(MainContext);
+  const {updateUserPassword} = useContext(MainContext);
   const {theme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
   const styles = createStyles(primary, secondary, text, background);

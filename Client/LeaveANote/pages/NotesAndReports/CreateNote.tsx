@@ -1,4 +1,4 @@
-import { Avatar, Button, Divider  } from '@rneui/base';
+import { Avatar} from '@rneui/base';
 import React, { useState,useEffect,useContext } from 'react';
 import { View,StyleSheet, Alert} from 'react-native';
 import {RouteProp } from '@react-navigation/native';

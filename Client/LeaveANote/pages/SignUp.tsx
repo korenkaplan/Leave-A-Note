@@ -1,5 +1,5 @@
 import React, { useState, FC, useContext} from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -54,7 +54,7 @@ const SignUp: FC<Props> = ({ navigation }) => {
       <ScrollView style={styles.scroll}>
 
         <Formik
-          initialValues={{ email: 'd@gmail.com', password: '123456', repeatPassword: '123456', phoneNumber: '0533406888', carNumber: '9876543', name: 'topaz kaplan' }}
+          initialValues={{ email: '', password: '', repeatPassword: '', phoneNumber: '', carNumber: '', name: '' }}
           validationSchema={validationSchema}
           onSubmit={handleFormSubmit}
         >

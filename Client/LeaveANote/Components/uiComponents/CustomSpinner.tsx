@@ -3,7 +3,6 @@ import { Overlay,Text} from '@rneui/themed';
 import { ThemeContext } from '../../context/ThemeContext';
 import LottieView from 'lottie-react-native';
 import { startCase } from 'lodash';
-import { Button, Icon } from '@rneui/themed';
 import { View, StyleSheet } from 'react-native';
 import animationData from '../../assets/lottie.Animation/sandTimer.json'
 import { IText, StyleButton } from '../../utils/interfaces/interfaces';

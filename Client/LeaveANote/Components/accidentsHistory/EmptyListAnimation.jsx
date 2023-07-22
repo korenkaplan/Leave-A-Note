@@ -18,7 +18,7 @@ export default function EmptyListAnimation() {
     </View>
   );
 }
-const createStyles = (primary, secondary, text, background) =>
+const createStyles = (text, background) =>
   StyleSheet.create({
     container: {
       flex: 1,

@@ -1,27 +1,32 @@
-import { View, StyleSheet } from 'react-native';
-import React, { useState, useContext } from 'react';
-import { Tab, TabView } from '@rneui/themed';
+import {View, StyleSheet} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {Tab, TabView} from '@rneui/themed';
 import AccidentsHistory from '../../pages/profilePages/AccidentsHistory';
 import EditInfo from '../../pages/profilePages/EditInfo';
 import EditPassword from '../../pages/profilePages/EditPassword';
-import { ThemeContext } from '../../context/ThemeContext';
+import {ThemeContext} from '../../context/ThemeContext';
 
 export default function ProfileTabView() {
   const [index, setIndex] = useState(0);
   const {theme, buttonTheme} = useContext(ThemeContext);
-  const {primary,secondary,text,background} = theme.colors
+  const {primary, secondary, text, background} = theme.colors;
   const {buttonMain, buttonAlt} = buttonTheme;
-  const styles = createStyles(primary,secondary,text,background, buttonMain, buttonAlt)
-
+  const styles = createStyles(
+    primary,
+    secondary,
+    text,
+    background,
+    buttonMain,
+    buttonAlt,
+  );
 
   return (
     <View style={styles.container}>
-            <TabView
+      <TabView
         value={index}
         onChange={setIndex}
         animationType="spring"
-        disableSwipe={true}
-      >
+        disableSwipe={true}>
         <TabView.Item style={styles.tabView}>
           <AccidentsHistory />
         </TabView.Item>
@@ -34,19 +39,17 @@ export default function ProfileTabView() {
       </TabView>
       <Tab
         value={index}
-        onChange={(e) => setIndex(e)}
+        onChange={e => setIndex(e)}
         style={styles.tabMenu}
-        initialValue={1}
         indicatorStyle={{
           backgroundColor: buttonMain.text,
           height: 4,
-          borderRadius:50,
-          width:'10%',
-          marginLeft:'8%',
+          borderRadius: 50,
+          width: '10%',
+          marginLeft: '8%',
           marginBottom: 5,
-          elevation:10
-        }}
-      >
+          elevation: 10,
+        }}>
         <Tab.Item
           style={styles.tabItem}
           // titleStyle={styles.tabLabel}
@@ -87,8 +90,14 @@ export default function ProfileTabView() {
   );
 }
 
-
-const createStyles = (primary, secondary, text, background, buttonMain, buttonAlt) =>
+const createStyles = (
+  primary,
+  secondary,
+  text,
+  background,
+  buttonMain,
+  buttonAlt,
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -103,13 +112,13 @@ const createStyles = (primary, secondary, text, background, buttonMain, buttonAl
     tabMenu: {
       backgroundColor: primary,
       borderRadius: 50, // Apply border radius to create a pill shape
-      borderColor:text.primary,
-      borderWidth:1.5,
-      margin:5,
-      elevation:10,
-      height:52,
-      marginBottom:15,
-      width:'60%',
+      borderColor: text.primary,
+      borderWidth: 1.5,
+      margin: 5,
+      elevation: 10,
+      height: 52,
+      marginBottom: 15,
+      width: '60%',
       alignSelf: 'center',
     },
     tabLabel: {
@@ -122,7 +131,4 @@ const createStyles = (primary, secondary, text, background, buttonMain, buttonAl
     activeTabIcon: {
       color: secondary, // Set the color of the active tab icon to secondary
     },
-    
   });
-
-

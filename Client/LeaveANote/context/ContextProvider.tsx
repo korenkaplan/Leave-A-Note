@@ -53,7 +53,6 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const [token, setToken] = useState<string>('');
   const api: AxiosInstance = axios.create({
     baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
-    // You can also configure other Axios options here
   });
 const reportsAndNotesDistributionData = async():Promise<DistributionOfReports[]> => {
 try {

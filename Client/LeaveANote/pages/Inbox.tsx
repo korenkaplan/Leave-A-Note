@@ -1,12 +1,12 @@
-import {View, Text,StyleSheet, ScrollView, TouchableOpacity,RefreshControl, LogBox} from 'react-native';
+import {StyleSheet, ScrollView, TouchableOpacity,RefreshControl} from 'react-native';
 import React,{useState,useContext,FC} from 'react';
 import EmptyAnimationInbox from '../Components/uiComponents/EmptyAnimationInbox';
-import { ListItem,Avatar, Icon} from '@rneui/themed';
+import { ListItem, Icon} from '@rneui/themed';
 import { MainContext } from '../context/ContextProvider';
 import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import { useNavigation } from '@react-navigation/native';
-import {Accident, StyleButton, Theme} from '../utils/interfaces/interfaces';
+import {Accident, StyleButton} from '../utils/interfaces/interfaces';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 
 const Inbox: FC = () =>{

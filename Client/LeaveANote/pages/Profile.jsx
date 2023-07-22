@@ -1,5 +1,5 @@
-import { View,StyleSheet,LogBox  } from 'react-native'
-import React,{useState} from 'react'
+import { View,StyleSheet  } from 'react-native'
+import React from 'react'
 import ProfileTabView from '../Components/profile/ProfileTabView';
 import ThemedView from '../Components/uiComponents/ThemedView';
 

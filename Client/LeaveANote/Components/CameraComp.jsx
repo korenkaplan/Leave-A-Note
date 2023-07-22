@@ -1,8 +1,7 @@
-import { View, Text,StyleSheet,ActivityIndicator,TouchableOpacity,  } from 'react-native'
+import { View,StyleSheet,ActivityIndicator,TouchableOpacity,  } from 'react-native'
 import React,{useRef,useState,useEffect,useContext} from 'react'
-import { Camera, useCameraDevices,CameraPermissionStatus} from 'react-native-vision-camera'
-import { Button, Icon, Image,Slider,Badge } from '@rneui/base';
-import { IText,StyleButton } from '../utils/interfaces/interfaces';
+import { Camera, useCameraDevices} from 'react-native-vision-camera'
+import { Icon, Image,Slider,Badge } from '@rneui/base';
 import { ThemeContext } from '../context/ThemeContext';
 import CustomButton from './uiComponents/CustomButton';
 export default function CameraComp({ navigation, route }) {

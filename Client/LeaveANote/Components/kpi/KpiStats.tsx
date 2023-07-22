@@ -1,75 +1,110 @@
 import { View, StyleSheet} from 'react-native'
-import React, { FC, useContext } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import NotesAndReportsPieChart from './NotesAndReportsPieChart'
 import { ThemeContext } from '../../context/ThemeContext';
 import { IText, StyleButton } from '../../utils/interfaces/interfaces'
-import { useNavigation } from '@react-navigation/native';
 import RegisteredUsers from './RegisteredUsers'
+import { Tab, TabView } from '@rneui/themed';
 import { IModalButton } from '../../utils/interfaces/interfaces'
-import Swiper from 'react-native-swiper'
 const KpiStats: FC = () => {
   const { theme, buttonTheme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors;
   const { buttonMain, buttonAlt } = buttonTheme;
+  const [index, setIndex] = useState(0);
   const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt);
-  const buttons: IModalButton[] = []
-  const cancelBtn: IModalButton = {
-    title: 'Cancel',
-    navigateTo: 'CreateNote'
-  }
-  const homeBtn: IModalButton = {
-    title: 'Go Home',
-    navigateTo: 'Home'
-  }
-  buttons.push(cancelBtn, homeBtn)
   return (
-    <Swiper style={styles.wrapper} showsButtons={false}
-    dotColor={text.secondary}
-    activeDotColor={buttonMain.background}
-    activeDotStyle={styles.activeDotStyle}
-    >
-     <View style={[styles.slide]}>
+    <View style={{flex:1, backgroundColor:background}}>
+            <TabView
+        value={index}
+        onChange={setIndex}
+        animationType="spring"
+        disableSwipe={false}
+      >
+         <TabView.Item style={styles.tabView}>
       <NotesAndReportsPieChart title='distribution of reports and notes' />
-      </View>
-      <View style={[styles.slide]}>
+        </TabView.Item>
+        <TabView.Item style={styles.tabView}>
       <RegisteredUsers title='registered users' />
-      </View>
-
-    </Swiper>
+        </TabView.Item>
+      </TabView>
+      <Tab
+         value={index}
+         onChange={(e) => setIndex(e)}
+         style={styles.tabMenu}
+         indicatorStyle={{
+           backgroundColor: buttonMain.text,
+           height: 4,
+           borderTopRightRadius:50,
+           borderBottomLeftRadius:50, 
+           borderTopStartRadius:5,
+           borderBottomEndRadius:5,
+           width:'10%',
+           marginLeft:'14%',
+           marginBottom: 5,
+           elevation:10
+         }}
+      >
+         <Tab.Item
+          style={styles.tabItem}
+          // titleStyle={styles.tabLabel}
+          // activeTitleStyle={styles.activeTabLabel} // Apply activeTabLabel style when the tab is active
+          icon={{
+            name: 'pie-chart-outline',
+            type: 'ionicon',
+            color: buttonMain.text,
+          }}
+        />
+        <Tab.Item
+          style={styles.tabItem}
+          // title="Edit information"
+          // titleStyle={styles.tabLabel}
+          icon={{
+            name: 'bar-chart-outline',
+            type: 'ionicon',
+            color: buttonMain.text,
+          }}
+        />
+      </Tab>
+    </View>
+   
   )
 }
 
-const createStyles = (primary: string, secondary: string, text: IText, background: string, buttonMain: StyleButton, buttonAlt: StyleButton) =>
+const createStyles = (primary: string, secondary: string, text: IText, background: string, buttonMain: StyleButton) =>
   StyleSheet.create({
-    buttonWrapperStyle:{
-      backgroundColor: 'transparent', flexDirection: 'row', position: 'absolute', top: 0, left: 0, flex: 1, paddingHorizontal: 10, paddingVertical: 10, justifyContent: 'space-between', alignItems: 'center'
-    },
-    buttonText:{
-      color:text.primary
-    },
-    wrapper:{},
-    activeDotStyle:{
-      height:10,
-      width:10,
-      borderColor:text.primary,
-      borderRadius:50,
-      borderWidth:1.
-    },
-    slide:{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    backgroundColor: background,
 
+    tabView: {
+      flex: 1,
     },
-    divider: {
-      height: 5,
+    tabItem: {
+      flex: 1,
+      backgroundColor: 'primary',
+    },
+    tabMenu: {
       backgroundColor: primary,
-      margin: 15,
-      borderRadius: 20,
+      borderTopRightRadius:50,
+      borderBottomLeftRadius:50, 
+      borderTopStartRadius:5,
+      borderBottomEndRadius:5,
+      borderColor:text.primary,
+      borderWidth:1.5,
+      margin:5,
+      elevation:10,
+      height:52,
+      marginBottom:15,
+      width:'60%',
+      alignSelf: 'center',
     },
-    button: {
-      backgroundColor: 'red'
-    }
+    tabLabel: {
+      color: buttonMain.text,
+      fontSize: 12,
+    },
+    tabIcon: {
+      color: buttonMain.text,
+    },
+    activeTabIcon: {
+      color: secondary, // Set the color of the active tab icon to secondary
+    },
+
   });
 export default KpiStats

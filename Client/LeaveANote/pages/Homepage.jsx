@@ -34,7 +34,7 @@ export default function Homepage({navigation}) {
     handleLogOut,
     currentUser,
   } = useContext(MainContext);
-  const [searchValue, setSearchValue] = useState('8333368');
+  const [searchValue, setSearchValue] = useState('');
   const [error, setError] = useState('');
   const [iconName, setIconName] = useState('search');
   const [isNumberValid, setIsNumberValid] = useState(false);

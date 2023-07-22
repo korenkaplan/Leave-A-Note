@@ -1,7 +1,5 @@
 import React, { createContext, useState, ReactNode} from 'react';
 import {Theme,IButtonTheme} from '../utils/interfaces/interfaces'
-import { useSafeArea } from 'native-base';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Create the theme context
 interface ThemeContextType {
@@ -12,7 +10,6 @@ interface ThemeContextType {
     buttonTheme:IButtonTheme
 
 }
-type ColorScheme = 'dark' | 'light';
 export const ThemeContext = createContext<ThemeContextType>({} as ThemeContextType);
 // Create the theme provider component
 function ThemeContextProvider({ children }: { children: ReactNode; }) {
@@ -64,28 +61,6 @@ function ThemeContextProvider({ children }: { children: ReactNode; }) {
       };
       
   const [theme, setTheme] = useState(lightTheme);
-  const [icon, setIcon] = useState('');
-
-const setColorScheme= async (colorScheme:ColorScheme) => {
-}
-const saveColorSchemePreference = async (colorScheme:string) => {
-  try {
-    await AsyncStorage.setItem('colorScheme', colorScheme);
-  } catch (error) {
-    // Handle the error
-    console.log('Error saving color scheme preference:', error);
-  }
-};
-const getColorSchemePreference = async () => {
-  try {
-    const colorScheme: string | null = await AsyncStorage.getItem('colorScheme');
-    return colorScheme;
-  } catch (error) {
-    // Handle the error
-    return null;
-    console.log('Error retrieving color scheme preference:', error);
-  }
-};
 
   const value: ThemeContextType = {
     theme,

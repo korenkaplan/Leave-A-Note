@@ -8,7 +8,7 @@ import { MainContext } from '../context/ContextProvider';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 import { emailSchema, passwordSchema } from '../utils/validation/validationSchemas';
 import { ThemeContext } from '../context/ThemeContext';
-import { IText, StyleButton } from '../utils/interfaces/interfaces';
+import { IText} from '../utils/interfaces/interfaces';
 import CustomButton from '../Components/uiComponents/CustomButton';
 import CustomInput from '../Components/uiComponents/CustomInput';
 import Toast from 'react-native-toast-message';
@@ -32,7 +32,6 @@ const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
-
   const { loginAttempt, setAuthenticated,showToast } = useContext(MainContext);
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors

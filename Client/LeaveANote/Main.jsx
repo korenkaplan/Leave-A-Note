@@ -16,7 +16,7 @@ export default function Main() {
     getUserById,
     setToken,
   } = useContext(MainContext);
-  const {theme, setTheme, lightTheme, darkTheme, buttonTheme} =
+  const { setTheme, lightTheme, darkTheme, buttonTheme} =
     useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true); // Add isLoading state
   const colorScheme = useColorScheme();
@@ -54,7 +54,6 @@ export default function Main() {
     // Render a loading indicator while data is being retrieved
     return <SplashScreen />;
   }
-
   return (
     <NavigationContainer>
       <StatusBar

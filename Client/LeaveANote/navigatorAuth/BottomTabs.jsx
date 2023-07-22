@@ -54,7 +54,7 @@ export default function BottomTabs() {
     };
     return (
       <Tab.Navigator
-        initialRouteName="Stats"
+        initialRouteName= {currentUser.role === 'admin'? "Stats": "Home"}
         screenOptions={({route}) => ({
           headerShown: false,
           tabBarShowLabel: false,

@@ -1,13 +1,12 @@
-import React, { useState, useContext, FC, useEffect,useRef} from 'react';
+import React, { useState, useContext, FC,useRef } from 'react';
 import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
-import { ListItem, Avatar, Button, Icon } from '@rneui/themed';
+import { ListItem,Button, Icon } from '@rneui/themed';
 import EmptyListAnimation from '../../Components/accidentsHistory/EmptyListAnimation';
 import { MainContext } from '../../context/ContextProvider';
 import { Accident, Theme } from '../../utils/interfaces/interfaces';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../context/ThemeContext';
 import { IText, StyleButton } from '../../utils/interfaces/interfaces';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import DropdownAlert from 'react-native-dropdownalert';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 const AccidentsHistory: FC = () => {
@@ -22,21 +21,21 @@ const AccidentsHistory: FC = () => {
   let dropDownAlertRef = useRef();
   const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt)
   const handleRefresh = async () => {
-      setRefreshing(true);
-      await refreshCurrantUser();
-      setRefreshing(false);
+    setRefreshing(true);
+    await refreshCurrantUser();
+    setRefreshing(false);
 
   };
   const handleInfoPress = (item: Accident) => {
-      navigation.navigate({name:item.type === 'note'?'NoteView':'ReportView' ,params: { item }});
+    navigation.navigate({ name: item.type === 'note' ? 'NoteView' : 'ReportView', params: { item } });
 
   };
   const handleDelete = async (index: number, id: string) => {
     const [isDeleted, message] = await deleteAccident(id);
-    const [messageToast,statusToast,headerToast] = isDeleted? [message,'success','Deleted Successfully 👋']:[message,'error','Failed to delete'];
+    const [messageToast, statusToast, headerToast] = isDeleted ? [message, 'success', 'Deleted Successfully 👋'] : [message, 'error', 'Failed to delete'];
     dropDownAlertRef.alertWithType(statusToast, headerToast, messageToast);
-    if (isDeleted) 
-    deleteMessageFromState(index);
+    if (isDeleted)
+      deleteMessageFromState(index);
   }
 
   const deleteMessageFromState = (index: number) => {
@@ -44,9 +43,9 @@ const AccidentsHistory: FC = () => {
     updatedMessages.splice(index, 1);
     setAccidents(updatedMessages);
   };
-  const formatTimestamp =(timestamp: Date): string => {
+  const formatTimestamp = (timestamp: Date): string => {
     const date = new Date(timestamp);
-    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit',hour12:false });
+    const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
     const formattedDate = date.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: 'numeric' });
     return `${formattedTime} ${formattedDate}`;
   }
@@ -84,10 +83,10 @@ const AccidentsHistory: FC = () => {
             <ListItem.Subtitle style={styles.Subtitle}>{accident.date}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron
-              size={35}
-              color={text.primary}
+            size={35}
+            color={text.primary}
 
-              />
+          />
         </ListItem.Swipeable>
       );
     } else {
@@ -130,23 +129,23 @@ const AccidentsHistory: FC = () => {
             <ListItem.Subtitle style={styles.Subtitle}>{accident.date}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron
-              size={35}
-              color={text.primary}
+            size={35}
+            color={text.primary}
 
-              />
+          />
         </ListItem.Swipeable>
       );
     }
   });
 
-  
+
   return (
-    <View style={{flex: 1}}>
-      <DividerWithText title='Your Accidents History'  fontSize={20} />
-    <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
-      {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
-    </ScrollView>
-    <DropdownAlert
+    <View style={{ flex: 1 }}>
+      <DividerWithText title='Your Accidents History' fontSize={20} />
+      <ScrollView contentContainerStyle={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
+        {accidents.length > 0 ? accidentsList : <EmptyListAnimation />}
+      </ScrollView>
+      <DropdownAlert
         ref={(ref) => {
           if (ref) {
             dropDownAlertRef = ref;
@@ -197,7 +196,7 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
       color: text.primary,
     },
     Subtitle: {
-      color:  text.primary,
+      color: text.primary,
     },
     item: {
       backgroundColor: background,

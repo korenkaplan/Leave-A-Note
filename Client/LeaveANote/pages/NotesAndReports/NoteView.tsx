@@ -2,14 +2,10 @@ import React,{useContext} from 'react';
 import {View, StyleSheet, Linking} from 'react-native';
 import { Image, ListItem,Icon } from '@rneui/themed';
 import { Button } from 'native-base';
-import { number } from 'yup';
 import { ThemeContext } from '../../context/ThemeContext';
-import ThemedView from '../../Components/uiComponents/ThemedView';
-import CustomButton from '../../Components/uiComponents/CustomButton';
 import { MessageProps } from '../../utils/interfaces/interfaces';
 import { StyleButton,IText } from '../../utils/interfaces/interfaces';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
-
 const NoteView: React.FC<MessageProps> = ( {route}) => {
   //const message = navigation.getParam('message','no message');
 
@@ -91,6 +87,7 @@ const moveToSmsDialog = () => {
             <Icon name="sms" type="font-awesome-5" color={buttonAlt.text} />
           </Button>
         </View>
+
     </View>
   );
 };
