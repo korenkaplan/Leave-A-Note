@@ -100,7 +100,7 @@ const handleSubmit = async ():Promise<void> =>{
           <Chip
           disabled={disableSendBtn}
           disabledStyle={styles.disableBtn}
-  title={disableSendBtn?'Add Photo' : 'Send Report'}
+  title={disableSendBtn?'Add Photo' : 'Send Note'}
   icon={{
     name: 'paper-plane',
     type: 'font-awesome',
