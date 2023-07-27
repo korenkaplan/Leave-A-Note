@@ -8,9 +8,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ThemeContext} from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
 import jwt_decode from 'jwt-decode';
-import messaging from '@react-native-firebase/messaging'
-import DropdownAlert from 'react-native-dropdownalert';
-
 export default function Main() {
   let dropDownAlertRef = useRef();
 
@@ -20,6 +17,7 @@ export default function Main() {
     setCurrentUser,
     getUserById,
     setToken,
+    updatedDeviceToken
   } = useContext(MainContext);
   const { setTheme, lightTheme, darkTheme, buttonTheme} =
     useContext(ThemeContext);
@@ -44,6 +42,7 @@ export default function Main() {
 
           if (currantUser != null) {
             setCurrentUser(currantUser);
+            await updatedDeviceToken(currantUser._id);
             setAuthenticated(true);
           }
         }
@@ -59,6 +58,8 @@ export default function Main() {
     // Render a loading indicator while data is being retrieved
     return <SplashScreen />;
   }
+
+
 
   return (
     <NavigationContainer>

@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
 import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports } from '../utils/interfaces/interfaces';
 import Toast from 'react-native-toast-message';
-
+import { requestUserPermission } from '../utils/notification/notificationHelper';
 interface MainContextType {
   currentUser: User | undefined;
   showError: boolean;
@@ -25,7 +25,7 @@ interface MainContextType {
   showToast:(message:string , status:string,header: string)=> void;
   submitNote: (note: NoteToSend) => Promise<boolean>;
   submitReport: (report: ReportToSend) => Promise<boolean>;
-  searchCarNumber: (carNumber: string) => Promise<boolean>;
+  searchCarNumber: (carNumber: string) => Promise<[boolean,string]>;
   loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
   signupAttempt: (newUser: SignUpFormValues) => Promise<[boolean,string,string?]>;
   handleLogOut: () => Promise<void>;
@@ -36,9 +36,11 @@ interface MainContextType {
   getUserById: (id: string, token: string) => Promise<User | null>; // get a user by Id and set CurrantUser state.
   deleteFromUnreadMessages: (messageId: string) => Promise<boolean>;
   autoLoginNewUser:(newToken: string) => Promise<void>;
+  updateDeviceToken:(userId: string) => Promise<void>;
   refreshCurrantUser:() => Promise<void>;
   registeredUsersData:(year: string) => Promise<[boolean,RegisteredUsersPerMonthAmount[]] >;
   reportsAndNotesDistributionData(): Promise<DistributionOfReports[]>
+  
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -54,6 +56,22 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const api: AxiosInstance = axios.create({
     baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
   });
+  
+ const updateDeviceTokenInDb = async (newToken: string,userId:string): Promise<void> => {
+  try {
+    const requestBody = {userId, newToken}
+    const response = await api.post('/users/updateDeviceToken',requestBody);
+    const responseData: IHttpResponse<void> = response.data;
+    if (responseData.tokenError) { handleTokenError() }
+  } catch (error:any) {
+    console.error("Error updating device token: " + error.message);
+  }
+};
+const updateDeviceToken =async (userId: string) => {
+  let updatedDeviceToken = await requestUserPermission();
+  if(updatedDeviceToken)
+  await updateDeviceTokenInDb(updatedDeviceToken,userId);
+};
 const reportsAndNotesDistributionData = async():Promise<DistributionOfReports[]> => {
 try {
     const requestBody ={
@@ -108,6 +126,7 @@ try {
         return false;
       }
       setCurrentUser(connectedUser);
+      await updateDeviceToken(connectedUser._id)
       return true;
     } catch (error) {
       return false;
@@ -187,24 +206,25 @@ try {
  * @param carNumber The car number to search for.
  * @returns A promise that resolves to a boolean indicating whether the car number was found.
  */ 
-  const searchCarNumber = async (carNumber: string): Promise<boolean> => {
+  const searchCarNumber = async (carNumber: string): Promise<[boolean,string]> => {
     const requestBody = {
       query: {
         carNumber
       },
       projection: {
         _id: 1,
+        deviceToken:1
       },
     };
     try {
       const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: `Bearer ${token}`, } });
       const responseData: IHttpResponse<User> = response.data;
       if (responseData.tokenError) { handleTokenError() }
-
-      return responseData.success;
+      const {success, data} = responseData;
+      return [success,data?.deviceToken || '']
     } catch (error: any) {
       console.log(error.response.data.error);
-      return false;
+      return [false,''];
     }
   };
 /**
@@ -441,7 +461,9 @@ try {
     }, 10000);
 
   };
+
   const value: MainContextType = {
+    updateDeviceToken,
     reportsAndNotesDistributionData,
     registeredUsersData,
     refreshCurrantUser,
@@ -473,6 +495,7 @@ try {
     showError,
     autoLoginNewUser
   };
+
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 }
 export default MainContextProvider;

@@ -11,8 +11,10 @@ import DividerWithText from '../../Components/uiComponents/DividerWithText';
 import SuccessModal from '../../Components/uiComponents/SuccessModal';
 import FailedModal from '../../Components/uiComponents/FailedModal';
 import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
+import { sendNotification } from '../../utils/notification/notificationHelper';
 interface Params {
   carNumber: string;
+  deviceTokenToSend:string;
   image: string;
 }
 interface Props {
@@ -20,8 +22,8 @@ interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
 const CreateNote: React.FC<Props> = ({ route, navigation }) => {
-  const { carNumber, image } = route.params;
-  const { carNumInput,submitNote, uploadPhotoToStorage} = useContext(MainContext);
+  const { carNumber, image, deviceTokenToSend } = route.params;
+  const { carNumInput,submitNote, uploadPhotoToStorage,currentUser} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
   const {theme,buttonTheme} = useContext(ThemeContext);
@@ -45,7 +47,11 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
       params:{'previous':'CreateNote'},
     });
   };
-
+  const handleNotification = () => {
+    let title = 'You Have A New Note';
+    let body = `${currentUser?.name} has left you a note`;
+    sendNotification(title, body,deviceTokenToSend);
+  };
 const handleSubmit = async ():Promise<void> =>{
   setIsLoading(true)
    const imageRef: string = await uploadPhotoToStorage(imgSource);
@@ -58,7 +64,13 @@ const handleSubmit = async ():Promise<void> =>{
       // send to context function the image url
   const isSent = await submitNote(note);
   setIsLoading(false)
-  isSent ? setIsVisibleSuccessModal(true) : setIsVisibleFailedModal(true);
+  if(isSent)
+  {
+    setIsVisibleSuccessModal(true)
+    handleNotification()
+  }
+  else
+  setIsVisibleFailedModal(true);
 
 };
 

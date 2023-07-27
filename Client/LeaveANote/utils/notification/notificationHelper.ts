@@ -3,36 +3,32 @@ import messaging from '@react-native-firebase/messaging'
 import {Accident} from '../interfaces/interfaces'
 import config from '../../config/index'
 
-//request permission for notification messages
-export const requestUserPermission = async () => {
+  /**
+ * Checks if there is permission to get notifications.
+ * if there is returns the most updated device token else returns null
+ * @returns DeviceToken || null
+ */
+export const requestUserPermission = async ():Promise<string | null> => {
     const authStatus = await messaging().requestPermission();
 
     const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-        getFcmToken();
+        return updateTokenInAsyncStorage();
     }
+    return null
 }
 //get FcmToken to send notification 
-export const getFcmToken = async () => {
-    let fcmToken = await AsyncStorage.getItem('fcmToken');
-    
-
-    if (!fcmToken) {
-        try {
-            let token = await messaging().getToken();
-            // console.log('token from getFcmToken():' + token);
-
-            if (token) {
-                await AsyncStorage.setItem('fcmToken', token);
-            }
-
-        } catch (error) {
-            console.log('can\'t get FcmToken');
-
+export const updateTokenInAsyncStorage = async ():Promise<string | null> => {
+    try {
+            let updatedToken = await messaging().getToken();
+            await AsyncStorage.setItem('fcmToken',updatedToken);
+            return updatedToken;
+        } catch (error: any) {
+            console.log('Error in function updateTokenInAsyncStorage:' + error.message);
+            return null;
         }
     }
-};
 //send notification
 export const sendNotification = async (notificationTitle:string,notificationBody:string, deviceToken:string) => {
 
@@ -61,5 +57,3 @@ const message = {
         console.log('Error sending message:', error);
     }
 };
-
-

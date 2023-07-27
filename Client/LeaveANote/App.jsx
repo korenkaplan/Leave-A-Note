@@ -15,23 +15,12 @@ import { Text } from '@rneui/base';
 import { Button } from '@rneui/themed';
 I18nManager.allowRTL(false);
 export default function App() {
-  const [token, setToken] = useState('')
   LogBox.ignoreLogs(['Require cycle: node_modules/victory']);
   let dropDownAlertRef = useRef();
   useEffect(() => {
     requestUserPermission();
-    getFcmToken();
     listenToForegroundNotifications()
   }, [])
-  
-  const getFcmToken = async () =>{
-    const token = await AsyncStorage.getItem('fcmToken')
-    if(token)
-    {
-      setToken(token)
-    }
-  }
-
   //foreground notification listener: will alert on new messages 
   const listenToForegroundNotifications = async () =>{
 // onMessage event handler for foreground notifications
@@ -43,6 +32,7 @@ messaging().onMessage(async remoteMessage => {
 });
 
   };
+
   const handlePress = () => {
     sendNotification('title123','body123','eVuAVLwzRIGxlYxBc1Npn7:APA91bFR2P8TWN8SNtWT-TfD7G_WYI2LQ9ThcMj3U36KZV2_8bhayuQ1tUNMSmMuQfmnZqEJrKRB3is23nJQRDcRIO1b_qcHP4SCLOom2_HBWajsFIXdmz1Y7tlAyXElSLum6XJcShQZ')
   }
