@@ -7,13 +7,14 @@ import { MainContext } from '../../context/ContextProvider';
 import { Chip, CheckBox } from '@rneui/themed';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { User } from '../../utils/interfaces/interfaces';
 import { ReportToSend, IText,StyleButton} from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
-import DividerWithText from '../../Components/uiComponents/DividerWithText';
 import SuccessModal from '../../Components/uiComponents/SuccessModal';
 import FailedModal from '../../Components/uiComponents/FailedModal';
 import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
 import { TouchableOpacity } from 'react-native';
+import { sendNotification } from '../../utils/notification/notificationHelper';
 interface Params {
   image: string;
 }
@@ -26,7 +27,7 @@ interface Props {
 const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
   const { image } = route.params;
-  const { setCarNumInput, submitReport, uploadPhotoToStorage } = useContext(MainContext);
+  const { setCarNumInput, submitReport, uploadPhotoToStorage, currentUser,getUserQuery } = useContext(MainContext);
   const [isLoading, setSetIsLoading] = useState(false)
   const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
   const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
@@ -79,22 +80,49 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       params: { 'previous': 'CreateReport' },
     });
   };
-
+  const handleNotification = async (deviceToken: string,name:string)=>{
+      let firstName = name.split(' ')[0];
+      let title = `Hello ${firstName} You Have A New Report!`;
+      let body = `${currentUser?.name || 'Someone'} has left you a Report`;
+      await sendNotification(title, body,deviceToken);
+  }
+  const getUserDetails = async (carNumber: string):Promise<User|null> =>{
+    const query = {carNumber};
+    const projection= {name: 1, deviceToken: 1};
+    return await getUserQuery(query,projection);
+    
+  };
   // handle the submit: cal function from context and show alert
   const handleFormSubmit = async (values: Values): Promise<void> => {
     try {
+      //start loading screen
        setSetIsLoading(true);
+       //save image to firebase storage and get back the image reference
       const imageRef: string = await uploadPhotoToStorage(imgSource);
+
+      //create the report object
       let report: ReportToSend = {
         imageUrl: imageRef,
         damagedCarNumber: values.damagedCarNumber,
         hittingCarNumber: values.hittingCarNumber,
         isAnonymous: isChecked,
       };
+
+      //submit the report to the server
       const isSent = await submitReport(report);
+      //close the loading screen by changing the state
        setSetIsLoading(false);
-      //show alert
+      //show the appropriate alert depending on the the response 
       isSent? setIsVisibleSuccessModal(true): setIsVisibleFailedModal(true);
+
+      //if it was sent successfully check if the user is identified
+      if(isSent)
+      {
+        const partialUser:User | null = await getUserDetails(values.damagedCarNumber)
+        //if the user is found send him a notification
+        if(partialUser)
+              handleNotification(partialUser.deviceToken, partialUser.name);
+      }
       //reset car number in context and clear fields
       setCarNumInput('');
     }

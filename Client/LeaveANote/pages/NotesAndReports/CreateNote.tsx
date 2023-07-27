@@ -14,7 +14,7 @@ import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
 import { sendNotification } from '../../utils/notification/notificationHelper';
 interface Params {
   carNumber: string;
-  deviceTokenToSend:string;
+  deviceToken:string;
   image: string;
 }
 interface Props {
@@ -22,8 +22,10 @@ interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
 const CreateNote: React.FC<Props> = ({ route, navigation }) => {
-  const { carNumber, image, deviceTokenToSend } = route.params;
-  const { carNumInput,submitNote, uploadPhotoToStorage,currentUser} = useContext(MainContext);
+  const [deviceToken, setDeviceToken] = useState('')
+  const [damagedCarNumber, setDamagedCarNumber] = useState('')
+  const [image, setImage] = useState('')
+  const { carNumInput,submitNote, uploadPhotoToStorage,currentUser,getUserQuery} = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
   const {theme,buttonTheme} = useContext(ThemeContext);
@@ -41,6 +43,18 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     }
   }, [image]);
 
+  useEffect(() => {
+ console.log('useEffect ' + route.params);
+ const { carNumber, image, deviceToken} = route.params;
+ if(deviceToken)
+ setDeviceToken(deviceToken)
+ if(carNumber)
+ setDamagedCarNumber(carNumber)
+ if(image)
+ setImage(image)  
+ console.log(carNumber, image, deviceToken);
+  }, [route.params])
+
   const openCamera = ():void => {
     navigation.navigate({
       name:'CameraComp',
@@ -51,14 +65,12 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     
     let title = 'You Have A New Note';
     let body = `${currentUser?.name} has left you a note`;
-    console.log('handleNotification: deviceTokenToSend: ' + deviceTokenToSend);
-    
-   await sendNotification(title, body,'eVuAVLwzRIGxlYxBc1Npn7:APA91bFR2P8TWN8SNtWT-TfD7G_WYI2LQ9ThcMj3U36KZV2_8bhayuQ1tUNMSmMuQfmnZqEJrKRB3is23nJQRDcRIO1b_qcHP4SCLOom2_HBWajsFIXdmz1Y7tlAyXElSLum6XJcShQZ');
+   await sendNotification(title, body,deviceToken);
   };
-const handleSubmit = async ():Promise<void> =>{
+  const handleSubmit = async ():Promise<void> =>{
   setIsLoading(true)
    const imageRef: string = await uploadPhotoToStorage(imgSource);
-  console.log(imageRef);
+   console.log(imageRef);
     
     let note: NoteToSend = {
       damagedCarNumber: carNumInput,

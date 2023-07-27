@@ -113,11 +113,16 @@ export default function Homepage({navigation}) {
     setCarNumInput(searchValue);
     navigation.navigate({
       name: 'CreateNote',
-      params: {carNumber: searchValue, deviceTokenToSend},
+      params: {carNumber: searchValue, deviceToken:deviceTokenToSend},
+      merge: true,
     });
   };
   const moveToReportPage = () => {
-    navigation.navigate('CreateReport', searchValue);
+    navigation.navigate({
+      name:'CreateReport',
+      params:{searchValue},
+      merge: true
+    });
     setSearchValue('');
   };
   const logOutAlert = () =>

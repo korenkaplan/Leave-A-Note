@@ -40,7 +40,7 @@ interface MainContextType {
   refreshCurrantUser: () => Promise<void>;
   registeredUsersData: (year: string) => Promise<[boolean, RegisteredUsersPerMonthAmount[]]>;
   reportsAndNotesDistributionData(): Promise<DistributionOfReports[]>
-
+  getUserQuery: (query:Partial<User> ,projection:object) => Promise<User | null>
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -56,7 +56,22 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const api: AxiosInstance = axios.create({
     baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
   });
-
+const getUserQuery = async (query:Partial<User> ,projection:object): Promise<User | null> => {
+  const requestBody = {
+    query: {...query},
+    projection: {...projection},
+  };
+  try {
+    const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: 'Bearer ' + token, } });
+    const responseData: IHttpResponse<User> = response.data;
+    if (responseData.tokenError) { handleTokenError() }
+    if (responseData.data === undefined) { return null; }
+    return responseData.data;
+  } catch (error: any) {
+    console.log(error.response.data.error);
+    return null;
+  }
+};
 
   const updateDeviceToken = async (userId: string) => {
     let updatedDeviceToken = await requestUserPermission();
@@ -471,6 +486,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   };
 
   const value: MainContextType = {
+    getUserQuery,
     updateDeviceToken,
     reportsAndNotesDistributionData,
     registeredUsersData,
