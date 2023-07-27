@@ -6,7 +6,7 @@ import {
   MESSAGING_SENDER_ID,
   APP_ID,
   MEASUREMENT_ID,
-  FIREBASE_SERVER_KEY,
+  SERVER_KEY,
 } from '@env';
 
 export default {
@@ -17,5 +17,5 @@ export default {
   MESSAGING_SENDER_ID,
   APP_ID,
   MEASUREMENT_ID,
-  FIREBASE_SERVER_KEY,
+  SERVER_KEY,
 };
