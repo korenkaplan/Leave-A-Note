@@ -123,23 +123,6 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
           />
 
           <Chip
-<<<<<<< HEAD
-          disabled={disableSendBtn}
-          disabledStyle={styles.disableBtn}
-  title={disableSendBtn?'Add Photo' : 'Send Note'}
-  icon={{
-    name: 'paper-plane',
-    type: 'font-awesome',
-    size: 20,
-    color: disableSendBtn? 'gray':buttonMain.text,
-  }}
-  onPress={handleSubmit}
-  type="outline"
-  containerStyle={styles.sendBtn}
-           titleStyle={styles.sendBtnTitle} // Add this line
-/>
-  </View>
-=======
             disabled={disableSendBtn}
             disabledStyle={styles.disableBtn}
             title={disableSendBtn ? 'Add Photo' : 'Send Note'}
@@ -155,7 +138,6 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
             titleStyle={styles.sendBtnTitle} // Add this line
           />
         </View>
->>>>>>> Dev
       </View>
       <SuccessModal body={`Your note was delivered to the owner of ${damagedCarNumber} `} onSwipe={() => navigation.navigate('Home')} isVisible={isVisibleSuccessModal} />
       <FailedModal body={`Oops its looks like we have a problem try again later...`} onSwipe={() => navigation.navigate('Home')} footerTitle='swipe home' isVisible={isVisibleFailedModal} />
