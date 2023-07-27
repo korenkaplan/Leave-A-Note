@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging'
-
+import {Accident} from '../interfaces/interfaces'
+import config from '../../config/index'
 //request permission for notification messages
 export const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
@@ -30,4 +31,11 @@ export const getFcmToken = async () => {
 
         }
     }
+};
+
+export const sendNotification = async (accident:Accident, deviceToken:string) => {
+let serverKey = config.FIREBASE_SERVER_KEY;
+
+
+
 };

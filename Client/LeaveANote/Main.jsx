@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {MainContext} from './context/ContextProvider';
 import {useColorScheme, StatusBar, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -8,7 +8,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ThemeContext} from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
 import jwt_decode from 'jwt-decode';
+import messaging from '@react-native-firebase/messaging'
+import DropdownAlert from 'react-native-dropdownalert';
+
 export default function Main() {
+  let dropDownAlertRef = useRef();
+
   const {
     authenticated,
     setAuthenticated,
@@ -47,13 +52,14 @@ export default function Main() {
         console.log(e);
       }
     };
+  
     getData();
   }, []);
-
   if (isLoading) {
     // Render a loading indicator while data is being retrieved
     return <SplashScreen />;
   }
+
   return (
     <NavigationContainer>
       <StatusBar
