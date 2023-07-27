@@ -27,7 +27,7 @@ interface MainContextType {
   submitReport: (report: ReportToSend) => Promise<boolean>;
   searchCarNumber: (carNumber: string) => Promise<[boolean,string]>;
   loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
-  signupAttempt: (newUser: SignUpFormValues) => Promise<[boolean,string,string?]>;
+  signupAttempt: (newUser: SignUpFormValues, deviceToken:string) => Promise<[boolean,string,string?]>;
   handleLogOut: () => Promise<void>;
   uploadPhotoToStorage: (uri: string) => Promise<string>;
   updateUserInformation: (data: UserDataToUpdate) => Promise<[boolean, string]>;
@@ -69,7 +69,6 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
 };
 const updateDeviceToken =async (userId: string) => {
   let updatedDeviceToken = await requestUserPermission();
-  if(updatedDeviceToken)
   await updateDeviceTokenInDb(updatedDeviceToken,userId);
 };
 const reportsAndNotesDistributionData = async():Promise<DistributionOfReports[]> => {
@@ -138,14 +137,15 @@ try {
  * @returns A promise that resolves to a tuple containing a boolean indicating whether the sign up was successful,
  *          a string with a success/error message, and an optional error message if the sign up failed.
  */
-  const signupAttempt = async (newUser: SignUpFormValues): Promise<[boolean,string,string?]> => {
+  const signupAttempt = async (newUser: SignUpFormValues,deviceToken:string): Promise<[boolean,string,string?]> => {
     try {
       const requestBody= {
         name: newUser.name,
         email: newUser.email,
         password: newUser.password,
         carNumber:newUser.carNumber,
-        phoneNumber:newUser.phoneNumber
+        phoneNumber:newUser.phoneNumber,
+        deviceToken
       }
       const response = await api.post('/users/register',requestBody);
       const responseData: IHttpResponse<string>= response.data;

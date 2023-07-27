@@ -6,9 +6,9 @@ import config from '../../config/index'
   /**
  * Checks if there is permission to get notifications.
  * if there is returns the most updated device token else returns null
- * @returns DeviceToken || null
+ * @returns DeviceToken | null
  */
-export const requestUserPermission = async ():Promise<string | null> => {
+export const requestUserPermission = async ():Promise<string> => {
     const authStatus = await messaging().requestPermission();
 
     const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
@@ -16,17 +16,22 @@ export const requestUserPermission = async ():Promise<string | null> => {
     if (enabled) {
         return updateTokenInAsyncStorage();
     }
-    return null
+    return ''
 }
 //get FcmToken to send notification 
-export const updateTokenInAsyncStorage = async ():Promise<string | null> => {
+  /**
+ * Get the most updated Device token and set it to Async Storage and return the token.
+ * if there is an error, return null
+ * @returns DeviceToken : string | null
+ */
+export const updateTokenInAsyncStorage = async (): Promise<string> => {
     try {
             let updatedToken = await messaging().getToken();
             await AsyncStorage.setItem('fcmToken',updatedToken);
             return updatedToken;
         } catch (error: any) {
             console.log('Error in function updateTokenInAsyncStorage:' + error.message);
-            return null;
+            return '';
         }
     }
 //send notification
