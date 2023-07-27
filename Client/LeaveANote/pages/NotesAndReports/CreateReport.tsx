@@ -8,7 +8,7 @@ import { Chip, CheckBox } from '@rneui/themed';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { User } from '../../utils/interfaces/interfaces';
-import { ReportToSend, IText,StyleButton} from '../../utils/interfaces/interfaces';
+import { ReportToSend, IText, StyleButton } from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
 import SuccessModal from '../../Components/uiComponents/SuccessModal';
 import FailedModal from '../../Components/uiComponents/FailedModal';
@@ -27,7 +27,7 @@ interface Props {
 const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
   const { image } = route.params;
-  const { setCarNumInput, submitReport, uploadPhotoToStorage, currentUser,getUserQuery } = useContext(MainContext);
+  const { setCarNumInput, submitReport, uploadPhotoToStorage, currentUser, getUserQuery } = useContext(MainContext);
   const [isLoading, setSetIsLoading] = useState(false)
   const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
   const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
@@ -36,10 +36,10 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'); // the image source starts with en empty iamge
   const [keyboardOpen, setKeyboardOpen] = useState<boolean>(false); // holds the boolean value if the keyboard is open or not
   enum Size { AvatarBig = 250, AvatarSmall = 150, AvatarAccessoryBig = 60, AvatarAccessorySmall = 40 };// enum for sizes of the avatar when the keyboard is open / closed
-  const {theme,buttonTheme} = useContext(ThemeContext);
-  const {buttonMain,buttonAlt}= buttonTheme;
-  const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background,buttonMain,buttonAlt)
+  const { theme, buttonTheme } = useContext(ThemeContext);
+  const { buttonMain, buttonAlt } = buttonTheme;
+  const { primary, secondary, text, background } = theme.colors
+  const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt)
   // create the schema for the values object of formik
   type Values = {
     damagedCarNumber: string,
@@ -80,24 +80,24 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       params: { 'previous': 'CreateReport' },
     });
   };
-  const handleNotification = async (deviceToken: string,name:string)=>{
-      let firstName = name.split(' ')[0];
-      let title = `Hello ${firstName} You Have A New Report!`;
-      let body = `${currentUser?.name || 'Someone'} has left you a Report`;
-      await sendNotification(title, body,deviceToken);
+  const handleNotification = async (deviceToken: string, name: string) => {
+    let firstName = name.split(' ')[0];
+    let title = `Hello ${firstName} You Have A New Report!`;
+    let body = `${currentUser?.name || 'Someone'} has left you a Report`;
+    await sendNotification(title, body, deviceToken);
   }
-  const getUserDetails = async (carNumber: string):Promise<User|null> =>{
-    const query = {carNumber};
-    const projection= {name: 1, deviceToken: 1};
-    return await getUserQuery(query,projection);
-    
+  const getUserDetails = async (carNumber: string): Promise<User | null> => {
+    const query = { carNumber };
+    const projection = { name: 1, deviceToken: 1 };
+    return await getUserQuery(query, projection);
+
   };
   // handle the submit: cal function from context and show alert
   const handleFormSubmit = async (values: Values): Promise<void> => {
     try {
       //start loading screen
-       setSetIsLoading(true);
-       //save image to firebase storage and get back the image reference
+      setSetIsLoading(true);
+      //save image to firebase storage and get back the image reference
       const imageRef: string = await uploadPhotoToStorage(imgSource);
 
       //create the report object
@@ -111,17 +111,16 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       //submit the report to the server
       const isSent = await submitReport(report);
       //close the loading screen by changing the state
-       setSetIsLoading(false);
+      setSetIsLoading(false);
       //show the appropriate alert depending on the the response 
-      isSent? setIsVisibleSuccessModal(true): setIsVisibleFailedModal(true);
+      isSent ? setIsVisibleSuccessModal(true) : setIsVisibleFailedModal(true);
 
       //if it was sent successfully check if the user is identified
-      if(isSent)
-      {
-        const partialUser:User | null = await getUserDetails(values.damagedCarNumber)
+      if (isSent) {
+        const partialUser: User | null = await getUserDetails(values.damagedCarNumber)
         //if the user is found send him a notification
-        if(partialUser)
-              handleNotification(partialUser.deviceToken, partialUser.name);
+        if (partialUser)
+          handleNotification(partialUser.deviceToken, partialUser.name);
       }
       //reset car number in context and clear fields
       setCarNumInput('');
@@ -144,7 +143,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       'Both car numbers cannot be identical'
     ),
   });
-  const navigateHome = () =>{
+  const navigateHome = () => {
     navigation.navigate('Home')
   }
   return (
@@ -212,9 +211,9 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
                 titleProps={{ style: { color: text.primary, marginLeft: 10, } }} // Specify the desired color for the title text
               />
 
-       
-            <Chip
-            onPress={()=>handleSubmit()}
+
+              <Chip
+                onPress={() => handleSubmit()}
                 disabled={disableSendBtn}
                 disabledStyle={styles.disableBtn}
                 title={disableSendBtn ? 'Add Photo' : 'Send Report'}
@@ -233,13 +232,12 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
         </Formik>
       </View>
       <CustomSpinner title='creating report' isVisible={isLoading} />
-      <SuccessModal body={`Thank you your report was delivered`} onSwipe={navigateHome} isVisible={isVisibleSuccessModal}/>
-      <FailedModal  body={`Oops its looks like we have a problem try again later...`} onSwipe={navigateHome} footerTitle='swipe home' isVisible={isVisibleFailedModal}/>
+      <SuccessModal body={`Thank you your report was delivered`} onSwipe={navigateHome} isVisible={isVisibleSuccessModal} />
+      <FailedModal body={`Oops its looks like we have a problem try again later...`} onSwipe={navigateHome} footerTitle='swipe home' isVisible={isVisibleFailedModal} />
     </View>
   );
 };
-
-const createStyles = (primary: string, secondary: string, text: IText, background: string,buttonMain:StyleButton,buttonAlt: StyleButton) =>
+const createStyles = (primary: string, secondary: string, text: IText, background: string, buttonMain: StyleButton, buttonAlt: StyleButton) =>
   StyleSheet.create({
     error: {
       marginTop: -20,
@@ -261,7 +259,7 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
       backgroundColor: 'lightgray',
     },
     sendBtn: {
-      backgroundColor:  buttonMain.background,
+      backgroundColor: buttonMain.background,
       alignSelf: 'center',
       minWidth: '50%',
     },
@@ -270,7 +268,7 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
     },
     bottomContainer: {
       flex: 1,
-      backgroundColor:background,
+      backgroundColor: background,
       paddingTop: 10
     },
 

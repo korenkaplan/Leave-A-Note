@@ -1,11 +1,11 @@
-import { Avatar} from '@rneui/base';
-import React, { useState,useEffect,useContext } from 'react';
-import { View,StyleSheet, Alert} from 'react-native';
-import {RouteProp } from '@react-navigation/native';
+import { Avatar } from '@rneui/base';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, StyleSheet, Alert } from 'react-native';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainContext } from '../../context/ContextProvider';
 import { Chip } from '@rneui/themed';
-import { NoteToSend, IText,StyleButton} from '../../utils/interfaces/interfaces';
+import { NoteToSend, IText, StyleButton } from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 import SuccessModal from '../../Components/uiComponents/SuccessModal';
@@ -14,7 +14,7 @@ import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
 import { sendNotification } from '../../utils/notification/notificationHelper';
 interface Params {
   carNumber: string;
-  deviceToken:string;
+  deviceToken: string;
   image: string;
 }
 interface Props {
@@ -25,16 +25,16 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const [deviceToken, setDeviceToken] = useState('')
   const [damagedCarNumber, setDamagedCarNumber] = useState('')
   const [image, setImage] = useState('')
-  const { carNumInput,submitNote, uploadPhotoToStorage,currentUser,getUserQuery} = useContext(MainContext);
+  const {submitNote, uploadPhotoToStorage, currentUser } = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
-  const {theme,buttonTheme} = useContext(ThemeContext);
-  const {buttonMain,buttonAlt}= buttonTheme;
+  const { theme, buttonTheme } = useContext(ThemeContext);
+  const { buttonMain, buttonAlt } = buttonTheme;
   const [isLoading, setIsLoading] = useState(false)
   const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
   const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
-  const {primary,secondary,text,background} = theme.colors
-  const styles = createStyles(primary,secondary,text,background,buttonMain,buttonAlt)
+  const { primary, secondary, text, background } = theme.colors
+  const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt)
 
   useEffect(() => {
     if (image) {
@@ -44,113 +44,111 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   }, [image]);
 
   useEffect(() => {
- console.log('useEffect ' + route.params);
- const { carNumber, image, deviceToken} = route.params;
- if(deviceToken)
- setDeviceToken(deviceToken)
- if(carNumber)
- setDamagedCarNumber(carNumber)
- if(image)
- setImage(image)  
- console.log(carNumber, image, deviceToken);
+    console.log('useEffect ' + route.params);
+    const { carNumber, image, deviceToken } = route.params;
+    if (deviceToken)
+      setDeviceToken(deviceToken)
+    if (carNumber)
+      setDamagedCarNumber(carNumber)
+    if (image)
+      setImage(image)
+    console.log(carNumber, image, deviceToken);
   }, [route.params])
 
-  const openCamera = ():void => {
+  const openCamera = (): void => {
     navigation.navigate({
-      name:'CameraComp',
-      params:{'previous':'CreateNote'},
+      name: 'CameraComp',
+      params: { 'previous': 'CreateNote' },
     });
   };
   const handleNotification = async () => {
-    
+
     let title = 'You Have A New Note';
     let body = `${currentUser?.name} has left you a note`;
-   await sendNotification(title, body,deviceToken);
+    await sendNotification(title, body, deviceToken);
   };
-  const handleSubmit = async ():Promise<void> =>{
-  setIsLoading(true)
-   const imageRef: string = await uploadPhotoToStorage(imgSource);
-   console.log(imageRef);
-    
+  const handleSubmit = async (): Promise<void> => {
+    setIsLoading(true)
+    const imageRef: string = await uploadPhotoToStorage(imgSource);
+    console.log('damagedCarNumber: '+ damagedCarNumber);
+
     let note: NoteToSend = {
-      damagedCarNumber: carNumInput,
+      damagedCarNumber: damagedCarNumber,
       imageSource: imageRef,
     };
-      // send to context function the image url
-  const isSent = await submitNote(note);
-  setIsLoading(false)
-  if(isSent)
-  {
-    setIsVisibleSuccessModal(true)
-    await handleNotification()
-  }
-  else
-  setIsVisibleFailedModal(true);
+    // send to context function the image url
+    const isSent = await submitNote(note);
+    setIsLoading(false)
+    if (isSent) {
+      setIsVisibleSuccessModal(true)
+      await handleNotification()
+    }
+    else
+      setIsVisibleFailedModal(true);
 
-};
+  };
 
   return (
     <View style={styles.MainContainer}>
-          
-      <View  style={styles.topContainer}>
+      <View style={styles.topContainer}>
         <Avatar
-  size={300}
-  rounded
-  source={{ uri: imgSource }}
-  containerStyle={styles.avatar}
->
-  <Avatar.Accessory
-    size={60}
-    name="camera"
-    onPress={openCamera }
-    style={styles.avatarAccessory}
-  />
-  
-</Avatar>
+          size={300}
+          rounded
+          source={{ uri: imgSource }}
+          containerStyle={styles.avatar}
+        >
+          <Avatar.Accessory
+            size={60}
+            name="camera"
+            onPress={openCamera}
+            style={styles.avatarAccessory}
+          />
+
+        </Avatar>
       </View>
       <View style={styles.bottomContainer}>
-      <DividerWithText height={2} fontSize={20}  title ={disableSendBtn?'Take  📸 and send the note':'great now hit the send button'}/>
-      <View >
-      <Chip
-  title={`Car Number ${carNumInput}`}
-  icon={{
-    name: 'car',
-    type: 'font-awesome',
-    size: 20,
-    color: text.primary,
-  }}
-  color={background}
-  containerStyle={styles.chip}
-  titleStyle={styles.chipTitle}
-/>
+        <DividerWithText height={2} fontSize={20} title={disableSendBtn ? 'Take  📸 and send the note' : 'great now hit the send button'} />
+        <View >
+          <Chip
+            title={`Car Number ${damagedCarNumber}`}
+            icon={{
+              name: 'car',
+              type: 'font-awesome',
+              size: 20,
+              color: text.primary,
+            }}
+            color={background}
+            containerStyle={styles.chip}
+            titleStyle={styles.chipTitle}
+          />
 
           <Chip
-          disabled={disableSendBtn}
-          disabledStyle={styles.disableBtn}
-  title={disableSendBtn?'Add Photo' : 'Send Note'}
-  icon={{
-    name: 'paper-plane',
-    type: 'font-awesome',
-    size: 20,
-    color: disableSendBtn? 'gray':buttonMain.text,
-  }}
-  onPress={handleSubmit}
-  type="outline"
-  containerStyle={styles.sendBtn}
-           titleStyle={styles.sendBtnTitle} // Add this line
-/>
-  </View>
+            disabled={disableSendBtn}
+            disabledStyle={styles.disableBtn}
+            title={disableSendBtn ? 'Add Photo' : 'Send Note'}
+            icon={{
+              name: 'paper-plane',
+              type: 'font-awesome',
+              size: 20,
+              color: disableSendBtn ? 'gray' : buttonMain.text,
+            }}
+            onPress={handleSubmit}
+            type="outline"
+            containerStyle={styles.sendBtn}
+            titleStyle={styles.sendBtnTitle} // Add this line
+          />
+        </View>
       </View>
-      <SuccessModal body={`Your note was delivered to the owner of ${carNumInput} `} onSwipe={()=>navigation.navigate('Home')} isVisible={isVisibleSuccessModal}/>
-      <FailedModal  body={`Oops its looks like we have a problem try again later...`} onSwipe={()=>navigation.navigate('Home')} footerTitle='swipe home' isVisible={isVisibleFailedModal}/>
+      <SuccessModal body={`Your note was delivered to the owner of ${damagedCarNumber} `} onSwipe={() => navigation.navigate('Home')} isVisible={isVisibleSuccessModal} />
+      <FailedModal body={`Oops its looks like we have a problem try again later...`} onSwipe={() => navigation.navigate('Home')} footerTitle='swipe home' isVisible={isVisibleFailedModal} />
       <CustomSpinner title='creating note' isVisible={isLoading} />
     </View>
   );
 };
 
-const createStyles = (primary: string, secondary: string, text: IText, background: string,buttonMain:StyleButton,buttonAlt:StyleButton) =>  StyleSheet.create({
-  disableBtn:{
-    backgroundColor:'lightgray',
+const createStyles = (primary: string, secondary: string, text: IText, background: string, buttonMain: StyleButton, buttonAlt: StyleButton) => StyleSheet.create({
+  disableBtn: {
+    backgroundColor: 'lightgray',
     borderColor: text.primary,
 
 
@@ -167,10 +165,10 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
   sendBtnTitle: {
     color: buttonMain.text,
   },
-  bottomContainer:{
-    flex:1,
-    backgroundColor:background,
-    
+  bottomContainer: {
+    flex: 1,
+    backgroundColor: background,
+
   },
   chip: {
     margin: 30,
@@ -178,7 +176,7 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
     borderColor: text.primary,
     borderWidth: 2,
   },
-  
+
   chipTitle: {
     color: text.primary,
   },
@@ -203,9 +201,9 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
     borderColor: text.primary,
     borderWidth: 2,
   },
-  topContainer:{
-    height:'50%',
-    width:'100%',
+  topContainer: {
+    height: '50%',
+    width: '100%',
     justifyContent: 'center',
   },
   CameraComp: {
