@@ -35,6 +35,7 @@ export default function Homepage({navigation}) {
     currentUser,
   } = useContext(MainContext);
   const [searchValue, setSearchValue] = useState('');
+  const [deviceTokenToSend, setDeviceTokenToSend] = useState('');
   const [error, setError] = useState('');
   const [iconName, setIconName] = useState('search');
   const [isNumberValid, setIsNumberValid] = useState(false);
@@ -96,11 +97,12 @@ export default function Homepage({navigation}) {
    */
   const handleSearchPress = async () => {
     setIsLoading(true); // Set loading state to true
-    const isUserExists = await searchCarNumber(searchValue);
+    const [isUserExists, deviceToken] = await searchCarNumber(searchValue);
     setIsLoading(false); // Set loading state to true
     if (isUserExists) {
       setIconName('check');
       setIsNumberValid(true);
+      setDeviceTokenToSend(deviceToken);
     } else {
       setIconName('error');
       setError('Car number not found');
@@ -111,12 +113,16 @@ export default function Homepage({navigation}) {
     setCarNumInput(searchValue);
     navigation.navigate({
       name: 'CreateNote',
-      params: {carNumber: searchValue},
+      params: {carNumber: searchValue, deviceToken:deviceTokenToSend},
+      merge: true,
     });
-    //setSearchValue('');
   };
   const moveToReportPage = () => {
-    navigation.navigate('CreateReport', searchValue);
+    navigation.navigate({
+      name:'CreateReport',
+      params:{searchValue},
+      merge: true
+    });
     setSearchValue('');
   };
   const logOutAlert = () =>
@@ -180,9 +186,7 @@ export default function Homepage({navigation}) {
             title={'Report'}
           />
         </View>
-
       </ScrollView>
-
     </ThemedView>
   );
 }

@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
 import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports } from '../utils/interfaces/interfaces';
 import Toast from 'react-native-toast-message';
-
+import { requestUserPermission } from '../utils/notification/notificationHelper';
 interface MainContextType {
   currentUser: User | undefined;
   showError: boolean;
@@ -22,12 +22,12 @@ interface MainContextType {
   setDamagedUserId: React.Dispatch<React.SetStateAction<string>>;
   token: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
-  showToast:(message:string , status:string,header: string)=> void;
+  showToast: (message: string, status: string, header: string) => void;
   submitNote: (note: NoteToSend) => Promise<boolean>;
   submitReport: (report: ReportToSend) => Promise<boolean>;
-  searchCarNumber: (carNumber: string) => Promise<boolean>;
+  searchCarNumber: (carNumber: string) => Promise<[boolean, string]>;
   loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
-  signupAttempt: (newUser: SignUpFormValues) => Promise<[boolean,string,string?]>;
+  signupAttempt: (newUser: SignUpFormValues, deviceToken: string) => Promise<[boolean, string, string?]>;
   handleLogOut: () => Promise<void>;
   uploadPhotoToStorage: (uri: string) => Promise<string>;
   updateUserInformation: (data: UserDataToUpdate) => Promise<[boolean, string]>;
@@ -35,10 +35,12 @@ interface MainContextType {
   deleteAccident: (messageId: string) => Promise<[boolean, string]>;
   getUserById: (id: string, token: string) => Promise<User | null>; // get a user by Id and set CurrantUser state.
   deleteFromUnreadMessages: (messageId: string) => Promise<boolean>;
-  autoLoginNewUser:(newToken: string) => Promise<void>;
-  refreshCurrantUser:() => Promise<void>;
-  registeredUsersData:(year: string) => Promise<[boolean,RegisteredUsersPerMonthAmount[]] >;
+  autoLoginNewUser: (newToken: string) => Promise<void>;
+  updateDeviceToken: (userId: string) => Promise<void>;
+  refreshCurrantUser: () => Promise<void>;
+  registeredUsersData: (year: string) => Promise<[boolean, RegisteredUsersPerMonthAmount[]]>;
   reportsAndNotesDistributionData(): Promise<DistributionOfReports[]>
+  getUserQuery: (query:Partial<User> ,projection:object) => Promise<User | null>
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -54,34 +56,55 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const api: AxiosInstance = axios.create({
     baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
   });
-const reportsAndNotesDistributionData = async():Promise<DistributionOfReports[]> => {
-try {
-    const requestBody ={
-      role:currentUser?.role
-    }
-    const response = await api.post(`stats/reportsDistribution`,requestBody,{headers: {Authorization: 'Bearer ' + token}})
-    const responseData:IHttpResponse<DistributionOfReports[]> = response.data
-    const {data}:IHttpResponse<DistributionOfReports[]> = responseData
-    return data? data : []
-} catch (error:any) {
-  console.error(error.message);
-  return []
-}
+const getUserQuery = async (query:Partial<User> ,projection:object): Promise<User | null> => {
+  const requestBody = {
+    query: {...query},
+    projection: {...projection},
+  };
+  try {
+    const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: 'Bearer ' + token, } });
+    const responseData: IHttpResponse<User> = response.data;
+    if (responseData.tokenError) { handleTokenError() }
+    if (responseData.data === undefined) { return null; }
+    return responseData.data;
+  } catch (error: any) {
+    console.log(error.response.data.error);
+    return null;
+  }
 };
-const registeredUsersData =async (year: string):Promise<[boolean,RegisteredUsersPerMonthAmount[]]> => {
-try {
-    const requestBody ={
-      year:year,
-      role:currentUser!.role
+
+  const updateDeviceToken = async (userId: string) => {
+    let updatedDeviceToken = await requestUserPermission();
+    await updateDeviceTokenInDb(updatedDeviceToken, userId);
+  };
+  const reportsAndNotesDistributionData = async (): Promise<DistributionOfReports[]> => {
+    try {
+      const requestBody = {
+        role: currentUser?.role
+      }
+      const response = await api.post(`stats/reportsDistribution`, requestBody, { headers: { Authorization: 'Bearer ' + token } })
+      const responseData: IHttpResponse<DistributionOfReports[]> = response.data
+      const { data }: IHttpResponse<DistributionOfReports[]> = responseData
+      return data ? data : []
+    } catch (error: any) {
+      console.error(error.message);
+      return []
     }
-  const response: AxiosResponse = await api.post(`/stats/registeredUsersData`,requestBody,{ headers:{ Authorization: 'Bearer ' + token, } });
-  const responseData: IHttpResponse<RegisteredUsersPerMonthAmount[]> = response.data;
-   return responseData.data? [true,responseData.data]: [false,[]];
-} catch (error: any) {
-  console.error(error.message);
-  return [false,[]]
-}
-}
+  };
+  const registeredUsersData = async (year: string): Promise<[boolean, RegisteredUsersPerMonthAmount[]]> => {
+    try {
+      const requestBody = {
+        year: year,
+        role: currentUser!.role
+      }
+      const response: AxiosResponse = await api.post(`/stats/registeredUsersData`, requestBody, { headers: { Authorization: 'Bearer ' + token, } });
+      const responseData: IHttpResponse<RegisteredUsersPerMonthAmount[]> = response.data;
+      return responseData.data ? [true, responseData.data] : [false, []];
+    } catch (error: any) {
+      console.error(error.message);
+      return [false, []]
+    }
+  }
   /**
  * Attempts to log in the user.
  * @param email The user's email.
@@ -108,33 +131,35 @@ try {
         return false;
       }
       setCurrentUser(connectedUser);
+      await updateDeviceToken(connectedUser._id)
       return true;
     } catch (error) {
       return false;
     }
   };
-/**
- * Attempts to sign up a new user.
- * @param newUser The new user's sign up form values.
- * @returns A promise that resolves to a tuple containing a boolean indicating whether the sign up was successful,
- *          a string with a success/error message, and an optional error message if the sign up failed.
- */
-  const signupAttempt = async (newUser: SignUpFormValues): Promise<[boolean,string,string?]> => {
+  /**
+   * Attempts to sign up a new user.
+   * @param newUser The new user's sign up form values.
+   * @returns A promise that resolves to a tuple containing a boolean indicating whether the sign up was successful,
+   *          a string with a success/error message, and an optional error message if the sign up failed.
+   */
+  const signupAttempt = async (newUser: SignUpFormValues, deviceToken: string): Promise<[boolean, string, string?]> => {
     try {
-      const requestBody= {
+      const requestBody = {
         name: newUser.name,
         email: newUser.email,
         password: newUser.password,
-        carNumber:newUser.carNumber,
-        phoneNumber:newUser.phoneNumber
+        carNumber: newUser.carNumber,
+        phoneNumber: newUser.phoneNumber,
+        deviceToken
       }
-      const response = await api.post('/users/register',requestBody);
-      const responseData: IHttpResponse<string>= response.data;
-      return responseData.success? [true,responseData.message,responseData.data]: [false,responseData.error!];
-  
+      const response = await api.post('/users/register', requestBody);
+      const responseData: IHttpResponse<string> = response.data;
+      return responseData.success ? [true, responseData.message, responseData.data] : [false, responseData.error!];
+
     } catch (error: any) {
       return [false, error.response.data.error]
-      
+
     }
 
 
@@ -144,24 +169,23 @@ try {
  * Automatically logs in a new user using the provided token.
  * @param newToken The token of the new user from the server.
  */
-  const autoLoginNewUser = async (newToken:string)=>{
-    await AsyncStorage.setItem('connectedUser',newToken)
-    const decoded:Token = jwt_decode(newToken);
+  const autoLoginNewUser = async (newToken: string) => {
+    await AsyncStorage.setItem('connectedUser', newToken)
+    const decoded: Token = jwt_decode(newToken);
     setToken(newToken)
-    const currantUser = await getUserById(decoded.id,newToken);
-    
-    if(currantUser != null)
-    {
+    const currantUser = await getUserById(decoded.id, newToken);
+
+    if (currantUser != null) {
       setCurrentUser(currantUser);
       setAuthenticated(true);
     }
   }
-/**
- * Retrieves a user by their ID.
- * @param id The ID of the user.
- * @param token The currant user's authentication token.
- * @returns A promise that resolves to a User object or null if the user is not found.
- */ 
+  /**
+   * Retrieves a user by their ID.
+   * @param id The ID of the user.
+   * @param token The currant user's authentication token.
+   * @returns A promise that resolves to a User object or null if the user is not found.
+   */
   const getUserById = async (id: string, token: string): Promise<User | null> => {
     const requestBody = {
       query: {
@@ -182,36 +206,37 @@ try {
       return null;
     }
   };
- /**
- * Searches for a user's car number.
- * @param carNumber The car number to search for.
- * @returns A promise that resolves to a boolean indicating whether the car number was found.
- */ 
-  const searchCarNumber = async (carNumber: string): Promise<boolean> => {
+  /**
+  * Searches for a user's car number.
+  * @param carNumber The car number to search for.
+  * @returns A promise that resolves to a boolean indicating whether the car number was found.
+  */
+  const searchCarNumber = async (carNumber: string): Promise<[boolean, string]> => {
     const requestBody = {
       query: {
         carNumber
       },
       projection: {
         _id: 1,
+        deviceToken: 1
       },
     };
     try {
       const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: `Bearer ${token}`, } });
       const responseData: IHttpResponse<User> = response.data;
       if (responseData.tokenError) { handleTokenError() }
-
-      return responseData.success;
+      const { success, data } = responseData;
+      return [success, data?.deviceToken || '']
     } catch (error: any) {
       console.log(error.response.data.error);
-      return false;
+      return [false, ''];
     }
   };
-/**
- * Submits a new note.
- * @param note The note to submit.
- * @returns A promise that resolves to a boolean indicating whether the note submission was successful.
- */
+  /**
+   * Submits a new note.
+   * @param note The note to submit.
+   * @returns A promise that resolves to a boolean indicating whether the note submission was successful.
+   */
   const submitNote = async (note: NoteToSend): Promise<boolean> => {
     if (!currentUser) { return false; }
     const requestBody = {
@@ -235,11 +260,11 @@ try {
       return false;
     }
   };
-/**
- * Submits a new report.
- * @param report The report to submit.
- * @returns A promise that resolves to a boolean indicating whether the report submission was successful.
- */
+  /**
+   * Submits a new report.
+   * @param report The report to submit.
+   * @returns A promise that resolves to a boolean indicating whether the report submission was successful.
+   */
   const submitReport = async (report: ReportToSend): Promise<boolean> => {
     try {
       if (!currentUser) { return false; }
@@ -264,10 +289,10 @@ try {
       return false;
     }
   };
- /**
- * Handles the token error by showing a dialog and logging out the user.
- * @returns A promise that resolves to void.
- */
+  /**
+  * Handles the token error by showing a dialog and logging out the user.
+  * @returns A promise that resolves to void.
+  */
   async function handleTokenError(): Promise<void> {
     // show the dialog 
     handleLogOut();
@@ -297,32 +322,32 @@ try {
       return error.message;
     }
   };
-/**
- * Handles the user logout by removing the token from async storage and setting authenticated to false.
- * @returns A promise that resolves to void.
- */
+  /**
+   * Handles the user logout by removing the token from async storage and setting authenticated to false.
+   * @returns A promise that resolves to void.
+   */
   const handleLogOut = async (): Promise<void> => {
     await AsyncStorage.removeItem('connectedUser');
     setAuthenticated(false);
   };
-/**
- * Updates the remember me value and stores the token in async storage if checked.
- * @param rememberMeValue Whether to remember the user's login.
- * @param token The user's authentication token.
- * @returns A promise that resolves to void.
- */
+  /**
+   * Updates the remember me value and stores the token in async storage if checked.
+   * @param rememberMeValue Whether to remember the user's login.
+   * @param token The user's authentication token.
+   * @returns A promise that resolves to void.
+   */
   const updateRememberMe = async (rememberMeValue: boolean, token: string): Promise<void> => {
     if (rememberMeValue)
       storeObject('connectedUser', token)
     else
       AsyncStorage.removeItem('connectedUser');
   };
- /**
- * Stores an object in async storage with the specified key and value.
- * @param key The key of the object.
- * @param value The value of the object.
- * @returns A promise that resolves to void.
- */
+  /**
+  * Stores an object in async storage with the specified key and value.
+  * @param key The key of the object.
+  * @param value The value of the object.
+  * @returns A promise that resolves to void.
+  */
   const storeObject = async (key: string, value: string): Promise<void> => {
     try {
       await AsyncStorage.setItem(key, value);
@@ -330,12 +355,30 @@ try {
       console.log('Error storing object:', error);
     }
   };
-/**
- * Updates the user's information in the database.
- * @param data The user data to update.
- * @returns A promise that resolves to a tuple containing a boolean indicating whether the update was successful
- *          and a string with a success/error message.
- */
+  const updateDeviceTokenInDb = async (deviceToken: string, userId: string): Promise<[boolean, string]> => {
+    try {
+      
+      const requestBody = {
+        userId,
+        deviceToken
+      }
+      const response = await api.post('/users/updateDeviceToken', requestBody)
+      const responseData: IHttpResponse<void> = response.data;
+      if (responseData.tokenError) { handleTokenError() }
+      //as [boolean,string] : I add this just because i know that if responseData.success is false then error won't be undefined 100%
+      return responseData.success ? [true, responseData.message] : [false, responseData.error!];
+
+    } catch (error: any) {
+      console.error(error.response.data); // Log the error response data for further analysis
+      return [false, error.response.data.error];
+    };
+  };
+  /**
+   * Updates the user's information in the database.
+   * @param data The user data to update.
+   * @returns A promise that resolves to a tuple containing a boolean indicating whether the update was successful
+   *          and a string with a success/error message.
+   */
   const updateUserInformation = async (data: UserDataToUpdate): Promise<[boolean, string]> => {
     try {
       if (!currentUser) return [false, 'Problem with connection try to login again'];
@@ -360,13 +403,13 @@ try {
       return [false, error.response.data.error];
     };
   }
- /**
- * Updates the user's password.
- * @param oldPassword The user's old password.
- * @param newPassword The user's new password.
- * @returns A promise that resolves to a tuple containing a boolean indicating whether the update was successful
- *          and a string with a success/error message.
- */
+  /**
+  * Updates the user's password.
+  * @param oldPassword The user's old password.
+  * @param newPassword The user's new password.
+  * @returns A promise that resolves to a tuple containing a boolean indicating whether the update was successful
+  *          and a string with a success/error message.
+  */
   const updateUserPassword = async (oldPassword: string, newPassword: string): Promise<[boolean, string]> => {
     try {
       if (!currentUser) return [false, 'Problem with connection try to login again'];
@@ -405,43 +448,46 @@ try {
       return [false, error.response.data.error]
     }
   };
-/**
- * Deletes an accident from the user's inbox list.
- * @param messageId The ID of the accident message to delete.
- * @returns A promise that resolves to a boolean indicating whether the deletion was successful.
- */
+  /**
+   * Deletes an accident from the user's inbox list.
+   * @param messageId The ID of the accident message to delete.
+   * @returns A promise that resolves to a boolean indicating whether the deletion was successful.
+   */
   const deleteFromUnreadMessages = async (messageId: string): Promise<boolean> => {
-try {
-  if (!currentUser) return false;
-  const requestBody = { userId: currentUser._id, messageId };
-  const response = await api.post('/users/deleteMessageInbox', requestBody, { headers: { Authorization: `Bearer ${token}` } });
-  const responseData: IHttpResponse<void> = response.data;
-  if (responseData.tokenError) { handleTokenError() }
-  return responseData.success;
-} catch (error: any) {
-  console.log(error.response.data.error);
-  return false
-}
+    try {
+      if (!currentUser) return false;
+      const requestBody = { userId: currentUser._id, messageId };
+      const response = await api.post('/users/deleteMessageInbox', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const responseData: IHttpResponse<void> = response.data;
+      if (responseData.tokenError) { handleTokenError() }
+      return responseData.success;
+    } catch (error: any) {
+      console.log(error.response.data.error);
+      return false
+    }
   };
-  const showToast =  (message:string , status:string,header: string) => {
-     Toast.show({
+  const showToast = (message: string, status: string, header: string) => {
+    Toast.show({
       type: status,
-      text1:  header,
+      text1: header,
       text2: message,
-      topOffset:4
+      topOffset: 4
     });
   }
   const refreshCurrantUser = async (): Promise<void> => {
-    if(!currentUser)return
-    const refreshedUser =  await getUserById(currentUser._id,token)
-    if(refreshedUser)
-    setCurrentUser(refreshedUser);
+    if (!currentUser) return
+    const refreshedUser = await getUserById(currentUser._id, token)
+    if (refreshedUser)
+      setCurrentUser(refreshedUser);
     setTimeout(() => {
       //The page will refresh before the time ends when currant user is set this is the maximum time
     }, 10000);
 
   };
+
   const value: MainContextType = {
+    getUserQuery,
+    updateDeviceToken,
     reportsAndNotesDistributionData,
     registeredUsersData,
     refreshCurrantUser,
@@ -473,6 +519,7 @@ try {
     showError,
     autoLoginNewUser
   };
+
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;
 }
 export default MainContextProvider;

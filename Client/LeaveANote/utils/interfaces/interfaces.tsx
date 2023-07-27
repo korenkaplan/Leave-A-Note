@@ -75,6 +75,7 @@ export interface User {
     role: string;
     unreadMessages: Accident[];
     accidents: Accident[];
+    deviceToken: string;
   }
 export interface PartialUserDataForAccident{
   _id:string;

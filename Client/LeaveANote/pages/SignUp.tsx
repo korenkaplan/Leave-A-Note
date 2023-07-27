@@ -13,6 +13,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import ThemedView from '../Components/uiComponents/ThemedView';
 import Toast from 'react-native-toast-message';
 import CustomSpinner from '../Components/uiComponents/CustomSpinner';
+import { requestUserPermission } from '../utils/notification/notificationHelper';
 interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
@@ -36,7 +37,8 @@ const SignUp: FC<Props> = ({ navigation }) => {
   const styles = createStyles(primary, secondary, text, background)
   const handleFormSubmit = async (values: SignUpFormValues, { setFieldError }: any) => {
     setIsLoading(true)
-    const [isRegistered, message, token] = await signupAttempt(values);
+    const deviceToken = await requestUserPermission();
+    const [isRegistered, message, token] = await signupAttempt(values, deviceToken);
     const [messageToast, statusToast, headerToast] = isRegistered ? [`${message} moving to homepage`, 'success', 'Sign-Up Successfully 👋'] : [message, 'error', 'Sign-Up failed'];
     setIsLoading(false)
     showToast(messageToast, statusToast, headerToast);

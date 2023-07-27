@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {MainContext} from './context/ContextProvider';
 import {useColorScheme, StatusBar, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -9,12 +9,15 @@ import {ThemeContext} from './context/ThemeContext';
 import SplashScreen from './pages/SplashScreen';
 import jwt_decode from 'jwt-decode';
 export default function Main() {
+  let dropDownAlertRef = useRef();
+
   const {
     authenticated,
     setAuthenticated,
     setCurrentUser,
     getUserById,
     setToken,
+    updateDeviceToken
   } = useContext(MainContext);
   const { setTheme, lightTheme, darkTheme, buttonTheme} =
     useContext(ThemeContext);
@@ -39,6 +42,7 @@ export default function Main() {
 
           if (currantUser != null) {
             setCurrentUser(currantUser);
+            await updateDeviceToken(currantUser._id);
             setAuthenticated(true);
           }
         }
@@ -47,13 +51,16 @@ export default function Main() {
         console.log(e);
       }
     };
+  
     getData();
   }, []);
-
   if (isLoading) {
     // Render a loading indicator while data is being retrieved
     return <SplashScreen />;
   }
+
+
+
   return (
     <NavigationContainer>
       <StatusBar
