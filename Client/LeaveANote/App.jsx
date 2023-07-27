@@ -32,17 +32,12 @@ messaging().onMessage(async remoteMessage => {
 });
 
   };
-
-  const handlePress = () => {
-    sendNotification('title123','body123','eVuAVLwzRIGxlYxBc1Npn7:APA91bFR2P8TWN8SNtWT-TfD7G_WYI2LQ9ThcMj3U36KZV2_8bhayuQ1tUNMSmMuQfmnZqEJrKRB3is23nJQRDcRIO1b_qcHP4SCLOom2_HBWajsFIXdmz1Y7tlAyXElSLum6XJcShQZ')
-  }
   return (
     <MainContextProvider>
       <NativeBaseProvider>
         <SafeAreaProvider>
           <ThemeContextProvider>
             <Main />
-            <Button onPress={handlePress} title={'send notification'}/>
            <ModalPortal />
           </ThemeContextProvider>
         </SafeAreaProvider>

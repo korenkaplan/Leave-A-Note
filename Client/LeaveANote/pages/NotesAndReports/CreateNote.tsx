@@ -47,10 +47,13 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
       params:{'previous':'CreateNote'},
     });
   };
-  const handleNotification = () => {
+  const handleNotification = async () => {
+    
     let title = 'You Have A New Note';
     let body = `${currentUser?.name} has left you a note`;
-    sendNotification(title, body,deviceTokenToSend);
+    console.log('handleNotification: deviceTokenToSend: ' + deviceTokenToSend);
+    
+   await sendNotification(title, body,'eVuAVLwzRIGxlYxBc1Npn7:APA91bFR2P8TWN8SNtWT-TfD7G_WYI2LQ9ThcMj3U36KZV2_8bhayuQ1tUNMSmMuQfmnZqEJrKRB3is23nJQRDcRIO1b_qcHP4SCLOom2_HBWajsFIXdmz1Y7tlAyXElSLum6XJcShQZ');
   };
 const handleSubmit = async ():Promise<void> =>{
   setIsLoading(true)
@@ -67,7 +70,7 @@ const handleSubmit = async ():Promise<void> =>{
   if(isSent)
   {
     setIsVisibleSuccessModal(true)
-    handleNotification()
+    await handleNotification()
   }
   else
   setIsVisibleFailedModal(true);
@@ -112,7 +115,7 @@ const handleSubmit = async ():Promise<void> =>{
           <Chip
           disabled={disableSendBtn}
           disabledStyle={styles.disableBtn}
-  title={disableSendBtn?'Add Photo' : 'Send Report'}
+  title={disableSendBtn?'Add Photo' : 'Send Note'}
   icon={{
     name: 'paper-plane',
     type: 'font-awesome',

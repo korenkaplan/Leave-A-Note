@@ -17,7 +17,7 @@ export default function Main() {
     setCurrentUser,
     getUserById,
     setToken,
-    updatedDeviceToken
+    updateDeviceToken
   } = useContext(MainContext);
   const { setTheme, lightTheme, darkTheme, buttonTheme} =
     useContext(ThemeContext);
@@ -42,7 +42,7 @@ export default function Main() {
 
           if (currantUser != null) {
             setCurrentUser(currantUser);
-            await updatedDeviceToken(currantUser._id);
+            await updateDeviceToken(currantUser._id);
             setAuthenticated(true);
           }
         }
