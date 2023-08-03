@@ -8,7 +8,7 @@ import { StyleButton,IText } from '../../utils/interfaces/interfaces';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 const ReportView: React.FC<MessageProps> = ({route}) => {
   const {item} = route.params;
-    const {hittingDriver, date, imageSource,isAnonymous,isIdentify, reporter} = item;
+    const {hittingDriverName,hittingCarNumber, hittingDriverPhoneNumber, date, imageSource,isAnonymous,isIdentify, reporterName, reporterPhoneNumber} = item;
     const {theme,buttonTheme} = useContext(ThemeContext);
     const {buttonAlt, buttonMain} = buttonTheme;
   const {primary,secondary,text,background} = theme.colors
@@ -55,7 +55,7 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
       <Icon name="car-outline" type="ionicon" color={primary} />
       <ListItem.Content>
-        <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingCarNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
         </View>
@@ -75,14 +75,14 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
       <Icon name="person-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title style={styles.Title}>{hittingDriver.name}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingDriverName}</ListItem.Title>
         <ListItem.Subtitle style={styles.Subtitle}>Damaging Driver</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
       <Icon name="car-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingCarNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
     <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Make Contact'}/>
@@ -90,13 +90,13 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
           <ListItem  containerStyle={[styles.ListItem,styles.phoneRow,]}> 
         <Icon name="person" type="ionicon" color={text.primary} />
         <ListItem.Content>
-          <ListItem.Title style={styles.Title}> {hittingDriver.phoneNumber}</ListItem.Title>
+          <ListItem.Title style={styles.Title}> {hittingDriverPhoneNumber}</ListItem.Title>
         </ListItem.Content>
       </ListItem>
-            <Button style={styles.callBtn} onPress={()=>{moveToPhoneDialog(hittingDriver.phoneNumber)}}>
+            <Button style={styles.callBtn} onPress={()=>{moveToPhoneDialog(hittingDriverPhoneNumber)}}>
               <Icon name="call" type="ionicon" color={buttonMain.text} />
             </Button>
-            <Button style={styles.textBtn} onPress={()=>{moveToSmsDialog(hittingDriver.phoneNumber,hittingDriver.name)}}>
+            <Button style={styles.textBtn} onPress={()=>{moveToSmsDialog(hittingDriverPhoneNumber,hittingDriverName)}}>
               <Icon name="sms" type="font-awesome-5" color={buttonAlt.text} />
             </Button>
           </View>
@@ -125,14 +125,14 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
           <ListItem containerStyle={[styles.ListItem,styles.phoneRow,]}> 
         <Icon name="person" type="ionicon" color={text.primary} />
         <ListItem.Content>
-          <ListItem.Title style={styles.Title}>{reporter.name}</ListItem.Title>
+          <ListItem.Title style={styles.Title}>{reporterName}</ListItem.Title>
           <ListItem.Subtitle style={styles.Subtitle}>Reporter</ListItem.Subtitle>
         </ListItem.Content>
       </ListItem>
-            <Button style={styles.callBtn} onPress={()=>{moveToPhoneDialog(reporter.phoneNumber)}}>
+            <Button style={styles.callBtn} onPress={()=>{moveToPhoneDialog(reporterPhoneNumber)}}>
               <Icon name="call" type="ionicon" color="white" />
             </Button>
-            <Button style={styles.textBtn} onPress={()=>{moveToSmsDialog(reporter.phoneNumber,reporter.name)}}>
+            <Button style={styles.textBtn} onPress={()=>{moveToSmsDialog(reporterPhoneNumber,reporterName)}}>
               <Icon name="sms" type="font-awesome-5" color={buttonAlt.text} />
             </Button>
           </View>

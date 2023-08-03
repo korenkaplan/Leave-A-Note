@@ -54,7 +54,7 @@ export default function BottomTabs() {
     };
     return (
       <Tab.Navigator
-        initialRouteName= {currentUser.role === 'admin'? "Stats": "Home"}
+        initialRouteName= {currentUser.role === 'Admin'? "Stats": "Home"}
         screenOptions={({route}) => ({
           headerShown: false,
           tabBarShowLabel: false,
@@ -97,7 +97,7 @@ export default function BottomTabs() {
           }}
         />
         <Tab.Screen name="Profile" component={Profile} />
-        {currentUser.role === 'admin' && (
+        {currentUser.role === 'Admin' && (
           <Tab.Screen name="Stats" component={KpiStats} />
         )}
       </Tab.Navigator>

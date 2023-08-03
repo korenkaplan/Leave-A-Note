@@ -5,7 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
-import { User, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, searchCarNumberDto, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports, Accident } from '../utils/interfaces/interfaces';
+import { User, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, searchCarNumberDto, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports, Accident, UserFromServer } from '../utils/interfaces/interfaces';
 import Toast from 'react-native-toast-message';
 import { requestUserPermission } from '../utils/notification/notificationHelper';
 interface MainContextType {
@@ -168,10 +168,26 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const getUserById = async (id: string, token: string): Promise<User | null> => {
     try {
       const response: AxiosResponse = await api.get("/User/getById", { headers: { Authorization: 'Bearer ' + token, }, params: { id } });
-      const responseData: IHttpResponse<User> = response.data;
+      const responseData: IHttpResponse<UserFromServer> = response.data;
       if (responseData.tokenError) { handleTokenError() }
-      if (responseData.data === undefined) { return null; }
-      return responseData.data;
+      if (responseData.data === undefined || !responseData.data) { return null; }
+      const userFromServer: UserFromServer = responseData.data;
+      
+      
+        const unreadMessages:Accident[] = userFromServer.accidents.filter(acc => acc.isRead === false )
+        const user:User = {
+        _id: userFromServer.id,
+        email: userFromServer.email,
+        phoneNumber: userFromServer.phoneNumber,
+        name: userFromServer.name,
+        carNumber: userFromServer.carNumber,
+        role: userFromServer.role,
+        accidents:userFromServer.accidents,
+        unreadMessages: unreadMessages,
+        deviceToken: userFromServer.deviceToken,
+        }
+        
+      return user;
     } catch (error: any) {
       console.log(error.response.data.error);
       return null;
@@ -398,7 +414,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       if (!currentUser) return [false, 'Problem with connection try to login again'];
 
       const requestBody = { userId: currentUser._id, accidentId };
-      const response = await api.post('/User/deleteMessage', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const response = await api.put('/User/deleteMessage', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<void> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       return [responseData.success, responseData.message];
@@ -416,12 +432,13 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     try {
       if (!currentUser) return false;
       const requestBody = { userId: currentUser._id, accidentId };
-      const response = await api.post('/users/deleteMessageInbox', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const response = await api.put('/User/readMessageInbox', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<void> = response.data;
+      
       if (responseData.tokenError) { handleTokenError() }
       return responseData.success;
     } catch (error: any) {
-      console.log(error.response.data.error);
+      console.log(error.message);
       return false
     }
   };

@@ -47,7 +47,6 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   }, [image]);
 
   useEffect(() => {
-    console.log('useEffect ' + route.params);
     const { carNumber, image, deviceToken, damagedUserId } = route.params;
     if (deviceToken)
       setDeviceToken(deviceToken)
@@ -58,7 +57,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     if (damagedUserId)
       setDamagedUserIdToSend(damagedUserId)
 
-    console.log(carNumber, image, deviceToken);
+    console.log(carNumber, damagedUserId, deviceToken);
   }, [route.params])
 
   const openCamera = (): void => {

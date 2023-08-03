@@ -36,7 +36,7 @@ export default function Homepage({navigation}) {
   } = useContext(MainContext);
   const [searchValue, setSearchValue] = useState('');
   const [deviceTokenToSend, setDeviceTokenToSend] = useState('');
-  const [damagedUserIdToSend, setDamagedUserIdToSend] = useState('');
+  const [damagedUserIdToSend, setDamagedUserIdToSend] = useState(-1);
   const [error, setError] = useState('');
   const [iconName, setIconName] = useState('search');
   const [isNumberValid, setIsNumberValid] = useState(false);

@@ -11,7 +11,7 @@ const NoteView: React.FC<MessageProps> = ( {route}) => {
 
   
   const {item } = route.params;
-  const {hittingDriver, date, imageSource} = item;
+  const {hittingCarNumber,hittingDriverPhoneNumber,hittingDriverName, date, imageSource} = item;
   const {theme,buttonTheme} = useContext(ThemeContext);
     const {buttonAlt, buttonMain} = buttonTheme;
   const {primary,secondary,text,background} = theme.colors
@@ -30,13 +30,13 @@ const noteDetails = (
     <ListItem  containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
       <Icon name="person-outline" type="ionicon" color={text.primary}  />
       <ListItem.Content>
-        <ListItem.Title style={styles.Title}>{hittingDriver.name}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingDriverName}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
     <ListItem  containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
       <Icon name="car-outline" type="ionicon" color={text.primary} />
       <ListItem.Content>
-        <ListItem.Title style={styles.Title}>{hittingDriver.carNumber}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingCarNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
 
@@ -52,13 +52,13 @@ const image = (
 );
 
 const moveToPhoneDialog = () => {
-  const phoneNumberUrl = `tel:${hittingDriver.phoneNumber}`;
+  const phoneNumberUrl = `tel:${hittingDriverPhoneNumber}`;
   Linking.openURL(phoneNumberUrl);
 };
 
 const moveToSmsDialog = () => {
-  const messageUrl = `sms:${hittingDriver.phoneNumber}?body=${encodeURIComponent(
-    `Hello ${hittingDriver.name}...`
+  const messageUrl = `sms:${hittingDriverPhoneNumber}?body=${encodeURIComponent(
+    `Hello ${hittingDriverName}...`
   )}`;
   Linking.openURL(messageUrl);
 };
@@ -77,7 +77,7 @@ const moveToSmsDialog = () => {
         <ListItem containerStyle={[styles.ListItem,styles.phoneRow,]}> 
       <Icon name="phone-portrait" type="ionicon" color={text.primary}  />
       <ListItem.Content >
-        <ListItem.Title style={styles.Title}>{hittingDriver.phoneNumber}</ListItem.Title>
+        <ListItem.Title style={styles.Title}>{hittingDriverPhoneNumber}</ListItem.Title>
       </ListItem.Content>
     </ListItem >
           <Button style={[styles.callBtn]}  onPress={moveToPhoneDialog}>

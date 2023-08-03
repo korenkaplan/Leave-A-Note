@@ -27,7 +27,7 @@ interface Props {
 const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
   const { image } = route.params;
-  const { setCarNumInput, submitReport, uploadPhotoToStorage, currentUser, getUserQuery } = useContext(MainContext);
+  const { setCarNumInput, submitReport, uploadPhotoToStorage, currentUser } = useContext(MainContext);
   const [isLoading, setSetIsLoading] = useState(false)
   const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
   const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)

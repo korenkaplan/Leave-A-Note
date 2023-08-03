@@ -17,7 +17,7 @@ const Inbox: FC = () =>{
   const styles = createStyles(primary,secondary,text,background, buttonMain, buttonAlt)
 
   //a temporary state containing the list of items,
-  const {currentUser, setCurrentUser, getUserById,deleteFromUnreadMessages,refreshCurrantUser} = useContext(MainContext);
+  const {currentUser, setCurrentUser,deleteFromUnreadMessages,refreshCurrantUser} = useContext(MainContext);
   //TODO get messages from the server 
   const [messages, setMessages] = useState(currentUser? currentUser.unreadMessages: []);
   const [refreshing, setRefreshing] = useState(false);
@@ -27,11 +27,11 @@ const Inbox: FC = () =>{
       // If the message is of type note
       if (message.type === 'note') {
         return (
-          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message._id} >
+          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
             <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
               <Icon containerStyle={[styles.iconNote,styles.textPrimaryBorder]} name='document-outline' type='ionicon' color={buttonMain.text} />
               <ListItem.Content>
-                <ListItem.Title style={styles.Title}>{message.hittingDriver.name}</ListItem.Title>
+                <ListItem.Title style={styles.Title}>{message.hittingDriverName}</ListItem.Title>
                 <ListItem.Subtitle style={styles.Subtitle}>{message.date}</ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron
@@ -45,11 +45,11 @@ const Inbox: FC = () =>{
       // If the message is of type report
       else {
         return (
-          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message._id} >
+          <TouchableOpacity onPress={() => { handlePress(message, index) }} key={message.id} >
             <ListItem bottomDivider  containerStyle={[styles.item,styles.textPrimaryBorder]}>
               <Icon containerStyle={[styles.iconReport,styles.textPrimaryBorder]} name='eye-outline' type='ionicon' color={buttonAlt.text} />
               <ListItem.Content>
-                <ListItem.Title style={styles.Title}>{message.isIdentify ? message.hittingDriver.name : message.hittingDriver.carNumber}</ListItem.Title>
+                <ListItem.Title style={styles.Title}>{message.isIdentify ? message.hittingDriverName : message.hittingCarNumber}</ListItem.Title>
                 <ListItem.Subtitle style={styles.Subtitle}>{message.date}</ListItem.Subtitle>
               </ListItem.Content>
               <ListItem.Chevron
@@ -71,13 +71,12 @@ const Inbox: FC = () =>{
      //create a function to handle the press of a message
      const handlePress = (item: Accident, index:number) => {
       //todo check if the message is a note or a report
-      handleDelete(index, item._id);
+      handleDelete(index, item.id);
       navigation.navigate({
         name: item.type === 'note' ? 'NoteView' : 'ReportView',
         params: { item },
         merge: true,
       });
-      
       //the timeout is so the animation won't show for a brief second if the list is empty before moving to view the message.
       setTimeout(() => {
         deleteMessageFromState(index)
@@ -86,9 +85,7 @@ const Inbox: FC = () =>{
      }
      //create a function to delete the message from the message list
      const handleDelete = async (index: number, id: string) => {
-    const isDeleted = await deleteFromUnreadMessages(id);
-    console.log(isDeleted);
-    
+    await deleteFromUnreadMessages(id);
 
     };
     const deleteMessageFromState = (index: number) => {

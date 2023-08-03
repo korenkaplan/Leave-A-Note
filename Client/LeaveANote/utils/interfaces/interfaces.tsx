@@ -81,6 +81,17 @@ export interface User {
   accidents: Accident[];
   deviceToken: string;
 }
+export interface UserFromServer {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  carNumber: string;
+  role: string;
+  accidents: Accident[];
+  deviceToken: string;
+}
+
 export interface PartialUserDataForAccident {
   _id: string;
   name: string;
@@ -119,23 +130,21 @@ export interface UserDataToUpdate {
 //The interface that holds the properties of both Note and Report.
 export interface Accident {
   id: string;
-  hittingDriver: {
-    name?: string;
-    carNumber: string;
-    phoneNumber?: string;
-  };
+  hittingDriverName: string;
+  hittingCarNumber: string;
+  hittingDriverPhoneNumber: string;
   createdAt: Date;
   date: string;
   imageSource: string;
   type: 'report' | 'note';
   isAnonymous?: boolean;
   isIdentify?: boolean;
-  reporter?: {
-    name: string;
-    phoneNumber: string;
-  };
-  isRead: boolean; 
+  reporterName: string;
+  reporterPhoneNumber: string;
+  isDeleted: boolean;
+  isRead: boolean;
 }
+
 export interface Token {
   exp: number;
   iat: number;
