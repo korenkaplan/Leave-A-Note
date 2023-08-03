@@ -5,7 +5,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/FirebaseConfig'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import jwt_decode from "jwt-decode";
-import { User, Accident, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, PartialUserDataForAccident, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports } from '../utils/interfaces/interfaces';
+import { User, NoteToSend, SignUpFormValues, ReportToSend, UserDataToUpdate, Token, searchCarNumberDto, IHttpResponse, RegisteredUsersPerMonthAmount, DistributionOfReports, Accident } from '../utils/interfaces/interfaces';
 import Toast from 'react-native-toast-message';
 import { requestUserPermission } from '../utils/notification/notificationHelper';
 interface MainContextType {
@@ -25,7 +25,7 @@ interface MainContextType {
   showToast: (message: string, status: string, header: string) => void;
   submitNote: (note: NoteToSend) => Promise<boolean>;
   submitReport: (report: ReportToSend) => Promise<boolean>;
-  searchCarNumber: (carNumber: string) => Promise<[boolean, string]>;
+  searchCarNumber: (carNumber: string) => Promise<[boolean, string,string]>;
   loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
   signupAttempt: (newUser: SignUpFormValues, deviceToken: string) => Promise<[boolean, string, string?]>;
   handleLogOut: () => Promise<void>;
@@ -40,7 +40,6 @@ interface MainContextType {
   refreshCurrantUser: () => Promise<void>;
   registeredUsersData: (year: string) => Promise<[boolean, RegisteredUsersPerMonthAmount[]]>;
   reportsAndNotesDistributionData(): Promise<DistributionOfReports[]>
-  getUserQuery: (query:Partial<User> ,projection:object) => Promise<User | null>
 }
 
 export const MainContext = createContext<MainContextType>({} as MainContextType);
@@ -54,24 +53,9 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [token, setToken] = useState<string>('');
   const api: AxiosInstance = axios.create({
-    baseURL: 'https://leave-a-note-nodejs-server.onrender.com/api', // Set your base URL
+    baseURL: 'https://leaveanoteservice.azurewebsites.net/api', // Set your base URL
   });
-const getUserQuery = async (query:Partial<User> ,projection:object): Promise<User | null> => {
-  const requestBody = {
-    query: {...query},
-    projection: {...projection},
-  };
-  try {
-    const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: 'Bearer ' + token, } });
-    const responseData: IHttpResponse<User> = response.data;
-    if (responseData.tokenError) { handleTokenError() }
-    if (responseData.data === undefined) { return null; }
-    return responseData.data;
-  } catch (error: any) {
-    console.log(error.response.data.error);
-    return null;
-  }
-};
+
 
   const updateDeviceToken = async (userId: string) => {
     let updatedDeviceToken = await requestUserPermission();
@@ -79,10 +63,8 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
   };
   const reportsAndNotesDistributionData = async (): Promise<DistributionOfReports[]> => {
     try {
-      const requestBody = {
-        role: currentUser?.role
-      }
-      const response = await api.post(`stats/reportsDistribution`, requestBody, { headers: { Authorization: 'Bearer ' + token } })
+
+      const response = await api.get(`Stats/reportsDistribution`, { headers: { Authorization: 'Bearer ' + token } })
       const responseData: IHttpResponse<DistributionOfReports[]> = response.data
       const { data }: IHttpResponse<DistributionOfReports[]> = responseData
       return data ? data : []
@@ -93,11 +75,8 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
   };
   const registeredUsersData = async (year: string): Promise<[boolean, RegisteredUsersPerMonthAmount[]]> => {
     try {
-      const requestBody = {
-        year: year,
-        role: currentUser!.role
-      }
-      const response: AxiosResponse = await api.post(`/stats/registeredUsersData`, requestBody, { headers: { Authorization: 'Bearer ' + token, } });
+
+      const response: AxiosResponse = await api.get(`/Stats/registeredUsersData`, { headers: { Authorization: 'Bearer ' + token, }, params: { year } });
       const responseData: IHttpResponse<RegisteredUsersPerMonthAmount[]> = response.data;
       return responseData.data ? [true, responseData.data] : [false, []];
     } catch (error: any) {
@@ -118,7 +97,7 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
       password,
     };
     try {
-      const response = await api.post(`/users/login`, loginData);
+      const response = await api.post(`/User/login`, loginData);
       const responseData: IHttpResponse<{ token: string }> = response.data;
       if (!responseData.success || responseData.data === undefined) { return false; }
       const token = responseData.data.token
@@ -153,7 +132,7 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
         phoneNumber: newUser.phoneNumber,
         deviceToken
       }
-      const response = await api.post('/users/register', requestBody);
+      const response = await api.post('/User/register', requestBody);
       const responseData: IHttpResponse<string> = response.data;
       return responseData.success ? [true, responseData.message, responseData.data] : [false, responseData.error!];
 
@@ -187,16 +166,8 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
    * @returns A promise that resolves to a User object or null if the user is not found.
    */
   const getUserById = async (id: string, token: string): Promise<User | null> => {
-    const requestBody = {
-      query: {
-        _id: id,
-      },
-      projection: {
-        password: 0,
-      },
-    };
     try {
-      const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: 'Bearer ' + token, } });
+      const response: AxiosResponse = await api.get("/User/getById", { headers: { Authorization: 'Bearer ' + token, }, params: { id } });
       const responseData: IHttpResponse<User> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       if (responseData.data === undefined) { return null; }
@@ -211,25 +182,16 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
   * @param carNumber The car number to search for.
   * @returns A promise that resolves to a boolean indicating whether the car number was found.
   */
-  const searchCarNumber = async (carNumber: string): Promise<[boolean, string]> => {
-    const requestBody = {
-      query: {
-        carNumber
-      },
-      projection: {
-        _id: 1,
-        deviceToken: 1
-      },
-    };
+  const searchCarNumber = async (carNumber: string): Promise<[boolean, string,string]> => {
     try {
-      const response: AxiosResponse = await api.post("/users/getUser", requestBody, { headers: { Authorization: `Bearer ${token}`, } });
-      const responseData: IHttpResponse<User> = response.data;
+      const response: AxiosResponse = await api.get("/User/searchCarNumber", { headers: { Authorization: `Bearer ${token}`, }, params: { carNumber } });
+      const responseData: IHttpResponse<searchCarNumberDto> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       const { success, data } = responseData;
-      return [success, data?.deviceToken || '']
+      return [success, data?.deviceToken || '', data?.id || '']
     } catch (error: any) {
       console.log(error.response.data.error);
-      return [false, ''];
+      return [false, '',''];
     }
   };
   /**
@@ -240,20 +202,19 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
   const submitNote = async (note: NoteToSend): Promise<boolean> => {
     if (!currentUser) { return false; }
     const requestBody = {
-      damaged_user_car_num: note.damagedCarNumber,
-      hitting_user_car: currentUser.carNumber,
-      hitting_user_phone: currentUser.phoneNumber,
-      hitting_user_name: currentUser.name,
+      userId: note.damagedUserId,
+      hittingCarNumber: currentUser.carNumber,
+      hittingDriverPhoneNumber: currentUser.phoneNumber,
+      hittingDriverName: currentUser.name,
       imageSource: note.imageSource,
     };
 
     try {
 
-      const response = await api.post("/notes/createNote", requestBody, { headers: { Authorization: `Bearer ${token}`, } });
+      const response = await api.post("/Accident/CreateNote", requestBody, { headers: { Authorization: `Bearer ${token}`, } });
 
-      const responseData: IHttpResponse<void> = response.data;
+      const responseData: IHttpResponse<Accident> = response.data;
       if (responseData.tokenError) { handleTokenError() }
-
       return responseData.success;
     } catch (error: any) {
       console.log(error.response.data.error); // Log the error response data for further analysis
@@ -357,7 +318,7 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
   };
   const updateDeviceTokenInDb = async (deviceToken: string, userId: string): Promise<[boolean, string]> => {
     try {
-      
+
       const requestBody = {
         userId,
         deviceToken
@@ -486,7 +447,6 @@ const getUserQuery = async (query:Partial<User> ,projection:object): Promise<Use
   };
 
   const value: MainContextType = {
-    getUserQuery,
     updateDeviceToken,
     reportsAndNotesDistributionData,
     registeredUsersData,

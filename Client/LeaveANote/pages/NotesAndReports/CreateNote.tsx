@@ -15,6 +15,7 @@ import { sendNotification } from '../../utils/notification/notificationHelper';
 interface Params {
   carNumber: string;
   deviceToken: string;
+  damagedUserId: string;
   image: string;
 }
 interface Props {
@@ -24,8 +25,10 @@ interface Props {
 const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const [deviceToken, setDeviceToken] = useState('')
   const [damagedCarNumber, setDamagedCarNumber] = useState('')
+  const [damagedUserIdToSend, setDamagedUserIdToSend] = useState('');
   const [image, setImage] = useState('')
-  const {submitNote, uploadPhotoToStorage, currentUser } = useContext(MainContext);
+
+  const { submitNote, uploadPhotoToStorage, currentUser } = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
   const { theme, buttonTheme } = useContext(ThemeContext);
@@ -45,13 +48,16 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
 
   useEffect(() => {
     console.log('useEffect ' + route.params);
-    const { carNumber, image, deviceToken } = route.params;
+    const { carNumber, image, deviceToken, damagedUserId } = route.params;
     if (deviceToken)
       setDeviceToken(deviceToken)
     if (carNumber)
       setDamagedCarNumber(carNumber)
     if (image)
       setImage(image)
+    if (damagedUserId)
+      setDamagedUserIdToSend(damagedUserId)
+
     console.log(carNumber, image, deviceToken);
   }, [route.params])
 
@@ -70,10 +76,9 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
   const handleSubmit = async (): Promise<void> => {
     setIsLoading(true)
     const imageRef: string = await uploadPhotoToStorage(imgSource);
-    console.log('damagedCarNumber: '+ damagedCarNumber);
 
     let note: NoteToSend = {
-      damagedCarNumber: damagedCarNumber,
+      damagedUserId: damagedUserIdToSend,
       imageSource: imageRef,
     };
     // send to context function the image url

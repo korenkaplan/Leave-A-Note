@@ -36,6 +36,7 @@ export default function Homepage({navigation}) {
   } = useContext(MainContext);
   const [searchValue, setSearchValue] = useState('');
   const [deviceTokenToSend, setDeviceTokenToSend] = useState('');
+  const [damagedUserIdToSend, setDamagedUserIdToSend] = useState('');
   const [error, setError] = useState('');
   const [iconName, setIconName] = useState('search');
   const [isNumberValid, setIsNumberValid] = useState(false);
@@ -97,12 +98,15 @@ export default function Homepage({navigation}) {
    */
   const handleSearchPress = async () => {
     setIsLoading(true); // Set loading state to true
-    const [isUserExists, deviceToken] = await searchCarNumber(searchValue);
+    const [isUserExists, deviceToken, damagedUserId] = await searchCarNumber(
+      searchValue,
+    );
     setIsLoading(false); // Set loading state to true
     if (isUserExists) {
       setIconName('check');
       setIsNumberValid(true);
       setDeviceTokenToSend(deviceToken);
+      setDamagedUserIdToSend(damagedUserId);
     } else {
       setIconName('error');
       setError('Car number not found');
@@ -113,15 +117,19 @@ export default function Homepage({navigation}) {
     setCarNumInput(searchValue);
     navigation.navigate({
       name: 'CreateNote',
-      params: {carNumber: searchValue, deviceToken:deviceTokenToSend},
+      params: {
+        carNumber: searchValue,
+        deviceToken: deviceTokenToSend,
+        damagedUserId: damagedUserIdToSend,
+      },
       merge: true,
     });
   };
   const moveToReportPage = () => {
     navigation.navigate({
-      name:'CreateReport',
-      params:{searchValue},
-      merge: true
+      name: 'CreateReport',
+      params: {searchValue},
+      merge: true,
     });
     setSearchValue('');
   };
