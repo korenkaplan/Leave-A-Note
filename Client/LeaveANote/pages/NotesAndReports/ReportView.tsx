@@ -12,6 +12,7 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
     const {theme,buttonTheme} = useContext(ThemeContext);
     const {buttonAlt, buttonMain} = buttonTheme;
   const {primary,secondary,text,background} = theme.colors
+  const iconsColor = buttonMain.text;
   const styles = createStyles(primary,secondary,text,background,buttonAlt, buttonMain)
       //return the image
       const image = (
@@ -40,20 +41,20 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
       <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Driver Information'}/>
 
          <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="calendar" type="ionicon" color={primary} />
+      <Icon name="calendar" type="ionicon" color={iconsColor} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>{date}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="person-outline" type="ionicon" color={primary} />
+      <Icon name="person-outline" type="ionicon" color={iconsColor} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>Unknown Driver</ListItem.Title>
         <ListItem.Subtitle style={styles.Subtitle}>Damaging Driver</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="car-outline" type="ionicon" color={primary} />
+      <Icon name="car-outline" type="ionicon" color={iconsColor} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>{hittingCarNumber}</ListItem.Title>
       </ListItem.Content>
@@ -67,20 +68,20 @@ const ReportView: React.FC<MessageProps> = ({route}) => {
       <DividerWithText height={1.5} fontColor= {buttonMain.text} title ={'Driver Information'}/>
 
          <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="calendar" type="ionicon" color={text.primary} />
+      <Icon name="calendar" type="ionicon" color={iconsColor} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>{date}</ListItem.Title>
       </ListItem.Content>
     </ListItem>
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="person-outline" type="ionicon" color={text.primary} />
+      <Icon name="person-outline" type="ionicon" color={iconsColor} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>{hittingDriverName}</ListItem.Title>
         <ListItem.Subtitle style={styles.Subtitle}>Damaging Driver</ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
     <ListItem containerStyle={[styles.ListItem,styles.textPrimaryBorder]}>
-      <Icon name="car-outline" type="ionicon" color={text.primary} />
+      <Icon name="car-outline" type="ionicon" color={iconsColor} />
       <ListItem.Content>
         <ListItem.Title style={styles.Title}>{hittingCarNumber}</ListItem.Title>
       </ListItem.Content>

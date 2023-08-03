@@ -41,12 +41,12 @@ initData()
     <View style={styles.mainContainer} >
       <DividerWithText fontSize={20} title={_.startCase(title)}/>
       <VictoryPie
-        radius={({ datum }) => 50 + datum.y*1.5}
+        radius={({ datum }) => 50 + datum.y*1.2}
         width={screenWidth*0.9}
         data={calculateStats(graphData)}
         colorScale={purpleShades}
        labelRadius={({ innerRadius }) => innerRadius ? Number(innerRadius)+ 12 : 50}
-        innerRadius={20}
+        innerRadius={25}
         labels={({ datum }) => `${datum.y}%`}
         labelPosition={"centroid"}
   

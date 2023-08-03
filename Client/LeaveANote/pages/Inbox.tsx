@@ -72,11 +72,12 @@ const Inbox: FC = () =>{
      const handlePress = (item: Accident, index:number) => {
       //todo check if the message is a note or a report
       handleDelete(index, item.id);
-      navigation.navigate({
+      navigation.navigate(
+        {
         name: item.type === 'note' ? 'NoteView' : 'ReportView',
         params: { item },
         merge: true,
-      });
+        });
       //the timeout is so the animation won't show for a brief second if the list is empty before moving to view the message.
       setTimeout(() => {
         deleteMessageFromState(index)

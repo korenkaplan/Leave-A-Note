@@ -171,7 +171,35 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
    * @param token The currant user's authentication token.
    * @returns A promise that resolves to a User object or null if the user is not found.
    */
-  const getUserById = async (id: string, token: string): Promise<User | null> => {
+  const getUserById = async (id: string, token: string, minimal = false): Promise<User | null> => {
+    try {
+      const response: AxiosResponse = await api.get("/User/getById", { headers: { Authorization: 'Bearer ' + token, }, params: { id, minimal } });
+      const responseData: IHttpResponse<UserFromServer> = response.data;
+      if (responseData.tokenError) { handleTokenError() }
+      if (responseData.data === undefined || !responseData.data) { return null; }
+      const userFromServer: UserFromServer = responseData.data;
+
+
+      const unreadMessages: Accident[] = userFromServer.accidents.filter(acc => acc.isRead === false)
+      const user: User = {
+        _id: userFromServer.id,
+        email: userFromServer.email,
+        phoneNumber: userFromServer.phoneNumber,
+        name: userFromServer.name,
+        carNumber: userFromServer.carNumber,
+        role: userFromServer.role,
+        accidents: userFromServer.accidents,
+        unreadMessages: unreadMessages,
+        deviceToken: userFromServer.deviceToken,
+      }
+
+      return user;
+    } catch (error: any) {
+      console.log(error.response.data.error);
+      return null;
+    }
+  };
+  const getMinimalUserByID = async (id: string, token: string): Promise<User | null> => {
     try {
       const response: AxiosResponse = await api.get("/User/getById", { headers: { Authorization: 'Bearer ' + token, }, params: { id } });
       const responseData: IHttpResponse<UserFromServer> = response.data;

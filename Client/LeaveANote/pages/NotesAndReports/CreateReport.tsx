@@ -7,7 +7,7 @@ import { MainContext } from '../../context/ContextProvider';
 import { Chip, CheckBox } from '@rneui/themed';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { User } from '../../utils/interfaces/interfaces';
+import { User, searchCarNumberDto } from '../../utils/interfaces/interfaces';
 import { ReportToSend, IText, StyleButton } from '../../utils/interfaces/interfaces';
 import { ThemeContext } from '../../context/ThemeContext';
 import SuccessModal from '../../Components/uiComponents/SuccessModal';
@@ -27,7 +27,7 @@ interface Props {
 const CreateReport: React.FC<Props> = ({ route, navigation }) => {
   // get variables from route, context and set states
   const { image } = route.params;
-  const { setCarNumInput, submitReport, uploadPhotoToStorage, currentUser } = useContext(MainContext);
+  const { setCarNumInput, submitReport, uploadPhotoToStorage, currentUser, searchCarNumber } = useContext(MainContext);
   const [isLoading, setSetIsLoading] = useState(false)
   const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
   const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
@@ -80,18 +80,13 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       params: { 'previous': 'CreateReport' },
     });
   };
-  const handleNotification = async (deviceToken: string, name: string) => {
-    let firstName = name.split(' ')[0];
-    let title = `Hello ${firstName} You Have A New Report!`;
-    let body = `${currentUser?.name || 'Someone'} has left you a Report`;
+  const handleNotification = async (deviceToken: string) => {
+    let title = `You Have A New Report!`;
+
+    let body = isChecked ? 'Someone has left you a Report anonymously' : `${currentUser?.name || 'Someone'} has left you a Report`;
     await sendNotification(title, body, deviceToken);
   }
-  const getUserDetails = async (carNumber: string): Promise<User | null> => {
-    const query = { carNumber };
-    const projection = { name: 1, deviceToken: 1 };
-    return await getUserQuery(query, projection);
 
-  };
   // handle the submit: cal function from context and show alert
   const handleFormSubmit = async (values: Values): Promise<void> => {
     try {
@@ -113,15 +108,17 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       //close the loading screen by changing the state
       setSetIsLoading(false);
       //show the appropriate alert depending on the the response 
-      isSent ? setIsVisibleSuccessModal(true) : setIsVisibleFailedModal(true);
 
       //if it was sent successfully check if the user is identified
       if (isSent) {
-        const partialUser: User | null = await getUserDetails(values.damagedCarNumber)
+        setIsVisibleSuccessModal(true)
+        const [success, deviceToken, id] = await searchCarNumber(values.damagedCarNumber)
         //if the user is found send him a notification
-        if (partialUser)
-          handleNotification(partialUser.deviceToken, partialUser.name);
+        if (success)
+          handleNotification(deviceToken);
       }
+      else
+        setIsVisibleFailedModal(true);
       //reset car number in context and clear fields
       setCarNumInput('');
     }
