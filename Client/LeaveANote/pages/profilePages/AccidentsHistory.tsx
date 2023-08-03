@@ -11,7 +11,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 const AccidentsHistory: FC = () => {
   const navigation = useNavigation();
-  const { getUserById, currentUser, setCurrentUser, deleteAccident, refreshCurrantUser } = useContext(MainContext);
+  const {  currentUser, deleteAccident, refreshCurrantUser } = useContext(MainContext);
   const [refreshing, setRefreshing] = useState(false);
   const [accidents, setAccidents] = useState<Accident[]>(currentUser ? currentUser.accidents : []);
   const { theme, buttonTheme } = useContext(ThemeContext);
@@ -49,7 +49,7 @@ const AccidentsHistory: FC = () => {
         <ListItem.Swipeable
           containerStyle={[styles.item, styles.textPrimaryBorder]}
           bottomDivider
-          key={accident._id}
+          key={accident.id}
           leftContent={reset => (
             <Button
               title="Info"
@@ -62,7 +62,7 @@ const AccidentsHistory: FC = () => {
           rightContent={reset => (
             <Button
               title="Delete"
-              onPress={() => handleDelete(index, accident._id)}
+              onPress={() => handleDelete(index, accident.id)}
               icon={{ name: 'delete', color: 'white' }}
               buttonStyle={[styles.hiddenButton, styles.deleteButton]}
             />
@@ -73,7 +73,7 @@ const AccidentsHistory: FC = () => {
             color={buttonMain.text}
           />
           <ListItem.Content>
-            <ListItem.Title style={styles.Title}>{accident.hittingDriver.name}</ListItem.Title>
+            <ListItem.Title style={styles.Title}>{accident.hittingDriverName}</ListItem.Title>
             <ListItem.Subtitle style={styles.Subtitle}>{accident.date}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron
@@ -88,7 +88,7 @@ const AccidentsHistory: FC = () => {
         <ListItem.Swipeable
           containerStyle={[styles.item, styles.textPrimaryBorder]}
           bottomDivider
-          key={accident._id}
+          key={accident.id}
           leftContent={reset => (
             <Button
               title="Info"
@@ -102,7 +102,7 @@ const AccidentsHistory: FC = () => {
           rightContent={reset => (
             <Button
               title="Delete"
-              onPress={() => handleDelete(index, accident._id)}
+              onPress={() => handleDelete(index, accident.id)}
               icon={{ name: 'delete', color: 'white' }}
               buttonStyle={[styles.hiddenButton, styles.deleteButton]}
 
@@ -117,8 +117,8 @@ const AccidentsHistory: FC = () => {
           <ListItem.Content>
             <ListItem.Title style={styles.Title}>
               {accident.isIdentify
-                ? accident.hittingDriver.name
-                : accident.hittingDriver.carNumber}
+                ? accident.hittingDriverName
+                : accident.hittingCarNumber}
             </ListItem.Title>
             <ListItem.Subtitle style={styles.Subtitle}>{accident.date}</ListItem.Subtitle>
           </ListItem.Content>

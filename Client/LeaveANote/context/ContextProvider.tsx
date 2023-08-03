@@ -137,8 +137,14 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return responseData.success ? [true, responseData.message, responseData.data] : [false, responseData.error!];
 
     } catch (error: any) {
-      return [false, error.response.data.error]
 
+      // If there is a response data with an error field, return the error message from the API response
+      if (error?.response?.data?.error) {
+        return [false, error.response.data.error];
+      }
+
+      // Otherwise, return the general error message
+      return [false, error.message];
     }
 
 
@@ -172,21 +178,21 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       if (responseData.tokenError) { handleTokenError() }
       if (responseData.data === undefined || !responseData.data) { return null; }
       const userFromServer: UserFromServer = responseData.data;
-      
-      
-        const unreadMessages:Accident[] = userFromServer.accidents.filter(acc => acc.isRead === false )
-        const user:User = {
+
+
+      const unreadMessages: Accident[] = userFromServer.accidents.filter(acc => acc.isRead === false)
+      const user: User = {
         _id: userFromServer.id,
         email: userFromServer.email,
         phoneNumber: userFromServer.phoneNumber,
         name: userFromServer.name,
         carNumber: userFromServer.carNumber,
         role: userFromServer.role,
-        accidents:userFromServer.accidents,
+        accidents: userFromServer.accidents,
         unreadMessages: unreadMessages,
         deviceToken: userFromServer.deviceToken,
-        }
-        
+      }
+
       return user;
     } catch (error: any) {
       console.log(error.response.data.error);
@@ -357,27 +363,37 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
    */
   const updateUserInformation = async (data: UserDataToUpdate): Promise<[boolean, string]> => {
     try {
-      if (!currentUser) return [false, 'Problem with connection try to login again'];
+      if (!currentUser) return [false, 'Problem with connection, try to login again'];
       const requestBody = {
         id: currentUser._id,
         email: data.email,
         phoneNumber: data.phoneNumber,
         carNumber: data.carNumber,
         name: data.name,
+      };
+      console.log(requestBody);
 
-      }
-      const response = await api.post('/User/informationUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } })
+      const response = await api.put('/User/informationUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<User> = response.data;
-      if (responseData.tokenError) { handleTokenError() }
+      if (responseData.tokenError) {
+        handleTokenError();
+      }
 
-      //as [boolean,string] : I add this just because i know that if ! successful then error won't be undefined 100%
+      // as [boolean, string]: I add this just because I know that if not successful, then error won't be undefined 100%
       return responseData.success ? [true, responseData.message] : [false, responseData.error!];
 
     } catch (error: any) {
-      console.error(error.response.data); // Log the error response data for further analysis
-      return [false, error.response.data.error];
-    };
-  }
+
+      // If there is a response data with an error field, return the error message from the API response
+      if (error?.response?.data?.error) {
+        return [false, error.response.data.error];
+      }
+
+      // Otherwise, return the general error message
+      return [false, error.message];
+    }
+  };
+
   /**
   * Updates the user's password.
   * @param oldPassword The user's old password.
@@ -393,14 +409,21 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
         oldPassword,
         newPassword
       }
-      const response = await api.post('/User/passwordUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const response = await api.put('/User/passwordUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<void> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       return responseData.success ? [responseData.success, responseData.message] : [responseData.success, responseData.error!];
     }
     catch (error: any) {
-      return [false, error.response.data.error];
-    };
+
+      // If there is a response data with an error field, return the error message from the API response
+      if (error?.response?.data?.error) {
+        return [false, error.response.data.error];
+      }
+
+      // Otherwise, return the general error message
+      return [false, error.message];
+    }
   }
 
   /**
@@ -434,7 +457,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       const requestBody = { userId: currentUser._id, accidentId };
       const response = await api.put('/User/readMessageInbox', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<void> = response.data;
-      
+
       if (responseData.tokenError) { handleTokenError() }
       return responseData.success;
     } catch (error: any) {
