@@ -118,7 +118,7 @@ export interface UserDataToUpdate {
 }
 //The interface that holds the properties of both Note and Report.
 export interface Accident {
-  ID: string;
+  id: string;
   hittingDriver: {
     name?: string;
     carNumber: string;
@@ -134,6 +134,7 @@ export interface Accident {
     name: string;
     phoneNumber: string;
   };
+  isRead: boolean; 
 }
 export interface Token {
   exp: number;

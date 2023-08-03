@@ -25,7 +25,7 @@ interface MainContextType {
   showToast: (message: string, status: string, header: string) => void;
   submitNote: (note: NoteToSend) => Promise<boolean>;
   submitReport: (report: ReportToSend) => Promise<boolean>;
-  searchCarNumber: (carNumber: string) => Promise<[boolean, string,string]>;
+  searchCarNumber: (carNumber: string) => Promise<[boolean, string, string]>;
   loginAttempt: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
   signupAttempt: (newUser: SignUpFormValues, deviceToken: string) => Promise<[boolean, string, string?]>;
   handleLogOut: () => Promise<void>;
@@ -182,7 +182,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   * @param carNumber The car number to search for.
   * @returns A promise that resolves to a boolean indicating whether the car number was found.
   */
-  const searchCarNumber = async (carNumber: string): Promise<[boolean, string,string]> => {
+  const searchCarNumber = async (carNumber: string): Promise<[boolean, string, string]> => {
     try {
       const response: AxiosResponse = await api.get("/User/searchCarNumber", { headers: { Authorization: `Bearer ${token}`, }, params: { carNumber } });
       const responseData: IHttpResponse<searchCarNumberDto> = response.data;
@@ -191,7 +191,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return [success, data?.deviceToken || '', data?.id || '']
     } catch (error: any) {
       console.log(error.response.data.error);
-      return [false, '',''];
+      return [false, '', ''];
     }
   };
   /**
@@ -230,7 +230,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     try {
       if (!currentUser) { return false; }
       const requestBody = {
-        imageUrl: report.imageUrl,
+        imageSource: report.imageUrl,
         damagedCarNumber: report.damagedCarNumber,
         hittingCarNumber: report.hittingCarNumber,
         isAnonymous: report.isAnonymous,
@@ -239,11 +239,10 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
           phoneNumber: currentUser.phoneNumber
         }
       }
-      const response = await api.post('/reports/createReport', requestBody, { headers: { Authorization: `Bearer ${token}`, } });
+      const response = await api.post('/Accident/createReport', requestBody, { headers: { Authorization: `Bearer ${token}`, } });
 
-      const responseData: IHttpResponse<void> = response.data;
+      const responseData: IHttpResponse<Accident> = response.data;
       if (responseData.tokenError) { handleTokenError() }
-
       return responseData.success;
     } catch (error: any) {
       console.log(error.response.data.error); // Log the error response data for further analysis
@@ -320,11 +319,11 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     try {
 
       const requestBody = {
-        userId,
+        id: userId,
         deviceToken
       }
-      const response = await api.post('/users/updateDeviceToken', requestBody)
-      const responseData: IHttpResponse<void> = response.data;
+      const response = await api.put('/User/updateDeviceToken', requestBody)
+      const responseData: IHttpResponse<string> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       //as [boolean,string] : I add this just because i know that if responseData.success is false then error won't be undefined 100%
       return responseData.success ? [true, responseData.message] : [false, responseData.error!];
@@ -344,16 +343,15 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     try {
       if (!currentUser) return [false, 'Problem with connection try to login again'];
       const requestBody = {
-        userId: currentUser._id,
-        update: {
-          email: data.email,
-          phoneNumber: data.phoneNumber,
-          carNumber: data.carNumber,
-          name: data.name,
-        }
+        id: currentUser._id,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        carNumber: data.carNumber,
+        name: data.name,
+
       }
-      const response = await api.post('/users/informationUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } })
-      const responseData: IHttpResponse<void> = response.data;
+      const response = await api.post('/User/informationUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } })
+      const responseData: IHttpResponse<User> = response.data;
       if (responseData.tokenError) { handleTokenError() }
 
       //as [boolean,string] : I add this just because i know that if ! successful then error won't be undefined 100%
@@ -375,11 +373,11 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     try {
       if (!currentUser) return [false, 'Problem with connection try to login again'];
       const requestBody = {
-        userId: currentUser._id,
+        id: currentUser._id,
         oldPassword,
         newPassword
       }
-      const response = await api.post('/users/passwordUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const response = await api.post('/User/passwordUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<void> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       return responseData.success ? [responseData.success, responseData.message] : [responseData.success, responseData.error!];
@@ -395,12 +393,12 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
  * @returns A promise that resolves to a tuple containing a boolean indicating whether the deletion was successful
  *          and a string with a success/error message.
  */
-  const deleteAccident = async (messageId: string): Promise<[boolean, string]> => {
+  const deleteAccident = async (accidentId: string): Promise<[boolean, string]> => {
     try {
       if (!currentUser) return [false, 'Problem with connection try to login again'];
 
-      const requestBody = { userId: currentUser._id, messageId };
-      const response = await api.post('/users/deleteMessage', requestBody, { headers: { Authorization: `Bearer ${token}` } });
+      const requestBody = { userId: currentUser._id, accidentId };
+      const response = await api.post('/User/deleteMessage', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<void> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       return [responseData.success, responseData.message];
@@ -414,10 +412,10 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
    * @param messageId The ID of the accident message to delete.
    * @returns A promise that resolves to a boolean indicating whether the deletion was successful.
    */
-  const deleteFromUnreadMessages = async (messageId: string): Promise<boolean> => {
+  const deleteFromUnreadMessages = async (accidentId: string): Promise<boolean> => {
     try {
       if (!currentUser) return false;
-      const requestBody = { userId: currentUser._id, messageId };
+      const requestBody = { userId: currentUser._id, accidentId };
       const response = await api.post('/users/deleteMessageInbox', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<void> = response.data;
       if (responseData.tokenError) { handleTokenError() }
