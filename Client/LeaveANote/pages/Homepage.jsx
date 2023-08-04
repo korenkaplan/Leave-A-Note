@@ -96,6 +96,12 @@ export default function Homepage({navigation}) {
    *
    */
   const handleSearchPress = async () => {
+    if (searchValue === currentUser.carNumber) {
+      setIconName('error');
+      setError("You Can't Send a note to yourself");
+      setIsNumberValid(false);
+      return;
+    }
     setIsLoading(true); // Set loading state to true
     const [isUserExists, deviceToken] = await searchCarNumber(searchValue);
     setIsLoading(false); // Set loading state to true
@@ -113,15 +119,15 @@ export default function Homepage({navigation}) {
     setCarNumInput(searchValue);
     navigation.navigate({
       name: 'CreateNote',
-      params: {carNumber: searchValue, deviceToken:deviceTokenToSend},
+      params: {carNumber: searchValue, deviceToken: deviceTokenToSend},
       merge: true,
     });
   };
   const moveToReportPage = () => {
     navigation.navigate({
-      name:'CreateReport',
-      params:{searchValue},
-      merge: true
+      name: 'CreateReport',
+      params: {searchValue},
+      merge: true,
     });
     setSearchValue('');
   };
