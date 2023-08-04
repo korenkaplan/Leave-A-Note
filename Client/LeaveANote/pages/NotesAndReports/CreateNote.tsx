@@ -57,7 +57,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     if (damagedUserId)
       setDamagedUserIdToSend(damagedUserId)
 
-    console.log(carNumber, damagedUserId, deviceToken);
+
   }, [route.params])
 
   const openCamera = (): void => {

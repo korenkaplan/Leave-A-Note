@@ -123,7 +123,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       setCarNumInput('');
     }
     catch (error: any) {
-      console.log(error.message);
+
     }
   };
   const toggleCheckbox = () => setIsChecked(!isChecked);

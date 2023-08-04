@@ -97,10 +97,15 @@ export default function Homepage({navigation}) {
    *
    */
   const handleSearchPress = async () => {
+    if(searchValue === currentUser.carNumber)
+    {
+      setIconName('error');
+      setError('You Can\'t Send a note to yourself');
+      setIsNumberValid(false);
+      return;
+    }
     setIsLoading(true); // Set loading state to true
-    const [isUserExists, deviceToken, damagedUserId] = await searchCarNumber(
-      searchValue,
-    );
+    const [isUserExists, deviceToken, damagedUserId] = await searchCarNumber( searchValue);
     setIsLoading(false); // Set loading state to true
     if (isUserExists) {
       setIconName('check');

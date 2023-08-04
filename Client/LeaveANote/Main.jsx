@@ -17,9 +17,9 @@ export default function Main() {
     setCurrentUser,
     getUserById,
     setToken,
-    updateDeviceToken
+    updateDeviceToken,
   } = useContext(MainContext);
-  const { setTheme, lightTheme, darkTheme, buttonTheme} =
+  const {setTheme, lightTheme, darkTheme, buttonTheme} =
     useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(true); // Add isLoading state
   const colorScheme = useColorScheme();
@@ -47,19 +47,15 @@ export default function Main() {
           }
         }
         setIsLoading(false);
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     };
-  
+
     getData();
   }, []);
   if (isLoading) {
     // Render a loading indicator while data is being retrieved
     return <SplashScreen />;
   }
-
-
 
   return (
     <NavigationContainer>

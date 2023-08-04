@@ -69,7 +69,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       const { data }: IHttpResponse<DistributionOfReports[]> = responseData
       return data ? data : []
     } catch (error: any) {
-      console.error(error.message);
+
       return []
     }
   };
@@ -80,7 +80,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       const responseData: IHttpResponse<RegisteredUsersPerMonthAmount[]> = response.data;
       return responseData.data ? [true, responseData.data] : [false, []];
     } catch (error: any) {
-      console.error(error.message);
+
       return [false, []]
     }
   }
@@ -106,7 +106,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       const decoded: Token = jwt_decode(token);
       const connectedUser: User | null = await getUserById(decoded.id, token)
       if (!connectedUser) {
-        console.error('Problem with Token')
+
         return false;
       }
       setCurrentUser(connectedUser);
@@ -195,7 +195,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
 
       return user;
     } catch (error: any) {
-      console.log(error.response.data.error);
+
       return null;
     }
   };
@@ -223,7 +223,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
 
       return user;
     } catch (error: any) {
-      console.log(error.response.data.error);
+
       return null;
     }
   };
@@ -240,7 +240,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       const { success, data } = responseData;
       return [success, data?.deviceToken || '', data?.id || '']
     } catch (error: any) {
-      console.log(error.response.data.error);
+
       return [false, '', ''];
     }
   };
@@ -267,7 +267,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       if (responseData.tokenError) { handleTokenError() }
       return responseData.success;
     } catch (error: any) {
-      console.log(error.response.data.error); // Log the error response data for further analysis
+
       return false;
     }
   };
@@ -295,7 +295,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       if (responseData.tokenError) { handleTokenError() }
       return responseData.success;
     } catch (error: any) {
-      console.log(error.response.data.error); // Log the error response data for further analysis
+
       return false;
     }
   };
@@ -328,7 +328,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
 
       return downloadURL;
     } catch (error: any) {
-      console.error('Error uploading photo:', error);
+
       return error.message;
     }
   };
@@ -362,7 +362,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
     try {
       await AsyncStorage.setItem(key, value);
     } catch (error) {
-      console.log('Error storing object:', error);
+
     }
   };
   const updateDeviceTokenInDb = async (deviceToken: string, userId: string): Promise<[boolean, string]> => {
@@ -379,7 +379,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return responseData.success ? [true, responseData.message] : [false, responseData.error!];
 
     } catch (error: any) {
-      console.error(error.response.data); // Log the error response data for further analysis
+
       return [false, error.response.data.error];
     };
   };
@@ -399,7 +399,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
         carNumber: data.carNumber,
         name: data.name,
       };
-      console.log(requestBody);
+
 
       const response = await api.put('/User/informationUpdate', requestBody, { headers: { Authorization: `Bearer ${token}` } });
       const responseData: IHttpResponse<User> = response.data;
@@ -489,7 +489,7 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       if (responseData.tokenError) { handleTokenError() }
       return responseData.success;
     } catch (error: any) {
-      console.log(error.message);
+
       return false
     }
   };

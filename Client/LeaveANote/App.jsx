@@ -11,11 +11,8 @@ import {
   requestUserPermission,
   sendNotification,
 } from './utils/notification/notificationHelper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import DropdownAlert from 'react-native-dropdownalert';
-import {Text} from '@rneui/base';
-import {Button} from '@rneui/themed';
 I18nManager.allowRTL(false);
 export default function App() {
   LogBox.ignoreLogs(['Require cycle: node_modules/victory']);
