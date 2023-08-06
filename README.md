@@ -6,9 +6,9 @@ Welcome to Leave A Note – your go-to platform for seamless parking incident re
 
 Whether you're directly involved in the incident or acting as a supportive witness, our process is simple and user-friendly:
 
-1. **Enter Car Number**: Begin by typing in the car number involved in the incident. This is a crucial step to ensure accurate communication.
+1. **Enter Car Number**: Begin by typing in the car number involved in the incident. 
 
-2. **Capture Photo**: Take a quick photo of the accident scene using your device's camera. This visual documentation adds essential context to your report.
+2. **Capture Photo**: Take a quick photo of the accident scene. 
 
 3. **Send Report**: Hit that "Send" button! Your report will be securely submitted through our system.
 
