@@ -1,44 +1,63 @@
-# "Leave A Note"  Documentation
-Leave A Note is a revolutionary platform designed to address the challenges drivers face during parking incidents or accidents when direct communication with the other party is not possible. Our goal is to provide a secure and efficient way for users to leave notes and reports for each other, ensuring a smooth resolution even in the absence of the other driver or when acting as a witness to a parking incident.
 
----
-<div style="display: flex; justify-content: center;">
-  <img src="https://i.imgur.com/OomUzFO.jpg" alt="Sample Image" width="200"/>
-  <img src="https://i.imgur.com/NwaUIrq.jpg" alt="Image 2" width="200">
+# Leave a Note - Driver's Communication App
+
+Leave A Note: Transforming Parking Incident Solutions. Our platform provides a secure and efficient way for users to leave notes and reports when direct communication is not possible. Facilitating smooth resolutions, whether you're involved in the incident or a supportive witness.
+
+
+##  Demo & Screenshots
+- [Walkthrough demo youtube video](https://www.youtube.com/watch?v=FAv9v3SBU9I)
+ <div>
+<img src="https://i.imgur.com/OomUzFO.jpg" width=150px >
+<img src="https://i.imgur.com/NwaUIrq.jpg" width=150px >
+<img src="https://i.imgur.com/iyOiBYt.jpg" width=150px >
+<img src="https://i.imgur.com/MlZXV8P.jpg" width=150px >
+<img src="https://i.imgur.com/k91xU8E.jpg" width=150px >
+<img src="https://i.imgur.com/ttdbT3L.jpg" width=150px >
+<img src="https://i.imgur.com/XcKMSVZ.jpg" width=150px >
+<img src="https://i.imgur.com/nBvNqbK.jpg" width=150px >
+<img src="https://i.imgur.com/MLkrqnb.jpg" width=150px >
+<img src="https://i.imgur.com/Rwok9PM.jpg" width=150px >
+<img src="https://i.imgur.com/08J4kub.jpg" width=150px >
+<img src="https://i.imgur.com/zLGrhRK.jpg" width=150px >
+<img src="https://i.imgur.com/SSJIjwc.jpg" width=150px >
+<img src="https://i.imgur.com/CR44j6n.jpg" width=150px >
+<img src="" width=150px >
 </div>
-Replace "Image1URL," "Image2URL," and "Image3URL" with the actual URLs of your images. Adjust the width value to control the size of the images.
 
-
-
-Keep in mind that the final appearance of the images might vary depending on the rendering environment (such as GitHub, GitLab, etc.). It's a good idea to preview your README on the platform you intend to use to ensure that the images are displayed as you expect.
-
-
-## Table Of Content
-1. [Source and Demo, Future Features for Upcoming Versions](#source-and-demo-future-features-for-upcoming-versions)
-2. [Introduction](#introduction)
-3. [Directories](#directories)
+## Table Of Contents
+1. [Tech Stack](#tech-stack)
+2. [Features](#features)
+3. [About The Idea](#about-the-idea)
+4. [Roadmap - Future Improvements](#roadmap)
+5. [Directories](#directories)
+6. [Environment Variables](#environment-variables)
+7. [Run Locally](#run-locally)
+8. [Author & Feedback](#author--feedback)
    
+## Tech Stack
+
+**Client:** React-Native, Typescript (Currant Repository)
+
+**Server for main branch :** Node, Typescript,  Express, Mongodb Atlas with Mongoose.
+
+[Node.JS & Mongodb version Server side Repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server)
 
 
+**Server for Net_Core_Backend branch :** ASP.NET Core 7 , Entity Framework 7.
 
-## Source And Demo, Future Features for Upcoming Versions
+[.NET 7 & SQL version Server side Repository](https://github.com/korenkaplan/LeaveANoteServerProject)
 
-**App Video Demo:**
-- [Walkthrough demo video](https://www.youtube.com/watch?v=FAv9v3SBU9I)
 
-**Source Code on GitHub:**
-- [.NET 7 & SQL version Server side Repository](https://github.com/korenkaplan/LeaveANoteServerProject)
-- [Node.JS & Mongodb version Server side Repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server)
-  
+## Features
 
-**Future Features for Upcoming Versions (Current Version 1.0):**
-1. **Multi-Language Support:** Recognizing our diverse user base, we plan to introduce multi-language support. Users will be able to interact with the platform in their preferred language, promoting inclusivity and ease of use for everyone.
-2. **Geo-Tagging and Mapping Integration:** To better understand incident locations, we will integrate geo-tagging and mapping functionalities. This will help users visualize the incident locations and provide a more accurate context for reporting and resolving parking incidents.
-3. **Image Download and Note Share as PDF:** In response to user requests, we will be introducing the ability to download incident images and notes as PDF files. This feature ensures users can keep a secure offline copy for their records or easily share the incident details with relevant parties.
-4. **User Feedback System for Problem and Bug Reports:** Your feedback matters to us! To provide a more streamlined way for users to report problems and bugs, we will introduce a user feedback system. This feature will allow you to submit any issues you encounter directly through the platform, enabling us to address and resolve them promptly.
----
+- Light/dark mode toggle
+- User authentication with secure login and authorization using JWT Tokens.
+- Background and Foreground notification system for new notes and reports using FCM. (Currently only for .NET Version)
+- Camera integration for capturing,using a custom camera component.
+- Easy-to-use interface that accommodates users of all experience levels
+- Featuring animation using the lottie package.
 
-## Introduction
+## About The Idea
 
 **The Problem:**
 Parking incidents can be frustrating and stressful, especially when the other driver involved is not present to exchange details. This often leads to a lack of information and difficulties in resolving insurance claims. "Leave A Note" aims to bridge this communication gap and provide a reliable means for drivers and witnesses to share vital information, ensuring a fair and hassle-free process in such situations.
@@ -55,35 +74,16 @@ Our platform caters to all drivers, whether they have experienced a parking inci
 - Privacy of a Reporter (3rd Party Witness): As a 3rd party witness, you have the option to remain completely anonymous when reporting an accident between two other drivers. Your identity will never be disclosed to the involved parties, ensuring you can contribute valuable information without any concerns about personal exposure.
 - Asymmetric Information Sharing: To further protect your privacy, "Leave A Note" operates on asymmetric information sharing. Only the damaged user will have access to the details of the hitting driver, while the reverse is not permitted. This ensures that the user who experienced the incident retains full control over the exchange of information, maintaining their privacy and personal safety.
 ---
+## Roadmap
 
-## Branches: Two Versions Available
+- **Multi-Language Support:** Recognizing our diverse user base, we plan to introduce multi-language support. Users will be able to interact with the platform in their preferred language, promoting inclusivity and ease of use for everyone.
 
-Leave A Note offers two different versions to suit your backend preferences: the **.NET Core SQL Version** and the **Node.js MongoDB Version**.
+- **Geo-Tagging and Mapping Integration:** To better understand incident locations, we will integrate geo-tagging and mapping functionalities. This will help users visualize the incident locations and provide a more accurate context for reporting and resolving parking incidents.
 
-### .NET Core SQL Version
+- **Image Download and Note Share as PDF:** In response to user requests, we will be introducing the ability to download incident images and notes as PDF files. This feature ensures users can keep a secure offline copy for their records or easily share the incident details with relevant parties.
 
-The `.NET Core SQL Version` branch is designed for those who prefer to work with the .NET ecosystem and utilize SQL databases. This version offers:
+- **User Feedback System for Problem and Bug Reports:** Your feedback matters to us! To provide a more streamlined way for users to report problems and bugs, we will introduce a user feedback system. This feature will allow you to submit any issues you encounter directly through the platform, enabling us to address and resolve them promptly.
 
-- **Robust Ecosystem:** Leveraging the capabilities of the .NET Core framework, this version provides a strong and well-supported backend ecosystem.
-- **SQL Database:** Utilizing a SQL database (such as SQL Server), this version offers reliable data storage and querying.
-- **Scalability:** With proper architecture and optimization, this version can handle scaling to accommodate increasing user demands.
-
-To access the `.NET Core SQL Version` source code and set up instructions, visit the repository here: [Leave A Note .NET Core SQL Version](https://github.com/korenkaplan/LeaveANoteServerProject).
-
-### Node.js MongoDB Version
-
-The `Node.js MongoDB Version` branch is tailored for developers who prefer working with Node.js and MongoDB for their backend needs. This version provides:
-
-- **Node.js Flexibility:** Utilizing the Node.js runtime, this version allows for event-driven and non-blocking I/O operations.
-- **MongoDB Database:** The use of a MongoDB database provides a schema-less and flexible approach to data storage.
-- **Modern Web Development:** Leveraging JavaScript for both frontend and backend development, this version aligns with modern web development trends.
-
-To explore the `Node.js MongoDB Version` source code and setup instructions, head over to the repository: [Leave A Note Node.js MongoDB Version](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server).
-
-Whichever version you choose, both are designed to empower you in creating a seamless and efficient experience for users of the "Leave A Note" platform.
-
-
----
 ## Directories
  - **assets**: Contains animations and images used throughout the app.
 
@@ -112,3 +112,84 @@ Whichever version you choose, both are designed to empower you in creating a sea
   - **validation**: Includes validation schemas (e.g., Joi) to ensure data integrity.
   - **notifications**: Houses helper functions for managing app notifications.
 
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file.
+This all can be found in the .env.example file, copy the following from firebase when creating a new project. 
+
+`API_KEY`
+
+`AUTH_DOMAIN`
+
+`PROJECT_ID`
+
+`STORAGE_BUCKET`
+
+`MESSAGING_SENDER_ID`
+
+`APP_ID`
+
+`MEASUREMENT_ID`
+
+
+This is for the notification you need to enable FCM with firebase.
+
+`SERVER_KEY`
+
+
+## Run Locally 
+### Clone and install 
+
+Clone the project from this link
+
+```bash
+   https://github.com/korenkaplan/Leave-A-Note.git
+```
+
+Go to the project directory
+
+```bash
+  cd Client/LeaveANote
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+### Create the .env file
+
+To run this project, you will need to add the following environment variables to your .env file.
+This all can be found in the .env.example file, copy the following from firebase when creating a new project. 
+
+`API_KEY`
+
+`AUTH_DOMAIN`
+
+`PROJECT_ID`
+
+`STORAGE_BUCKET`
+
+`MESSAGING_SENDER_ID`
+
+`APP_ID`
+
+`MEASUREMENT_ID`
+
+
+### Launch the Project
+
+```bash
+  npm run start
+```
+
+Choose Android
+
+```bash
+  a - run on Android
+```
+
+## Author & Feedback
+- [@korenkaplan](https://github.com/korenkaplan)
+- If you have any feedback, please reach out to us at korenkaplan96@gmail.com
