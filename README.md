@@ -3,6 +3,10 @@
 
 Leave A Note: Transforming Parking Incident Solutions. Our platform provides a secure and efficient way for users to leave notes and reports when direct communication is not possible. Facilitating smooth resolutions, whether you're involved in the incident or a supportive witness.
 
+This repository exclusively hosts the client-side of our application. In addition, the application is further developed across two primary branches:
+- 'main' Branch: This branch is for a ASP.NET Core SQL backend which can be found [here](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server).
+- 'NET_Core_Version' branch:This branch is for a Node js mongoDB backend which can be found [here](https://github.com/korenkaplan/LeaveANoteServerProject).
+
 
 ##  Demo & Screenshots
 - [Walkthrough demo youtube video](https://www.youtube.com/watch?v=FAv9v3SBU9I)
@@ -21,7 +25,7 @@ Leave A Note: Transforming Parking Incident Solutions. Our platform provides a s
 <img src="https://i.imgur.com/zLGrhRK.jpg" width=150px >
 <img src="https://i.imgur.com/SSJIjwc.jpg" width=150px >
 <img src="https://i.imgur.com/CR44j6n.jpg" width=150px >
-<img src="" width=150px >
+<img src="https://i.imgur.com/sQpKjIK.jpg" width=150px >
 </div>
 
 ## Table Of Contents
