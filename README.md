@@ -2,7 +2,6 @@
 Leave A Note is a revolutionary platform designed to address the challenges drivers face during parking incidents or accidents when direct communication with the other party is not possible. Our goal is to provide a secure and efficient way for users to leave notes and reports for each other, ensuring a smooth resolution even in the absence of the other driver or when acting as a witness to a parking incident.
 
 ---
-![App Screenshot](https://imgur.com/uuAI0PO)
 
 ## Table Of Content
 1. [Source and Demo, Future Features for Upcoming Versions](#source-and-demo-future-features-for-upcoming-versions)
