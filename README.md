@@ -6,9 +6,9 @@ Welcome to Leave A Note – your go-to platform for seamless parking incident re
 
 Whether you're directly involved in the incident or acting as a supportive witness, our process is simple and user-friendly:
 
-1. **Enter Car Number**: Begin by typing in the car number involved in the incident. This is a crucial step to ensure accurate communication.
+1. **Enter Car Number**: Begin by typing in the car number involved in the incident. 
 
-2. **Capture Photo**: Take a quick photo of the accident scene using your device's camera. This visual documentation adds essential context to your report.
+2. **Capture Photo**: Take a quick photo of the accident scene. 
 
 3. **Send Report**: Hit that "Send" button! Your report will be securely submitted through our system.
 
@@ -18,12 +18,25 @@ At Leave A Note, our aim is to simplify the process, reduce stress, and foster c
 
 
 This repository exclusively hosts the client-side of our application. In addition, the application is further developed across two primary branches:
-- 'main' Branch: This branch is for a ASP.NET Core backend, SQL database and hosted on [Azure](https://azure.microsoft.com/en-us) cloud, which can be found [in this repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server).
-- 'NET_Core_Backend' branch:This branch is for a Node js backend , mongoDB and hosted on [Render](https://render.com/)  which can be found [in this repository](https://github.com/korenkaplan/LeaveANoteServerProject).
+- `main` branch:This branch is for a Node js backend , mongoDB and hosted on [Render](https://render.com/)  which can be found [in this repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server).
+- `NET_Core_Backend` Branch : This branch is for a ASP.NET Core backend, SQL database and hosted on [Azure](https://azure.microsoft.com/en-us) cloud, which can be found [in this repository](https://github.com/korenkaplan/LeaveANoteServerProject) .
 
+  
+## Table Of Contents
+1. [Demo & Screenshots](#demo--screenshots)
+2. [Tech Stack](#tech-stack)
+3. [Features](#features)
+4. [About The Idea](#about-the-idea)
+5. [Roadmap - Future Improvements](#roadmap)
+6. [Directories](#directories)
+7. [Environment Variables](#environment-variables)
+8. [Run Locally](#run-locally)
+9. [API Reference - Context Functions](#api-reference---context-functions)
+10. [Author & Feedback](#author--feedback)
 
 ##  Demo & Screenshots
 - [Walkthrough demo youtube video](https://www.youtube.com/watch?v=FAv9v3SBU9I)
+### Screenshots from the application.
  <div>
 <img src="https://i.imgur.com/OomUzFO.jpg" width=150px >
 <img src="https://i.imgur.com/NwaUIrq.jpg" width=150px >
@@ -42,15 +55,7 @@ This repository exclusively hosts the client-side of our application. In additio
 <img src="https://i.imgur.com/sQpKjIK.jpg" width=150px >
 </div>
 
-## Table Of Contents
-1. [Tech Stack](#tech-stack)
-2. [Features](#features)
-3. [About The Idea](#about-the-idea)
-4. [Roadmap - Future Improvements](#roadmap)
-5. [Directories](#directories)
-6. [Environment Variables](#environment-variables)
-7. [Run Locally](#run-locally)
-8. [Author & Feedback](#author--feedback)
+
    
 ## Tech Stack
 
@@ -199,7 +204,7 @@ This all can be found in the .env.example file, copy the following from firebase
 ### Launch the Project
 
 ```bash
-  npm run start
+  npm start
 ```
 
 Choose Android
@@ -207,6 +212,202 @@ Choose Android
 ```bash
   a - run on Android
 ```
+
+## API Reference -  baseURL: 'https://leaveanoteservice.azurewebsites.net/api'
+
+#### updateDeviceTokenInDb
+Update the user's device in the database to keep it updated.
+
+**Returned Value:** The new Token
+
+```http
+PUT /User/updateDeviceToken
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `deviceToken`      | `string` | `The user's device token for sending notifications` |
+| `userId`      | `string` | `The user's ID in the database` |
+
+#### reportsAndNotesDistributionData
+Get the distribution data of the reports notes and unmatched reports.
+**Authorization:** bearer token , role = 'Admin'
+**Returned Value:** An object containing the amount of reports, notes and unmatched reports.
+
+```http
+GET /Stats/reportsDistribution
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `Empty`      | `` | `` |
+
+#### registeredUsersData 
+Get registered users' data per month for a specific year.
+**Authorization:** bearer token , role = 'Admin'
+**Returned Value:** An object containing the amount of regiserted user of a specific year.
+```http
+GET /Stats/registeredUsersData
+```
+| Request-Params | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `year`      | `string` | `Year for filtering` |
+
+
+#### loginAttempt
+Make a sign in attempt.
+
+**Returned Value:** A token containing the user id, experation time and role.
+
+```http
+POST /User/login
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `string` | `The email to search the user by` |
+| `password`      | `string` | `the password of the user` |
+
+#### signupAttempt
+Register a new user.
+
+**Returned Value:** A token containing the user id, experation time and role.
+
+```http
+POST /User/register'
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | `The user's name` |
+| `email`      | `string` | `The user's email` |
+| `password`      | `string` | `The user's password` |
+| `carNumber`      | `string` | `The user's car number` |
+| `phoneNumber`      | `string` | `The user's phone number` |
+| `deviceToken`      | `string` | `The user's device token` |
+
+
+### getUserById
+Get a user by its ID
+**Authorization:** bearer token
+**Returned Value:** User | null
+```http
+GET /User/getById
+```
+| Request-Params | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `int` | ` The user's ID` |
+| `minimal` |  `bool` | `Whether to return a user with or without all the accident list`|
+
+
+### searchCarNumber
+Get the device token and the id of the user by the car number.
+**Authorization:** bearer token
+**Returned Value:** {deviceToken: string,id: string}
+```http
+GET /User/searchCarNumber
+```
+| Request-Params | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `int` | ` The user's ID` |
+| `minimal` |  `bool` | `Whether to return a user with or without all the accident list`|
+
+#### submitNote
+Submits a new note.
+**Authorization:** bearer token
+**Returned Value:** Void
+```http
+POST /Accident/CreateNote'
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `int` | ` The damaged user's ID` |
+| `damaged_user_car_num`      | `string` | ` The damaged user's car number` |
+| `hitting_user_car`      | `string` | `The offending user's car number` |
+| `hitting_user_phone`      | `string` | `The offending user's phone number` |
+| `hitting_user_name`      | `string` | `The offending user's name` |
+| `imageSource`      | `string` | `The url to the image of the accident.` |
+
+
+#### submitReport
+Create a new report
+**Authorization:** bearer token
+**Returned Value:** Void
+
+```http
+POST /Accident/createReport
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `imageSource`      | `string` | `The url to the image of the accident.` |
+| `damagedCarNumber`      | `string` | `The damaged user's car number` |
+| `hittingCarNumber`      | `string` | `The offending user's car number` |
+| `isAnonymous`      | `bool` | `Determines whether the reporter will stay anonymous` |
+| `reporter`      | `{name: string , phoneNumber:string}` | `` |
+
+#### updateUserInformation
+Update the user's inforamtion in the database.
+**Authorization:** bearer token
+**Returned Value:** Void
+
+```http
+PUT /User/informationUpdate
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `email`      | `string` | `The email  of  the user to update` |
+| `phoneNumber`      | `string` | `The phone Number  of  the user to update` |
+| `carNumber`      | `string` | `The car Number  of  the user to update` |
+| `name`      | `string` | `The name of  the user to update` |
+
+
+#### updateUserPassword
+Update the user's password in the database.
+**Authorization:** bearer token
+**Returned Value:** Void
+
+```http
+PUT /User/passwordUpdate
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `oldPassword`      | `string` | `Validate the old password before changing` |
+| `newPassword`      | `string` | `The new password to update to` |
+
+#### deleteAccident
+Update the accident field isDeleted to true.
+**Authorization:** bearer token
+**Returned Value:** Void
+
+```http
+PUT /User/deleteMessage
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `accidentId`      | `string` | `The ID of the accident's message to delete` |
+
+#### deleteFromUnreadMessages
+Update the accident field isRead to true.
+**Authorization:** bearer token
+**Returned Value:** Void
+
+```http
+PUT /User/readMessageInbox
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `accidentId`      | `string` | `The ID of the accident that was read` |
+
 
 ## Author & Feedback
 - [@korenkaplan](https://github.com/korenkaplan)
