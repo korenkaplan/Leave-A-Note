@@ -18,8 +18,9 @@ At Leave A Note, our aim is to simplify the process, reduce stress, and foster c
 
 
 This repository exclusively hosts the client-side of our application. In addition, the application is further developed across two primary branches:
-- 'main' Branch: This branch is for a ASP.NET Core backend, SQL database and hosted on [Azure](https://azure.microsoft.com/en-us) cloud, which can be found [in this repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server).
-- 'NET_Core_Backend' branch:This branch is for a Node js backend , mongoDB and hosted on [Render](https://render.com/)  which can be found [in this repository](https://github.com/korenkaplan/LeaveANoteServerProject).
+- `main` branch:This branch is for a Node js backend , mongoDB and hosted on [Render](https://render.com/)  which can be found [in this repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server).
+- `NET_Core_Backend` Branch : This branch is for a ASP.NET Core backend, SQL database and hosted on [Azure](https://azure.microsoft.com/en-us) cloud, which can be found [in this repository](https://github.com/korenkaplan/LeaveANoteServerProject) .
+
   
 ## Table Of Contents
 1. [Demo & Screenshots](#demo--screenshots)
