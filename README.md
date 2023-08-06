@@ -208,6 +208,195 @@ Choose Android
   a - run on Android
 ```
 
+## API Reference - Context Functions
+
+#### getUserQuery
+Using the mongodb find method to search a user in the user's collection.
+
+**Returned Value:** a user object with the projection fields or null if not found.
+
+
+```http
+POST /users/getUser
+```
+
+| Request-Body | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `query` | `object` | The properties to search by |
+| `projection` | `object` | The properties to get back |
+
+#### updateDeviceTokenInDb
+Update the user's device in the database to keep it updated.
+
+**Returned Value:** Void
+
+```http
+  PUT /users/updateDeviceToken
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `deviceToken`      | `string` | `The user's device token for sending notifications` |
+| `userId`      | `string` | `The user's ID in the database` |
+
+#### reportsAndNotesDistributionData
+Get the distribution data of the reports notes and unmatched reports.
+
+**Returned Value:** An object containing the amount of reports, notes and unmatched reports.
+
+```http
+  POST stats/reportsDistribution
+  Authorization: bearer token , role = 'Admin'
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `role`      | `string` | `The user role, stats only available to the admin` |
+
+#### registeredUsersData 
+Get registered users' data per month for a specific year.
+
+**Returned Value:** An object containing the amount of regiserted user of a specific year.
+```http
+  Post /stats/registeredUsersData '
+  Authorization: bearer token , role = 'Admin'
+
+```
+year	string	Year for filtering
+role	string	User role for filtering
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `year`      | `string` | `Year for filtering` |
+| `role`      | `string` | `The user role, stats only available to the admin` |
+
+#### loginAttempt
+Make a sign in attempt.
+
+**Returned Value:** A token containing the user id, experation time and role.
+
+```http
+  POST /users/login '
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `string` | `The email to search the user by` |
+| `password`      | `string` | `the password of the user` |
+
+#### signupAttempt
+Register a new user.
+
+**Returned Value:** A token containing the user id, experation time and role.
+
+```http
+  POST /users/register'
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | `The user's name` |
+| `email`      | `string` | `The user's email` |
+| `password`      | `string` | `The user's password` |
+| `carNumber`      | `string` | `The user's car number` |
+| `phoneNumber`      | `string` | `The user's phone number` |
+| `deviceToken`      | `string` | `The user's device token` |
+
+#### submitNote
+Submits a new note.
+
+**Returned Value:** Void
+```http
+  POST /notes/createNote'
+  Authorization: bearer token
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `damaged_user_car_num`      | `string` | ` The damaged user's car number` |
+| `hitting_user_car`      | `string` | `The offending user's car number` |
+| `hitting_user_phone`      | `string` | `The offending user's phone number` |
+| `hitting_user_name`      | `string` | `The offending user's name` |
+| `imageSource`      | `string` | `The url to the image of the accident.` |
+
+
+#### submitReport
+Create a new report
+
+**Returned Value:** Void
+
+```http
+  POST /reports/createReport '
+  Authorization: bearer token
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `imageUrl`      | `string` | `The url to the image of the accident.` |
+| `damagedCarNumber`      | `string` | `The damaged user's car number` |
+| `hittingCarNumber`      | `string` | `The offending user's car number` |
+| `isAnonymous`      | `bool` | `Determines whether the reporter will stay anonymous` |
+| `reporter`      | `{name: string , phoneNumber:string}` | `` |
+
+#### updateUserInformation
+Update the user's inforamtion in the database.
+
+**Returned Value:** Void
+
+```http
+  POST /users/informationUpdate'
+  Authorization: bearer token
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `update`      | `{email:str, phoneNUmber: str, carNumber:str,name:str}` | `The data to update` |
+
+#### updateUserPassword
+Update the user's password in the database.
+
+**Returned Value:** Void
+
+```http
+  POST /users/passwordUpdate'
+  Authorization: bearer token
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `oldPassword`      | `string` | `Validate the old password before changing` |
+| `newPassword`      | `string` | `The new password to update to` |
+
+#### deleteAccident
+Delete accident form the user's accident.
+
+**Returned Value:** Void
+
+```http
+  POST /users/deleteMessage'
+  Authorization: bearer token
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `messageId`      | `string` | `The ID of the accident's message to delete` |
+
+#### deleteFromUnreadMessages
+Remove the message from the users inbox.
+
+**Returned Value:** Void
+
+```http
+  POST /users/deleteMessageInbox'
+  Authorization: bearer token
+```
+
+| Request-Body | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userId`      | `string` | `The ID od  the user to update` |
+| `messageId`      | `string` | `The ID of the accident's message to delete` |
 ## Author & Feedback
 - [@korenkaplan](https://github.com/korenkaplan)
 - If you have any feedback, please reach out to us at korenkaplan96@gmail.com
