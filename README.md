@@ -2,6 +2,16 @@
 Leave A Note is a revolutionary platform designed to address the challenges drivers face during parking incidents or accidents when direct communication with the other party is not possible. Our goal is to provide a secure and efficient way for users to leave notes and reports for each other, ensuring a smooth resolution even in the absence of the other driver or when acting as a witness to a parking incident.
 
 ---
+<div style="display: flex; justify-content: center;">
+  <img src="https://i.imgur.com/OomUzFO.jpg" alt="Sample Image" width="200"/>
+  <img src="https://i.imgur.com/NwaUIrq.jpg" alt="Image 2" width="200">
+</div>
+Replace "Image1URL," "Image2URL," and "Image3URL" with the actual URLs of your images. Adjust the width value to control the size of the images.
+
+
+
+Keep in mind that the final appearance of the images might vary depending on the rendering environment (such as GitHub, GitLab, etc.). It's a good idea to preview your README on the platform you intend to use to ensure that the images are displayed as you expect.
+
 
 ## Table Of Content
 1. [Source and Demo, Future Features for Upcoming Versions](#source-and-demo-future-features-for-upcoming-versions)
