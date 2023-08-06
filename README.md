@@ -20,10 +20,22 @@ At Leave A Note, our aim is to simplify the process, reduce stress, and foster c
 This repository exclusively hosts the client-side of our application. In addition, the application is further developed across two primary branches:
 - 'main' Branch: This branch is for a ASP.NET Core backend, SQL database and hosted on [Azure](https://azure.microsoft.com/en-us) cloud, which can be found [in this repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server).
 - 'NET_Core_Backend' branch:This branch is for a Node js backend , mongoDB and hosted on [Render](https://render.com/)  which can be found [in this repository](https://github.com/korenkaplan/LeaveANoteServerProject).
-
+  
+## Table Of Contents
+1. [Demo & Screenshots](#demo--screenshots)
+2. [Tech Stack](#tech-stack)
+3. [Features](#features)
+4. [About The Idea](#about-the-idea)
+5. [Roadmap - Future Improvements](#roadmap)
+6. [Directories](#directories)
+7. [Environment Variables](#environment-variables)
+8. [Run Locally](#run-locally)
+9. [API Reference - Context Functions](#api-reference---context-functions)
+10. [Author & Feedback](#author--feedback)
 
 ##  Demo & Screenshots
 - [Walkthrough demo youtube video](https://www.youtube.com/watch?v=FAv9v3SBU9I)
+### Screenshots from the application.
  <div>
 <img src="https://i.imgur.com/OomUzFO.jpg" width=150px >
 <img src="https://i.imgur.com/NwaUIrq.jpg" width=150px >
@@ -42,15 +54,7 @@ This repository exclusively hosts the client-side of our application. In additio
 <img src="https://i.imgur.com/sQpKjIK.jpg" width=150px >
 </div>
 
-## Table Of Contents
-1. [Tech Stack](#tech-stack)
-2. [Features](#features)
-3. [About The Idea](#about-the-idea)
-4. [Roadmap - Future Improvements](#roadmap)
-5. [Directories](#directories)
-6. [Environment Variables](#environment-variables)
-7. [Run Locally](#run-locally)
-8. [Author & Feedback](#author--feedback)
+
    
 ## Tech Stack
 
@@ -199,7 +203,7 @@ This all can be found in the .env.example file, copy the following from firebase
 ### Launch the Project
 
 ```bash
-  npm run start
+  npm start
 ```
 
 Choose Android
@@ -216,7 +220,7 @@ Using the mongodb find method to search a user in the user's collection.
 **Returned Value:** a user object with the projection fields or null if not found.
 
 
-```http
+```HTTP Request:
 POST /users/getUser
 ```
 
@@ -231,7 +235,7 @@ Update the user's device in the database to keep it updated.
 **Returned Value:** Void
 
 ```http
-  PUT /users/updateDeviceToken
+PUT /users/updateDeviceToken
 ```
 
 | Request-Body | Type     | Description                       |
@@ -241,12 +245,11 @@ Update the user's device in the database to keep it updated.
 
 #### reportsAndNotesDistributionData
 Get the distribution data of the reports notes and unmatched reports.
-
+**Authorization:** bearer token , role = 'Admin'
 **Returned Value:** An object containing the amount of reports, notes and unmatched reports.
 
 ```http
-  POST stats/reportsDistribution
-  Authorization: bearer token , role = 'Admin'
+POST /stats/reportsDistribution
 ```
 
 | Request-Body | Type     | Description                       |
@@ -255,12 +258,10 @@ Get the distribution data of the reports notes and unmatched reports.
 
 #### registeredUsersData 
 Get registered users' data per month for a specific year.
-
+**Authorization:** bearer token , role = 'Admin'
 **Returned Value:** An object containing the amount of regiserted user of a specific year.
 ```http
-  Post /stats/registeredUsersData '
-  Authorization: bearer token , role = 'Admin'
-
+POST /stats/registeredUsersData
 ```
 year	string	Year for filtering
 role	string	User role for filtering
@@ -275,7 +276,7 @@ Make a sign in attempt.
 **Returned Value:** A token containing the user id, experation time and role.
 
 ```http
-  POST /users/login '
+POST /users/login '
 ```
 
 | Request-Body | Type     | Description                       |
@@ -289,7 +290,7 @@ Register a new user.
 **Returned Value:** A token containing the user id, experation time and role.
 
 ```http
-  POST /users/register'
+POST /users/register'
 ```
 
 | Request-Body | Type     | Description                       |
@@ -303,11 +304,10 @@ Register a new user.
 
 #### submitNote
 Submits a new note.
-
+**Authorization:** bearer token
 **Returned Value:** Void
 ```http
-  POST /notes/createNote'
-  Authorization: bearer token
+POST /notes/createNote'
 ```
 
 | Request-Body | Type     | Description                       |
@@ -321,12 +321,11 @@ Submits a new note.
 
 #### submitReport
 Create a new report
-
+**Authorization:** bearer token
 **Returned Value:** Void
 
 ```http
-  POST /reports/createReport '
-  Authorization: bearer token
+POST /reports/createReport '
 ```
 
 | Request-Body | Type     | Description                       |
@@ -339,12 +338,11 @@ Create a new report
 
 #### updateUserInformation
 Update the user's inforamtion in the database.
-
+**Authorization:** bearer token
 **Returned Value:** Void
 
 ```http
-  POST /users/informationUpdate'
-  Authorization: bearer token
+POST /users/informationUpdate'
 ```
 
 | Request-Body | Type     | Description                       |
@@ -354,12 +352,11 @@ Update the user's inforamtion in the database.
 
 #### updateUserPassword
 Update the user's password in the database.
-
+**Authorization:** bearer token
 **Returned Value:** Void
 
 ```http
-  POST /users/passwordUpdate'
-  Authorization: bearer token
+POST /users/passwordUpdate'
 ```
 
 | Request-Body | Type     | Description                       |
@@ -370,12 +367,11 @@ Update the user's password in the database.
 
 #### deleteAccident
 Delete accident form the user's accident.
-
+**Authorization:** bearer token
 **Returned Value:** Void
 
 ```http
-  POST /users/deleteMessage'
-  Authorization: bearer token
+POST /users/deleteMessage'
 ```
 
 | Request-Body | Type     | Description                       |
@@ -385,12 +381,11 @@ Delete accident form the user's accident.
 
 #### deleteFromUnreadMessages
 Remove the message from the users inbox.
-
+**Authorization:** bearer token
 **Returned Value:** Void
 
 ```http
-  POST /users/deleteMessageInbox'
-  Authorization: bearer token
+POST /users/deleteMessageInbox'
 ```
 
 | Request-Body | Type     | Description                       |
