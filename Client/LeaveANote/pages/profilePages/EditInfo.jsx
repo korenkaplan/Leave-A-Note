@@ -17,19 +17,22 @@ import DropdownAlert from 'react-native-dropdownalert';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
 export default function EditInfo() {
+  // Access required context and state
   let dropDownAlertRef = useRef();
   const {theme} = useContext(ThemeContext);
   const [isLoading, setIsLoading] = useState(false);
   const {primary, secondary, text, background} = theme.colors;
   const styles = createStyles(primary, secondary, text, background);
-  const {updateUserInformation} = useContext(MainContext);
+  const {updateUserInformation, currentUser} = useContext(MainContext);
+
+  // Define validation schema for the form fields
   const validationSchema = Yup.object().shape({
     name: nameSchema,
     carNumber: carNumberSchema,
     phoneNumber: phoneNumberSchema,
     email: emailSchema,
   });
-  const {currentUser} = useContext(MainContext);
+  // Function to handle form submission
   const handleFormSubmit = async (values, {resetForm}) => {
     setIsLoading(true);
     const [isUpdated, message] = await updateUserInformation(values);

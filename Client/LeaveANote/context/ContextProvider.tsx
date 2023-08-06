@@ -55,8 +55,6 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const api: AxiosInstance = axios.create({
     baseURL: 'https://leaveanoteservice.azurewebsites.net/api', // Set your base URL
   });
-
-
   const updateDeviceToken = async (userId: string) => {
     let updatedDeviceToken = await requestUserPermission();
     await updateDeviceTokenInDb(updatedDeviceToken, userId);
@@ -169,39 +167,12 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
    * Retrieves a user by their ID.
    * @param id The ID of the user.
    * @param token The currant user's authentication token.
+   * @param minimal A boolean value indicating whether the user object will include the accident list or not(default: false -> will include)
    * @returns A promise that resolves to a User object or null if the user is not found.
    */
   const getUserById = async (id: string, token: string, minimal = false): Promise<User | null> => {
     try {
       const response: AxiosResponse = await api.get("/User/getById", { headers: { Authorization: 'Bearer ' + token, }, params: { id, minimal } });
-      const responseData: IHttpResponse<UserFromServer> = response.data;
-      if (responseData.tokenError) { handleTokenError() }
-      if (responseData.data === undefined || !responseData.data) { return null; }
-      const userFromServer: UserFromServer = responseData.data;
-
-
-      const unreadMessages: Accident[] = userFromServer.accidents.filter(acc => acc.isRead === false)
-      const user: User = {
-        _id: userFromServer.id,
-        email: userFromServer.email,
-        phoneNumber: userFromServer.phoneNumber,
-        name: userFromServer.name,
-        carNumber: userFromServer.carNumber,
-        role: userFromServer.role,
-        accidents: userFromServer.accidents,
-        unreadMessages: unreadMessages,
-        deviceToken: userFromServer.deviceToken,
-      }
-
-      return user;
-    } catch (error: any) {
-
-      return null;
-    }
-  };
-  const getMinimalUserByID = async (id: string, token: string): Promise<User | null> => {
-    try {
-      const response: AxiosResponse = await api.get("/User/getById", { headers: { Authorization: 'Bearer ' + token, }, params: { id } });
       const responseData: IHttpResponse<UserFromServer> = response.data;
       if (responseData.tokenError) { handleTokenError() }
       if (responseData.data === undefined || !responseData.data) { return null; }
@@ -421,7 +392,6 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return [false, error.message];
     }
   };
-
   /**
   * Updates the user's password.
   * @param oldPassword The user's old password.
@@ -453,7 +423,6 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
       return [false, error.message];
     }
   }
-
   /**
  * Deletes an accident from the user's accidents history list.
  * @param messageId The ID of the accident message to delete.

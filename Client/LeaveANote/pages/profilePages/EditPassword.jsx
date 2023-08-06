@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet,ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import React, {useState, useContext, useRef} from 'react';
 import {Input} from '@rneui/themed';
 import {Formik} from 'formik';
@@ -11,6 +11,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 import CustomSpinner from '../../Components/uiComponents/CustomSpinner';
 export default function EditPassword() {
+    // Access required state and context
   let dropDownAlertRef = useRef();
   const [oldPasswordSecure, setOldPasswordSecure] = useState(true);
   const [newPasswordSecure, setNewPasswordSecure] = useState(true);
@@ -20,6 +21,8 @@ export default function EditPassword() {
   const {theme} = useContext(ThemeContext);
   const {primary, secondary, text, background} = theme.colors;
   const styles = createStyles(primary, secondary, text, background);
+
+  // Define validation rules for password fields
   const validationSchema = Yup.object().shape({
     currentPassword: passwordSchema,
     newPassword: passwordSchema.notOneOf(

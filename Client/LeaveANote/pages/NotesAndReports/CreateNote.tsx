@@ -23,22 +23,25 @@ interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
 const CreateNote: React.FC<Props> = ({ route, navigation }) => {
+   // State variables for various data
   const [deviceToken, setDeviceToken] = useState('')
   const [damagedCarNumber, setDamagedCarNumber] = useState('')
   const [damagedUserIdToSend, setDamagedUserIdToSend] = useState('');
   const [image, setImage] = useState('')
-
+  const [isLoading, setIsLoading] = useState(false)
+  const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
+  const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
+  // Access context values
   const { submitNote, uploadPhotoToStorage, currentUser } = useContext(MainContext);
   const [disableSendBtn, setDisableSendBtn] = useState<boolean>(true)
   const [imgSource, setImgSource] = useState<string>('https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg');
   const { theme, buttonTheme } = useContext(ThemeContext);
   const { buttonMain, buttonAlt } = buttonTheme;
-  const [isLoading, setIsLoading] = useState(false)
-  const [isVisibleSuccessModal, setIsVisibleSuccessModal] = useState(false)
-  const [isVisibleFailedModal, setIsVisibleFailedModal] = useState(false)
+  //Extract theme colors and styles
   const { primary, secondary, text, background } = theme.colors
   const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt)
 
+  // Effect to update image and button state
   useEffect(() => {
     if (image) {
       setImgSource(image);
@@ -46,6 +49,7 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
     }
   }, [image]);
 
+  // Effect to set initial values from route parameters
   useEffect(() => {
     const { carNumber, image, deviceToken, damagedUserId } = route.params;
     if (deviceToken)
@@ -60,18 +64,21 @@ const CreateNote: React.FC<Props> = ({ route, navigation }) => {
 
   }, [route.params])
 
+   // Function to open the camera screen
   const openCamera = (): void => {
     navigation.navigate({
       name: 'CameraComp',
       params: { 'previous': 'CreateNote' },
     });
   };
+  // Function to handle sending a notification
   const handleNotification = async () => {
 
     let title = 'You Have A New Note';
     let body = `${currentUser?.name} has left you a note`;
     await sendNotification(title, body, deviceToken);
   };
+  // Function to handle form submission
   const handleSubmit = async (): Promise<void> => {
     setIsLoading(true)
     const imageRef: string = await uploadPhotoToStorage(imgSource);

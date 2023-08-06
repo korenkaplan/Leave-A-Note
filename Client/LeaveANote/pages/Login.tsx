@@ -1,14 +1,14 @@
 import React, { useState, FC, useContext } from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { StackNavigationProp } from '@react-navigation/stack';
-import {Text, CheckBox } from '@rneui/base';
+import { Text, CheckBox } from '@rneui/base';
 import { MainContext } from '../context/ContextProvider';
 import DividerWithText from '../Components/uiComponents/DividerWithText';
 import { emailSchema, passwordSchema } from '../utils/validation/validationSchemas';
 import { ThemeContext } from '../context/ThemeContext';
-import { IText} from '../utils/interfaces/interfaces';
+import { IText } from '../utils/interfaces/interfaces';
 import CustomButton from '../Components/uiComponents/CustomButton';
 import CustomInput from '../Components/uiComponents/CustomInput';
 import Toast from 'react-native-toast-message';
@@ -33,20 +33,20 @@ const Login: FC<Props> = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
-  const { loginAttempt, setAuthenticated,showToast } = useContext(MainContext);
+  const { loginAttempt, setAuthenticated, showToast } = useContext(MainContext);
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
   const styles = createStyles(primary, secondary, text, background);
-  const messageToast='Sorry... wrong email or password';
-  const statusToast='error';
-  const headerToast='Login Failed';
+  const messageToast = 'Sorry... wrong email or password';
+  const statusToast = 'error';
+  const headerToast = 'Login Failed';
   const handleFormSubmit = async (values: LoginFormValues) => {
     // Handle login form submission
     setIsLoading(true)
     const result = await loginAttempt(values.email, values.password, rememberMe);
     setIsLoading(false)
     if (result === false) {
-      showToast(messageToast,statusToast,headerToast);
+      showToast(messageToast, statusToast, headerToast);
       return;
     }
     setAuthenticated(true);
@@ -87,7 +87,7 @@ const Login: FC<Props> = ({ navigation }) => {
                 color: text.primary,
                 onPress: () => setHidePassword(!hidePassword),
               }}
-              errorMessage={errors.password}/>
+              errorMessage={errors.password} />
             <CheckBox
               title="Remember Me"
               checked={rememberMe}
@@ -101,22 +101,22 @@ const Login: FC<Props> = ({ navigation }) => {
               <CustomButton
                 type={'main'}
                 onPress={handleSubmit}
-                title={'Login'}  />
+                title={'Login'} />
             </View>
 
           </>
         )}
       </Formik>
-      <DividerWithText title="Don't have an account ?"/>
+      <DividerWithText title="Don't have an account ?" />
       <View style={styles.buttonContainer}>
         <CustomButton
           type='alt'
-          onPress={() => navigation.navigate({name:'SignUp', params:{}})}
-          title={'Register'}/>
+          onPress={() => navigation.navigate({ name: 'SignUp', params: {} })}
+          title={'Register'} />
       </View>
 
-      <Toast/>
-      <CustomSpinner title='making sure its you...' isVisible={isLoading}/>
+      <Toast />
+      <CustomSpinner title='making sure its you...' isVisible={isLoading} />
 
     </View>
   );
@@ -128,16 +128,16 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
     padding: 20,
     backgroundColor: background,
   },
-  footer:{
-    position:'absolute',
-    bottom:5,
+  footer: {
+    position: 'absolute',
+    bottom: 5,
     alignSelf: 'center',
-    color:text.primary
+    color: text.primary
 
   },
-  footerContainer:{
-    position:'absolute',
-    bottom:5,
+  footerContainer: {
+    position: 'absolute',
+    bottom: 5,
     alignSelf: 'center',
 
   },
@@ -155,12 +155,12 @@ const createStyles = (primary: string, secondary: string, text: IText, backgroun
     fontWeight: 'bold',
     marginBottom: 10,
     color: text.primary,
-    alignSelf:'center',
+    alignSelf: 'center',
 
   },
   subHeading: {
     fontSize: 19,
-    alignSelf:'center',
+    alignSelf: 'center',
     marginBottom: 20,
     color: text.secondary,
 

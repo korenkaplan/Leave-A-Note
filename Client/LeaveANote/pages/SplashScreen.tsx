@@ -9,12 +9,17 @@ import { IText } from '../utils/interfaces/interfaces';
 interface Props {
   navigation: StackNavigationProp<Record<string, object>, string>;
 }
-
+/**
+ * SplashScreen component that displays a loading animation with fading text.
+ * @param navigation - Stack navigation prop.
+ */
 const SplashScreen: React.FC<Props> = ({ navigation }) => {
   const [fadeAnimation] = useState(new Animated.Value(0));
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
   const styles = createStyles(primary, secondary, text, background)
+
+      // Set up a timeout to gradually fade in the text after a delay
   useEffect(() => {
     const splashTimeout = setTimeout(() => {
       Animated.timing(fadeAnimation, {
@@ -23,7 +28,7 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
         useNativeDriver: true,
       }).start();
     }, 1000);
-
+  // Clear the timeout when the component is unmounted
     return () => {
       clearTimeout(splashTimeout);
     };

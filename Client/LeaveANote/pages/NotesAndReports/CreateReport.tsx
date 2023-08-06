@@ -80,6 +80,7 @@ const CreateReport: React.FC<Props> = ({ route, navigation }) => {
       params: { 'previous': 'CreateReport' },
     });
   };
+  // Function to handle sending a notification
   const handleNotification = async (deviceToken: string) => {
     let title = `You Have A New Report!`;
 

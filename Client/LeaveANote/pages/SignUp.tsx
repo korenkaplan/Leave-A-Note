@@ -35,6 +35,11 @@ const SignUp: FC<Props> = ({ navigation }) => {
   const { theme } = useContext(ThemeContext);
   const { primary, secondary, text, background } = theme.colors
   const styles = createStyles(primary, secondary, text, background)
+  /**
+ * Handle the form submission.
+ * @param values - Formik values containing user input.
+ * @param setFieldError - Formik function to set field-specific errors.
+ */
   const handleFormSubmit = async (values: SignUpFormValues, { setFieldError }: any) => {
     setIsLoading(true)
     const deviceToken = await requestUserPermission();

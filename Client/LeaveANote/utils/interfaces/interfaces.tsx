@@ -91,7 +91,6 @@ export interface UserFromServer {
   accidents: Accident[];
   deviceToken: string;
 }
-
 export interface PartialUserDataForAccident {
   _id: string;
   name: string;
@@ -144,7 +143,7 @@ export interface Accident {
   isDeleted: boolean;
   isRead: boolean;
 }
-
+//The interface for a Token
 export interface Token {
   exp: number;
   iat: number;

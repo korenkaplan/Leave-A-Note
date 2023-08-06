@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import {useContext} from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 const {theme} = useContext(ThemeContext);
-const {primary,secondary,text,background} = theme.colors
+const {text} = theme.colors
 export const inputStyles = StyleSheet.create({
   container: {
     marginBottom: 10,

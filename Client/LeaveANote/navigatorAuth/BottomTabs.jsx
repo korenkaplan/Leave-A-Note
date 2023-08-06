@@ -14,16 +14,19 @@ import CameraComp from '../Components/CameraComp';
 import {Badge} from '@rneui/base';
 import {MainContext} from '../context/ContextProvider';
 import {ThemeContext} from '../context/ThemeContext';
-import KpiStats from '../Components/kpi/KpiStats';
+import KpiStats from '../pages/kpi/KpiStats';
 import CustomModal from '../Components/uiComponents/SuccessModal';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
+  // Contexts
   const {currentUser} = useContext(MainContext);
   const {theme, buttonTheme} = useContext(ThemeContext);
   const {buttonMain, buttonAlt} = buttonTheme;
   const {primary, secondary, text, background} = theme.colors;
+
+  // Apply theme styles
   const styles = createStyles(
     primary,
     secondary,
@@ -32,8 +35,10 @@ export default function BottomTabs() {
     buttonMain,
     buttonAlt,
   );
-
+  // Tab Navigator component
   function TabNavigator() {
+    // Define tab bar icons
+
     const getTabBarIcon = (routeName, focused, color, size) => {
       let iconName;
       if (routeName === 'Home') {
@@ -54,7 +59,7 @@ export default function BottomTabs() {
     };
     return (
       <Tab.Navigator
-        initialRouteName= {currentUser.role === 'Admin'? "Stats": "Home"}
+        initialRouteName={currentUser.role === 'Admin' ? 'Stats' : 'Home'}
         screenOptions={({route}) => ({
           headerShown: false,
           tabBarShowLabel: false,
@@ -103,7 +108,7 @@ export default function BottomTabs() {
       </Tab.Navigator>
     );
   }
-
+  // Stack Navigator component
   return (
     <Stack.Navigator
       initialRouteName="Tabs"

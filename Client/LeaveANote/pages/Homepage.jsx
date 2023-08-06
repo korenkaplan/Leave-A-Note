@@ -17,16 +17,16 @@ import ThemedView from '../Components/uiComponents/ThemedView';
 import CustomButton from '../Components/uiComponents/CustomButton';
 
 export default function Homepage({navigation}) {
-  const {theme, buttonTheme} = useContext(ThemeContext);
-  const {primary, secondary, text, background} = theme.colors;
-  const {buttonMain, buttonAlt} = buttonTheme;
-  const styles = createStyles(primary, secondary, text, background);
   const widthPercent = 100;
   const heightPercent = 30;
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
   const width = (windowWidth * widthPercent) / 100;
   const height = (windowHeight * heightPercent) / 100;
+  const {theme, buttonTheme} = useContext(ThemeContext);
+  const {primary, secondary, text, background} = theme.colors;
+  const {buttonMain, buttonAlt} = buttonTheme;
+  const styles = createStyles(primary, secondary, text, background);
   const {
     setCarNumInput,
     searchCarNumber,
@@ -41,12 +41,11 @@ export default function Homepage({navigation}) {
   const [iconName, setIconName] = useState('search');
   const [isNumberValid, setIsNumberValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const colorScheme = useColorScheme();
   const isNumLengthValid = searchValue.length > 6 && searchValue.length < 9;
 
   /**
-  Contains the props of the right icon of the input element
- */
+   * Contains the props of the right icon of the input element.
+   */
   const iconProps = {
     name: iconName,
     marginRight: 10,
@@ -66,8 +65,8 @@ export default function Homepage({navigation}) {
     },
   };
   /**
-  This function creates a loading spinner.
- */
+   * Function to create a loading spinner.
+   */
   const loadSpinner = () => {
     return (
       <View
@@ -80,11 +79,10 @@ export default function Homepage({navigation}) {
       </View>
     );
   };
+
   /**
-  This function updates the states on input change event:
-  1. change validation state of the input to false.
-  2. change the icon to search icon.
- */
+   * Function to update search value on input change event.
+   */
   const updateSearchValue = searchValue => {
     setIsNumberValid(false);
     setError('');
@@ -92,20 +90,19 @@ export default function Homepage({navigation}) {
     setSearchValue(searchValue);
   };
   /**
-   * This function checks the car number input in the database.
-   * after submit event
-   *
+   * Handles the search button press.
    */
   const handleSearchPress = async () => {
-    if(searchValue === currentUser.carNumber)
-    {
+    if (searchValue === currentUser.carNumber) {
       setIconName('error');
-      setError('You Can\'t Send a note to yourself');
+      setError("You Can't Send a note to yourself");
       setIsNumberValid(false);
       return;
     }
     setIsLoading(true); // Set loading state to true
-    const [isUserExists, deviceToken, damagedUserId] = await searchCarNumber( searchValue);
+    const [isUserExists, deviceToken, damagedUserId] = await searchCarNumber(
+      searchValue,
+    );
     setIsLoading(false); // Set loading state to true
     if (isUserExists) {
       setIconName('check');
@@ -118,6 +115,9 @@ export default function Homepage({navigation}) {
       setIsNumberValid(false);
     }
   };
+  /**
+   * Function to navigate to the "CreateNote" page.
+   */
   const moveToNotePage = () => {
     setCarNumInput(searchValue);
     navigation.navigate({
@@ -130,6 +130,9 @@ export default function Homepage({navigation}) {
       merge: true,
     });
   };
+  /**
+   * Function to navigate to the "CreateReport" page.
+   */
   const moveToReportPage = () => {
     navigation.navigate({
       name: 'CreateReport',
@@ -138,6 +141,9 @@ export default function Homepage({navigation}) {
     });
     setSearchValue('');
   };
+  /**
+   * Function to display a log out alert.
+   */
   const logOutAlert = () =>
     Alert.alert(
       'Are you sure you want to Sign out?',

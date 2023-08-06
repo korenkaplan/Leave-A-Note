@@ -10,6 +10,7 @@ import { IText, StyleButton } from '../../utils/interfaces/interfaces';
 import DropdownAlert from 'react-native-dropdownalert';
 import DividerWithText from '../../Components/uiComponents/DividerWithText';
 const AccidentsHistory: FC = () => {
+   // Access required context and state
   const navigation = useNavigation();
   const {  currentUser, deleteAccident, refreshCurrantUser } = useContext(MainContext);
   const [refreshing, setRefreshing] = useState(false);
@@ -18,17 +19,22 @@ const AccidentsHistory: FC = () => {
   const { primary, secondary, text, background } = theme.colors
   const { buttonMain, buttonAlt } = buttonTheme;
   let dropDownAlertRef = useRef();
+    // Define the styles based on theme
   const styles = createStyles(primary, secondary, text, background, buttonMain, buttonAlt)
+
+  // Function to handle pull-to-refresh
   const handleRefresh = async () => {
     setRefreshing(true);
     await refreshCurrantUser();
     setRefreshing(false);
 
   };
+   // Function to handle press on accident information
   const handleInfoPress = (item: Accident) => {
     navigation.navigate({ name: item.type === 'note' ? 'NoteView' : 'ReportView', params: { item } });
 
   };
+  // Function to handle delete action
   const handleDelete = async (index: number, id: string) => {
     const [isDeleted, message] = await deleteAccident(id);
     const [messageToast, statusToast, headerToast] = isDeleted ? [message, 'success', 'Deleted Successfully 👋'] : [message, 'error', 'Failed to delete'];
@@ -36,13 +42,13 @@ const AccidentsHistory: FC = () => {
     if (isDeleted)
       deleteMessageFromState(index);
   }
-
+ // Function to remove a message from state currant user
   const deleteMessageFromState = (index: number) => {
     let updatedMessages = [...accidents];
     updatedMessages.splice(index, 1);
     setAccidents(updatedMessages);
   };
-
+// Generate the list of accidents
   const accidentsList = accidents.map((accident, index) => {
     if (accident.type === 'note') {
       return (
