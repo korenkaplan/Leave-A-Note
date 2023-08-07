@@ -231,7 +231,9 @@ PUT /User/updateDeviceToken
 
 #### reportsAndNotesDistributionData
 Get the distribution data of the reports notes and unmatched reports.
+
 **Authorization:** bearer token , role = 'Admin'
+
 **Returned Value:** An object containing the amount of reports, notes and unmatched reports.
 
 ```http
@@ -244,7 +246,9 @@ GET /Stats/reportsDistribution
 
 #### registeredUsersData 
 Get registered users' data per month for a specific year.
+
 **Authorization:** bearer token , role = 'Admin'
+
 **Returned Value:** An object containing the amount of regiserted user of a specific year.
 ```http
 GET /Stats/registeredUsersData
@@ -289,8 +293,11 @@ POST /User/register'
 
 ### getUserById
 Get a user by its ID
+
 **Authorization:** bearer token
+
 **Returned Value:** User | null
+
 ```http
 GET /User/getById
 ```
@@ -302,8 +309,11 @@ GET /User/getById
 
 ### searchCarNumber
 Get the device token and the id of the user by the car number.
+
 **Authorization:** bearer token
+
 **Returned Value:** {deviceToken: string,id: string}
+
 ```http
 GET /User/searchCarNumber
 ```
@@ -314,8 +324,11 @@ GET /User/searchCarNumber
 
 #### submitNote
 Submits a new note.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
+
 ```http
 POST /Accident/CreateNote'
 ```
@@ -332,7 +345,9 @@ POST /Accident/CreateNote'
 
 #### submitReport
 Create a new report
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -349,7 +364,9 @@ POST /Accident/createReport
 
 #### updateUserInformation
 Update the user's inforamtion in the database.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -367,7 +384,9 @@ PUT /User/informationUpdate
 
 #### updateUserPassword
 Update the user's password in the database.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -382,7 +401,9 @@ PUT /User/passwordUpdate
 
 #### deleteAccident
 Update the accident field isDeleted to true.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -396,7 +417,9 @@ PUT /User/deleteMessage
 
 #### deleteFromUnreadMessages
 Update the accident field isRead to true.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
