@@ -31,7 +31,7 @@ This repository exclusively hosts the client-side of our application. In additio
 6. [Directories](#directories)
 7. [Environment Variables](#environment-variables)
 8. [Run Locally](#run-locally)
-9. [API Reference - Context Functions](#api-reference---context-functions)
+9. [API Reference](#api-reference)
 10. [Author & Feedback](#author--feedback)
 
 ##  Demo & Screenshots
@@ -213,8 +213,8 @@ Choose Android
   a - run on Android
 ```
 
-## API Reference -  baseURL: 'https://leaveanoteservice.azurewebsites.net/api'
-
+## API Reference  
+### baseURL: 'https://leaveanoteservice.azurewebsites.net/api'
 #### updateDeviceTokenInDb
 Update the user's device in the database to keep it updated.
 
