@@ -31,7 +31,7 @@ This repository exclusively hosts the client-side of our application. In additio
 6. [Directories](#directories)
 7. [Environment Variables](#environment-variables)
 8. [Run Locally](#run-locally)
-9. [API Reference - Context Functions](#api-reference---context-functions)
+9. [API Reference](#api-reference)
 10. [Author & Feedback](#author--feedback)
 
 ##  Demo & Screenshots
@@ -214,7 +214,7 @@ Choose Android
 ```
 
 ## API Reference - Context Functions
-
+### Base URL: https://leave-a-note-nodejs-server.onrender.com/api
 #### getUserQuery
 Using the mongodb find method to search a user in the user's collection.
 
@@ -246,7 +246,9 @@ PUT /users/updateDeviceToken
 
 #### reportsAndNotesDistributionData
 Get the distribution data of the reports notes and unmatched reports.
+
 **Authorization:** bearer token , role = 'Admin'
+
 **Returned Value:** An object containing the amount of reports, notes and unmatched reports.
 
 ```http
@@ -259,8 +261,11 @@ POST /stats/reportsDistribution
 
 #### registeredUsersData 
 Get registered users' data per month for a specific year.
+
 **Authorization:** bearer token , role = 'Admin'
+
 **Returned Value:** An object containing the amount of regiserted user of a specific year.
+
 ```http
 POST /stats/registeredUsersData
 ```
@@ -305,8 +310,11 @@ POST /users/register'
 
 #### submitNote
 Submits a new note.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
+
 ```http
 POST /notes/createNote'
 ```
@@ -322,7 +330,9 @@ POST /notes/createNote'
 
 #### submitReport
 Create a new report
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -339,7 +349,9 @@ POST /reports/createReport '
 
 #### updateUserInformation
 Update the user's inforamtion in the database.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -353,7 +365,9 @@ POST /users/informationUpdate'
 
 #### updateUserPassword
 Update the user's password in the database.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -368,7 +382,9 @@ POST /users/passwordUpdate'
 
 #### deleteAccident
 Delete accident form the user's accident.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
@@ -382,7 +398,9 @@ POST /users/deleteMessage'
 
 #### deleteFromUnreadMessages
 Remove the message from the users inbox.
+
 **Authorization:** bearer token
+
 **Returned Value:** Void
 
 ```http
