@@ -70,6 +70,7 @@ This repository exclusively hosts the client-side of our application. In additio
 
 [.NET 7 & SQL version Server side Repository](https://github.com/korenkaplan/LeaveANoteServerProject)
 
+**Cloud Storage:** Firebase Storage to store the images.
 
 ## Features
 
