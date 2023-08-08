@@ -201,6 +201,7 @@ This all can be found in the .env.example file, copy the following from firebase
 
 `MEASUREMENT_ID`
 
+`SERVER_KEY`
 
 ### Launch the Project
 
