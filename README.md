@@ -66,7 +66,7 @@ This repository exclusively hosts the client-side of our application. In additio
 [Node.JS & Mongodb version Server side Repository](https://github.com/korenkaplan/Leave-A-Note-NodeJS-Server)
 
 
-**Server for Net_Core_Backend branch :** ASP.NET Core 7 , Entity Framework 7.
+**Server for Net_Core_Backend branch :** ASP.NET Core 7 , Entity Framework 7, Microsoft Azure Cloud Services.
 
 [.NET 7 & SQL version Server side Repository](https://github.com/korenkaplan/LeaveANoteServerProject)
 
