@@ -17,13 +17,14 @@ export default function Main() {
     setToken,
     updateDeviceToken,
   } = useContext(MainContext);
-  const {setTheme, lightTheme, darkTheme, buttonTheme} =
+  const {setTheme, lightTheme, darkTheme, } =
     useContext(ThemeContext);
   // Use isLoading state to control the loading screen
   const [isLoading, setIsLoading] = useState(true);
   // Get the current device color scheme.
   const colorScheme = useColorScheme();
   // Set theme based on the device's color scheme.
+
   useEffect(() => {
     if (colorScheme === 'dark') {
       setTheme(darkTheme);
@@ -31,6 +32,7 @@ export default function Main() {
       setTheme(lightTheme);
     }
   }, [colorScheme]);
+  
   // Fetch user data and manage authentication on app start.
   useEffect(() => {
     const getData = async () => {
