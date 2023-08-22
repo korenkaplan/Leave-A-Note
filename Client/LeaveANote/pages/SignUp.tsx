@@ -59,7 +59,6 @@ const SignUp: FC<Props> = ({ navigation }) => {
     <ThemedView style={styles.container}>
       <DividerWithText weight='bold' fontSize={20} title="Sign Up And Lets Begin " />
       <ScrollView style={styles.scroll}>
-
         <Formik
           initialValues={{ email: '', password: '', repeatPassword: '', phoneNumber: '', carNumber: '', name: '' }}
           validationSchema={validationSchema}
@@ -70,12 +69,10 @@ const SignUp: FC<Props> = ({ navigation }) => {
               <CustomInput
                 placeholder="Enter your email"
                 placeholderTextColor={text.primary}
-
                 value={values.email}
                 onChangeText={handleChange('email')}
                 leftIcon={{ type: 'ionicon', name: 'mail-outline', color: text.primary }}
                 errorMessage={errors.email} />
-
               <CustomInput
                 placeholder="Enter your full name"
                 value={values.name}
