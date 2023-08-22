@@ -52,9 +52,11 @@ function MainContextProvider({ children }: { children: ReactNode; }) {
   const [damagedUserId, setDamagedUserId] = useState<string>('');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [token, setToken] = useState<string>('');
+
   const api: AxiosInstance = axios.create({
     baseURL: 'https://leaveanoteservice.azurewebsites.net/api', // Set your base URL
   });
+  
   const updateDeviceToken = async (userId: string) => {
     let updatedDeviceToken = await requestUserPermission();
     await updateDeviceTokenInDb(updatedDeviceToken, userId);
